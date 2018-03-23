@@ -17,13 +17,13 @@ app.use(routes);
 mongoose.Promise = global.Promise;
 // Connect to the Mongo DB
 mongoose.connect(
-  process.env.MONGODB_URI || "mongodb://localhost/reactwishusers",
+  process.env.MONGODB_URI || "mongodb://hagan:wishdb@ds123259.mlab.com:23259/heroku_z506v43z",
   {
     useMongoClient: true
   }
 );
 
-// "mongodb://hagan:wishdb@ds123259.mlab.com:23259/heroku_z506v43z",
+
 
 // Start the API server
 app.listen(PORT, function() {
