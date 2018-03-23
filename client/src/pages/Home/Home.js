@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-// import API from "../../utils/API";
+import API from "../../utils/API";
 import { Link } from "react-router-dom";
-import { Col, Row, FormControl, ControlLabel, FormGroup, Button, Jumbotron, Grid } from 'react-bootstrap';
+import { Col, Row, Form, FormControl, ControlLabel, FormGroup, Button, Jumbotron, Grid } from 'react-bootstrap';
 import WishForm from "../../components/WishForm";
 import GrantForm from "../../components/GrantForm";
-import LoginModal from "../../components/LoginModal";
+// import LoginModal from "../../components/LoginModal";
 import './Home.css';
 // import Toggle from 'react-toggle-display';
 
@@ -17,11 +17,9 @@ class Home extends Component {
 
     this.state = {
       books: [],
-      showLogin: false,
       wish: {
         business: "",
         location: "",
-        value: 0, 
         request: "",
         isHidden: false
       },
@@ -37,17 +35,17 @@ class Home extends Component {
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  // componentDidMount() {
-  //   this.loadBooks();
-  // }
+  componentDidMount() {
+    this.userInfo();
+  }
 
-  // loadBooks = () => {
-  //   API.getBooks()
-  //     .then(res =>
-  //       this.setState({ books: res.data })
-  //     )
-  //     .catch(err => console.log(err));
-  // };
+  userInfo = () => {
+    API.getUser()
+      .then(res =>
+        console.log(res.data)
+      )
+      .catch(err => console.log(err));
+  };
 
   // deleteBook = id => {
   //   API.deleteBook(id)
@@ -94,9 +92,6 @@ class Home extends Component {
       <Grid fluid>
         <Row>
           <Col md={6}>
-            {/* <Toggle show={this.state.showLogin}> */}
-            {/* <LoginModal /> */}
-            {/* </Toggle> */}
             <Jumbotron>
               <button className="home-btns" onClick={this.toggleWishHidden.bind(this)}>Make a Wish</button>
             </Jumbotron>
@@ -133,21 +128,6 @@ class Home extends Component {
 
               <FormGroup>
                 <Col sm={2}>
-                  Value
-                </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.wish.value}
-                    onChange={this.handleInputChange}
-                    name="value"
-                    placeholder="how much are you willing to pay?"
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={2}>
                   Request
                 </Col>
                 <Col componentClass={ControlLabel} sm={10}>
@@ -166,7 +146,6 @@ class Home extends Component {
               </Button>
                 </Col>
               </FormGroup>
-              {/* </form> */}
             </WishForm>}
           </Col>
           <Col md={6}>
