@@ -33,6 +33,7 @@ class Login extends Component {
 
 
     signUpSubmit = event => {
+        console.log("sign up clicked!")
         event.preventDefault();
         if (this.state.signEmail && this.state.signPassword && this.state.signName) {
             API.saveUser({
@@ -48,8 +49,9 @@ class Login extends Component {
     };
 
     logInSubmit = event => {
+        console.log("clicked log in")
         event.preventDefault();
-        API.getUser()
+        API.getUserId(this.state.logEmail)
             .then(res =>
                 console.log(res.data)
             )
