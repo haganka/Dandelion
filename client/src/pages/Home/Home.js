@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import { Col, Row, Form, FormControl, ControlLabel, FormGroup, Button, Jumbotron, Grid } from 'react-bootstrap';
 import WishForm from "../../components/WishForm";
 import GrantForm from "../../components/GrantForm";
-// import LoginModal from "../../components/LoginModal";
 import './Home.css';
 // import Toggle from 'react-toggle-display';
 
@@ -16,7 +15,6 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      books: [],
       wish: {
         business: "",
         location: "",

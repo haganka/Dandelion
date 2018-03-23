@@ -8,7 +8,7 @@ const NavBar = () =>
   <NavItem eventKey="1" href="/">
     Wish
   </NavItem>
-  <NavItem eventKey="2" href="/about">
+  <NavItem eventKey="2" href="/home">
     Home
   </NavItem>
   <NavItem eventKey="3" href="/matches">
@@ -17,7 +17,7 @@ const NavBar = () =>
   <NavItem eventKey="4" href="/account">
     Account
   </NavItem>
-  <NavItem eventKey="5" href="/login">
+  <NavItem eventKey="5" href="/logout">
     Logout
   </NavItem>
 </Nav>

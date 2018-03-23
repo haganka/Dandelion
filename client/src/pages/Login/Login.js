@@ -1,208 +1,126 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
 import { Link } from "react-router-dom";
-import { Col, Row, Form, FormControl, ControlLabel, FormGroup, Button, Jumbotron, Grid } from 'react-bootstrap';
-import WishForm from "../../components/WishForm";
-import GrantForm from "../../components/GrantForm";
-// import LoginModal from "../../components/LoginModal";
+import { Col, Row, Form, Button, Jumbotron, Grid } from 'react-bootstrap';
+import LogInBox from "../../components/LogInBox";
+import SignUpBox from "../../components/SignUpBox";
 import './Login.css';
 // import Toggle from 'react-toggle-display';
 
 
 class Login extends Component {
-  //allows access to props if you pass down, allows console logging
-  constructor(props) {
-    //allows ability to set state if you want to
-    super(props);
+    //allows access to props if you pass down, allows console logging
+    constructor(props) {
+        //allows ability to set state if you want to
+        super(props);
 
-    this.state = {
-        name: "",
-        email: "",
-        password: ""
+        this.state = {
+            hideLogIn: true,
+            hideSignUp: true,
+            signName: "",
+            signEmail: "",
+            signPassword: "",
+            logEmail: "",
+            logPassword: ""
+        };
+
+        this.toggleLogIn = this.toggleLogIn.bind(this);
+        this.toggleSignUp = this.toggleSignUp.bind(this);
+        this.logInSubmit = this.logInSubmit.bind(this);
+        this.signUpSubmit = this.signUpSubmit.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+    }
+
+
+    signUpSubmit = event => {
+        event.preventDefault();
+        if (this.state.signEmail && this.state.signPassword && this.state.signName) {
+            API.saveUser({
+                name: this.state.signName,
+                email: this.state.signEmail,
+                password: this.state.signPassword
+            })
+                .then(res =>
+                    console.log(res.data)
+                )
+                .catch(err => console.log(err));
+        }
     };
 
-    this.handleInputChange = this.handleInputChange.bind(this);
-  }
+    logInSubmit = event => {
+        event.preventDefault();
+        API.getUser()
+            .then(res =>
+                console.log(res.data)
+            )
+            .catch(err => console.log(err));
+    };
 
 
-  signUpSubmit = event => {
-    event.preventDefault();
-    if(this.state.email && this.state.password && this.state.name){
-    API.saveUser({
-        name: this.state.name,
-        email: this.state.email,
-        password: this.state.password
-    })
-      .then(res =>
-        console.log(res.data)
-      )
-      .catch(err => console.log(err));
+    handleInputChange = (event) => {
+        const { name, value } = event.target;
+        this.setState({
+            [name]: value
+        });
+        console.log(this.state)
+    };
+
+    toggleLogIn() {
+        this.setState({
+            hideLogIn: !this.state.hideLogIn
+        })
+        if(this.state.hideLogIn === false){
+            this.setState({ hideSignup: true});
+        }
     }
-  };
 
-  loginSubmit = event => {
-    event.preventDefault();
-    API.getUser()
-      .then(res =>
-        console.log(res.data)
-      )
-      .catch(err => console.log(err));
-  };
+    toggleSignUp() {
+        this.setState({
+            hideSignUp: !this.state.hideSignUp
+        })
+        if(this.state.hideSignUp === false){
+            this.setState({ hideLogIn: true});
+        }
+    }
 
-  handleInputChange = event => {
-    const { name, value } = event.target;
-    this.setState({
-      [name]: value
-    });
-    console.log(this.state)
-  };
+    render() {
+        return (
+            <Grid fluid>
+                <Row>
+                    <Col md={12}>
+                        <Jumbotron>
+                            Hi there, welcome to Wish. Wish allows every day people to make a wish or grant a wish of another. If you're stuck in class and in desperate need of a coffee or don't have time to run out and grab lunch, just make a wish! If you're stopping at the grocery store on the way home or swinging by your favorite coffee shop on the way in to work, offer to grant a wish! By matching and accepting each other, you're making wishes come true. Log in or sign up to get started!
+                        </Jumbotron>
+                    </Col>
+                </Row>
+                <Row>
+                    <button className="login-btns" onClick={this.toggleLogIn.bind(this)}>Log in</button>
+                    <button className="login-btns" onClick={this.toggleSignUp.bind(this)}>Sign up</button>
+                </Row>
+                <Row>
+                    <Col>
+                    <Form>
+                        {!this.state.hideLogIn && <LogInBox
+                            emailValue={this.state.logEmail} 
+                            passValue={this.state.logPassword} 
+                            onChangeLog={this.handleInputChange.bind(this)} 
+                            onSubmitLog={this.logInSubmit.bind(this)}
+                        />}
 
-  // handleFormSubmit = event => {
-  //   event.preventDefault();
-  //   if (this.state.location && this.state.value) {
-  //     API.saveBook({
-  //       business: this.state.business,
-  //       location: this.state.location,
-  //       value: this.state.value,
-  //       request: this.state.request
-  //     })
-  //       .then(res => this.loadBooks())
-  //       .catch(err => console.log(err));
-  //   }
-  // };
+                        {!this.state.hideSignUp && <SignUpBox 
+                            nameValueSign={this.state.signName} 
+                            emailValueSign={this.state.signEmail} 
+                            passValueSign={this.state.signPassword} 
+                            onChangeSign={this.handleInputChange.bind(this)} 
+                            onSubmitSign={this.signUpSubmit.bind(this)}
+                        />}
 
-  toggleWishHidden() {
-    this.setState({
-      wish: { isHidden: !this.state.wish.isHidden }
-    })
-  }
-
-  toggleGrantHidden() {
-    this.setState({
-      grant: { isHidden: !this.state.grant.isHidden }
-    })
-  }
-
-  render() {
-    return (
-      <Grid fluid>
-        <Row>
-          <Col md={6}>
-            <Jumbotron>
-              <button className="home-btns" onClick={this.toggleWishHidden.bind(this)}>Make a Wish</button>
-            </Jumbotron>
-            {!this.state.wish.isHidden && <WishForm >
-              <FormGroup>
-                <Col sm={2}>
-                  Business Name
-                </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.wish.business}
-                    onChange={this.handleInputChange}
-                    name="business"
-                    placeholder="Business name (optional?)"
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={2}>
-                  Your Location
-                </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.wish.location}
-                    onChange={this.handleInputChange}
-                    name="location"
-                    placeholder="Enter your location address"
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={2}>
-                  Request
-                </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.wish.request}
-                    onChange={this.handleInputChange}
-                    name="request"
-                    placeholder="Request"
-                  />
-                  <Button
-                    disabled={!(this.state.wish.location && this.state.wish.value)}
-                  // onClick={this.handleFormSubmit}
-                  >
-                    Wish
-              </Button>
-                </Col>
-              </FormGroup>
-            </WishForm>}
-          </Col>
-          <Col md={6}>
-            <Jumbotron>
-              <button className="home-btns" onClick={this.toggleGrantHidden.bind(this)} >Grant a Wish</button>
-            </Jumbotron>
-            {!this.state.grant.isHidden && <GrantForm >
-              <FormGroup>
-                <Col sm={2}>
-                  Business Name
-              </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.grant.business}
-                    onChange={this.handleInputChange}
-                    name="business"
-                    placeholder="Business name"
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={2}>
-                  Business Location
-              </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.grant.location}
-                    onChange={this.handleInputChange}
-                    name="location"
-                    placeholder="Enter the business address"
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={2}>
-                  Range
-              </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.grant.range}
-                    onChange={this.handleInputChange}
-                    name="range"
-                    placeholder="desired mile range (i.e. 0.5, 1, 1.2)"
-                  />
-                <Button
-                disabled={!(this.state.grant.location && this.state.grantbusiness)}
-                  >Grant
-                </Button>
-                </Col>
-              </FormGroup>
-            </GrantForm>}
-          </Col>
-        </Row>
-      </Grid>
-    );
-  }
+                    </Form>
+                    </Col>
+                </Row>
+            </Grid>
+        );
+    }
 }
 
 
