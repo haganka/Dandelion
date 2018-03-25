@@ -22,6 +22,8 @@
     "axios": "^0.16.2",
     "body-parser": "^1.17.2",
     "express": "^4.15.4",
-    "mongoose": "^4.11.7"
+    "firebase": "^4.12.0",
+    "mongoose": "^4.11.7",
+    "react-geolocated": "^2.3.0"
   }
 }

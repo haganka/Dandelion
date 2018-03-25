@@ -5,7 +5,8 @@ import { Col, Row, Button, Jumbotron, Grid } from 'react-bootstrap';
 import WishForm from "../../components/WishForm";
 import GrantForm from "../../components/GrantForm";
 import './Home.css';
-// import Toggle from 'react-toggle-display';
+import firebase from '../../fire.js';
+import {geolocated} from 'react-geolocated';
 
 
 class Home extends Component {
@@ -21,7 +22,9 @@ class Home extends Component {
       business: "",
       location: "",
       request: "",
-      range: ""
+      range: "",
+      wishes: [],
+      grants: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -39,11 +42,6 @@ class Home extends Component {
       .catch(err => console.log(err));
   };
 
-  // deleteBook = id => {
-  //   API.deleteBook(id)
-  //     .then(res => this.loadBooks())
-  //     .catch(err => console.log(err));
-  // };
 
   handleInputChange = event => {
     console.log("running")
@@ -57,17 +55,31 @@ class Home extends Component {
   handleWishSubmit = event => {
     event.preventDefault();
     if (this.state.business && this.state.location && this.state.request) {
-      API.saveWish({
+      let allWishes = this.state.wishes;
+      const newWish = {
         business: this.state.business,
         location: this.state.location,
         request: this.state.request
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }else{
-      console.log("please fill out all fields")
+      };
+      allWishes.push(newWish);
+      this.setState({wishes: allWishes})
+      firebase.database().ref('wishes/' + newWish.business + '/' + "wish")
+      .push(newWish);
+        // this.setState({
+        //   message: ''
+        // });
+      }
     }
-  };
+
+      // firebase.database().ref(this.state.business + '/drivers').on('value', driver => {
+      //   const allDrivers = driver.val();
+      //   if (allDrivers != null) {
+      //     this.setState({
+      //       matches: allDrivers
+      //     });
+      //   }
+      // });
+ 
 
   handleGrantSubmit = event => {
     event.preventDefault();
@@ -132,9 +144,11 @@ class Home extends Component {
           <Col md={12}>
               {this.state.wish ? <WishForm              
                 type="text"
+                busSelect={this.state.businessOptions}
                 busValue={this.state.business}
                 locValue={this.state.location}
                 reqValue={this.state.request}
+                getLocation={this.getCurrentPosition}
                 onChange={this.handleInputChange.bind(this)}
                 onSubmit={this.handleWishSubmit.bind(this)}
               /> : <GrantForm
@@ -147,6 +161,11 @@ class Home extends Component {
               />}
           </Col>
         </Row>
+        <Row>
+          <Col sm={12}>
+                <div id="map"></div>
+          </Col>
+          </Row>
       </Grid>
     );
   }
