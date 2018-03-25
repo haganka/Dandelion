@@ -4,6 +4,7 @@ import { Form, FormGroup, FormControl, Col, Row, Button, ControlLabel } from 're
 const LogInBox = props => 
 
   <div className="login">
+    <Form>
     <FormGroup>
       <Col sm={2}>
         Email
@@ -12,8 +13,8 @@ const LogInBox = props =>
       <FormControl
           type="email"
           value={props.emailValue}
-          onChange={props.onChangeLog}
-          name="logEmail"
+          onChange={props.onChange}
+          name="email"
           placeholder="Enter Email"
         />  
       </Col>
@@ -27,17 +28,18 @@ const LogInBox = props =>
         <FormControl
           type="password"
           value={props.passValue}
-          onChange={props.onChangeLog}
-          name="logPassword"
+          onChange={props.onChange}
+          name="password"
           placeholder="Enter password"
         />
       </Col>
     </FormGroup>
     <Button
-      onClick={props.onSubmitLog}
+      onClick={props.onSubmit}
       disabled={!(props.emailValue && props.passValue)}
       >Log In
     </Button>
+    </Form>
   </div>;
 
 

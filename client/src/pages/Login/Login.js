@@ -15,13 +15,11 @@ class Login extends Component {
         super(props);
 
         this.state = {
-            hideLogIn: true,
-            hideSignUp: true,
-            signName: "",
-            signEmail: "",
-            signPassword: "",
-            logEmail: "",
-            logPassword: ""
+            login: false,
+            signup: false,
+            name: "",
+            email: "",
+            password: "",
         };
 
         this.toggleLogIn = this.toggleLogIn.bind(this);
@@ -69,19 +67,25 @@ class Login extends Component {
 
     toggleLogIn() {
         this.setState({
-            hideLogIn: !this.state.hideLogIn
+            name: "", email: "", password: ""
+          })
+        this.setState({
+            login: !this.state.login
         })
-        if(this.state.hideLogIn === false){
-            this.setState({ hideSignup: true});
+        if(this.state.signup === true){
+            this.setState({ signup: false});
         }
     }
 
     toggleSignUp() {
         this.setState({
-            hideSignUp: !this.state.hideSignUp
+            name: "", email: "", password: ""
+          })
+        this.setState({
+            signup: !this.state.signup
         })
-        if(this.state.hideSignUp === false){
-            this.setState({ hideLogIn: true});
+        if(this.state.login === true){
+            this.setState({ login: false});
         }
     }
 
@@ -101,23 +105,18 @@ class Login extends Component {
                 </Row>
                 <Row>
                     <Col>
-                    <Form>
-                        {!this.state.hideLogIn && <LogInBox
-                            emailValue={this.state.logEmail} 
-                            passValue={this.state.logPassword} 
-                            onChangeLog={this.handleInputChange.bind(this)} 
-                            onSubmitLog={this.logInSubmit.bind(this)}
+                        {this.state.login ? <LogInBox
+                            emailValue={this.state.email} 
+                            passValue={this.state.password} 
+                            onChange={this.handleInputChange.bind(this)} 
+                            onSubmit={this.logInSubmit.bind(this)}
+                        /> : <SignUpBox 
+                            nameValue={this.state.name} 
+                            emailValue={this.state.email} 
+                            passValue={this.state.password} 
+                            onChange={this.handleInputChange.bind(this)} 
+                            onSubmit={this.signUpSubmit.bind(this)}
                         />}
-
-                        {!this.state.hideSignUp && <SignUpBox 
-                            nameValueSign={this.state.signName} 
-                            emailValueSign={this.state.signEmail} 
-                            passValueSign={this.state.signPassword} 
-                            onChangeSign={this.handleInputChange.bind(this)} 
-                            onSubmitSign={this.signUpSubmit.bind(this)}
-                        />}
-
-                    </Form>
                     </Col>
                 </Row>
             </Grid>

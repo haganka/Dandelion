@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
 import { Link } from "react-router-dom";
-import { Col, Row, Form, FormControl, ControlLabel, FormGroup, Button, Jumbotron, Grid } from 'react-bootstrap';
+import { Col, Row, Button, Jumbotron, Grid } from 'react-bootstrap';
 import WishForm from "../../components/WishForm";
 import GrantForm from "../../components/GrantForm";
 import './Home.css';
@@ -15,19 +15,13 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      wish: {
-        business: "",
-        location: "",
-        request: "",
-        isHidden: false
-      },
-      grant: {
-        business: "",
-        location: "",
-        range: "",
-        isHidden: false
-      }
-
+      userInfo: "", //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
+      grant: false,
+      wish: false,
+      business: "",
+      location: "",
+      request: "",
+      range: ""
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -52,6 +46,7 @@ class Home extends Component {
   // };
 
   handleInputChange = event => {
+    console.log("running")
     const { name, value } = event.target;
     this.setState({
       [name]: value
@@ -59,31 +54,64 @@ class Home extends Component {
     console.log(this.state)
   };
 
-  // handleFormSubmit = event => {
-  //   event.preventDefault();
-  //   if (this.state.location && this.state.value) {
-  //     API.saveBook({
-  //       business: this.state.business,
-  //       location: this.state.location,
-  //       value: this.state.value,
-  //       request: this.state.request
-  //     })
-  //       .then(res => this.loadBooks())
-  //       .catch(err => console.log(err));
-  //   }
-  // };
+  handleWishSubmit = event => {
+    event.preventDefault();
+    if (this.state.business && this.state.location && this.state.request) {
+      API.saveWish({
+        business: this.state.business,
+        location: this.state.location,
+        request: this.state.request
+      })
+        .then(res => this.loadBooks())
+        .catch(err => console.log(err));
+    }else{
+      console.log("please fill out all fields")
+    }
+  };
 
-  toggleWishHidden() {
+  handleGrantSubmit = event => {
+    event.preventDefault();
+    if (this.state.business && this.state.location && this.state.range) {
+      API.saveGrant({
+        business: this.state.business,
+        location: this.state.location,
+        range: this.state.request
+      })
+        .then(res => this.loadBooks())
+        .catch(err => console.log(err));
+    }else{
+      console.log("please fill out all fields")
+    }
+  };
+
+  toggleWish() {
     this.setState({
-      wish: { isHidden: !this.state.wish.isHidden }
+      business: "", location: "", request: "", range: ""
     })
+    this.setState({
+      wish: !this.state.wish
+    })
+    if(this.state.grant === true){
+      this.setState({
+        grant: false
+      })
+    }
   }
 
-  toggleGrantHidden() {
+  toggleGrant() {
     this.setState({
-      grant: { isHidden: !this.state.grant.isHidden }
+      business: "", location: "", request: "", range: ""
+    })
+    this.setState({
+      grant: !this.state.grant
+    })
+    if(this.state.wish === true){
+      this.setState({
+        wish: false
     })
   }
+}
+
 
   render() {
     return (
@@ -91,115 +119,32 @@ class Home extends Component {
         <Row>
           <Col md={6}>
             <Jumbotron>
-              <button className="home-btns" onClick={this.toggleWishHidden.bind(this)}>Make a Wish</button>
+              <button className="home-btns" onClick={this.toggleWish.bind(this)}>Make a Wish</button>
             </Jumbotron>
-            {!this.state.wish.isHidden && <WishForm >
-              <FormGroup>
-                <Col sm={2}>
-                  Business Name
-                </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.wish.business}
-                    onChange={this.handleInputChange}
-                    name="business"
-                    placeholder="Business name (optional?)"
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={2}>
-                  Your Location
-                </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.wish.location}
-                    onChange={this.handleInputChange}
-                    name="location"
-                    placeholder="Enter your location address"
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={2}>
-                  Request
-                </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.wish.request}
-                    onChange={this.handleInputChange}
-                    name="request"
-                    placeholder="Request"
-                  />
-                  <Button
-                    disabled={!(this.state.wish.location && this.state.wish.value)}
-                  // onClick={this.handleFormSubmit}
-                  >
-                    Wish
-              </Button>
-                </Col>
-              </FormGroup>
-            </WishForm>}
           </Col>
           <Col md={6}>
             <Jumbotron>
-              <button className="home-btns" onClick={this.toggleGrantHidden.bind(this)} >Grant a Wish</button>
+              <button className="home-btns" onClick={this.toggleGrant.bind(this)}>Grant a Wish</button>
             </Jumbotron>
-            {!this.state.grant.isHidden && <GrantForm >
-              <FormGroup>
-                <Col sm={2}>
-                  Business Name
-              </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.grant.business}
-                    onChange={this.handleInputChange}
-                    name="business"
-                    placeholder="Business name"
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={2}>
-                  Business Location
-              </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.grant.location}
-                    onChange={this.handleInputChange}
-                    name="location"
-                    placeholder="Enter the business address"
-                  />
-                </Col>
-              </FormGroup>
-
-              <FormGroup>
-                <Col sm={2}>
-                  Range
-              </Col>
-                <Col componentClass={ControlLabel} sm={10}>
-                  <FormControl
-                    type="text"
-                    value={this.state.grant.range}
-                    onChange={this.handleInputChange}
-                    name="range"
-                    placeholder="desired mile range (i.e. 0.5, 1, 1.2)"
-                  />
-                <Button
-                disabled={!(this.state.grant.location && this.state.grantbusiness)}
-                  >Grant
-                </Button>
-                </Col>
-              </FormGroup>
-            </GrantForm>}
+          </Col>
+        </Row>
+        <Row>
+          <Col md={12}>
+              {this.state.wish ? <WishForm              
+                type="text"
+                busValue={this.state.business}
+                locValue={this.state.location}
+                reqValue={this.state.request}
+                onChange={this.handleInputChange.bind(this)}
+                onSubmit={this.handleWishSubmit.bind(this)}
+              /> : <GrantForm
+                type="text"
+                busValue={this.state.business}
+                locValue={this.state.location}
+                rangeValue={this.state.range}
+                onChange={this.handleInputChange.bind(this)}
+                onSubmit={this.handleGrantSubmit.bind(this)}
+              />}
           </Col>
         </Row>
       </Grid>
