@@ -17,7 +17,7 @@ class Home extends Component {
 
     this.state = {
       userInfo: "", //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
-      grant: true,
+      grant: false,
       wish: false,
       business: "",
       location: "",
@@ -211,14 +211,15 @@ getLatLng = (event) => {
                 getLocation={this.getCurrentPosition}
                 onChange={this.handleInputChange.bind(this)}
                 onSubmit={this.getLatLng}
-              /> : <GrantForm
+              /> : null}
+              {this.state.grant ? <GrantForm
                 type="text"
                 busValue={this.state.business}
                 locValue={this.state.location}
                 rangeValue={this.state.range}
                 onChange={this.handleInputChange.bind(this)}
                 onSubmit={this.getLatLng}
-              />}
+              /> : null}
           </Col>
         </Row>
         <Row>
