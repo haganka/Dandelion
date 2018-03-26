@@ -69,14 +69,15 @@ class Home extends Component {
       this.setState({wishes: allWishes})
       firebase.database().ref(newWish.business + '/' + "wishes")
       .push(newWish);
-        // this.setState({
-        //   message: ''
-        // });
       this.findGrantMatch();
       }
     }
 
     getDistance = (lat1, lon1, lat2, lon2) => {
+      console.log("lat1", lat1);
+      console.log("lon1", lon1);
+      console.log("lat2", lat2);
+      console.log("lon2", lon2);
         var p = 0.017453292519943295;    // Math.PI / 180
         var c = Math.cos;
         var a = 0.5 - c((lat2 - lat1) * p)/2 + 
@@ -85,27 +86,34 @@ class Home extends Component {
       
         var km = 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
         var miles = km * 0.62137;
+        console.log("miles", miles);
       return miles;
     }
 
     findGrantMatch = () => {
+      console.log("running find grant match")
       firebase.database().ref(this.state.business + '/grants').on('value', grant => {
         const allGrants = grant.val();
-        console.log(allGrants)
-        if(this.getDistance(this.state.lat, this.state.long, grant.val().lat, grant.val().long) <= grant.val().request){
-          console.log("match", grant.val())
-        }
-        // if (allGrants != null) {
-        //   this.setState({
-        //     matches: allGrants
-        //   });
-        // }
-      });
-      
+        const matches = Object.keys(allGrants).filter(e => this.getDistance(this.state.lat, this.state.long, allGrants[e].lat, allGrants[e].long) <= allGrants[e].range)
+          console.log("match", matches)
+      }); 
     }
+
+    findWishMatch = () => {
+      console.log("running find wish match")
+      firebase.database().ref(this.state.business + '/wishes').on('value', wish => {
+        
+        const allWishes = wish.val();
+        console.log("allWishes", allWishes);
+        const matches = Object.keys(allWishes).filter(e => this.getDistance(this.state.lat, this.state.long, allWishes[e].lat, allWishes[e].long) <= this.state.range)
+        console.log("matches", matches);
+      }); 
+    }
+
 
   handleGrantSubmit = () => {
     if (this.state.business && this.state.location && this.state.range) {
+      console.log("saving grant data")
         let allGrants = this.state.grants;
         const newGrant = {
           business: this.state.business,
@@ -118,10 +126,8 @@ class Home extends Component {
         this.setState({grants: allGrants})
         firebase.database().ref(newGrant.business + '/' + "grants")
         .push(newGrant);
-          // this.setState({
-          //   message: ''
-          // });
         }
+    this.findWishMatch();
   };
 
   toggleWish() {
