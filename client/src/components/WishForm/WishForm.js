@@ -22,7 +22,7 @@ const WishForm = props =>
                 value={props.locValue}
                 onChange={props.onChange}
                 name="location"
-                placeholder="delivery location"
+                placeholder="delivery location (address, city, state)"
             />
             </Col>
             </Row>

@@ -6,7 +6,7 @@ import WishForm from "../../components/WishForm";
 import GrantForm from "../../components/GrantForm";
 import './Home.css';
 import firebase from '../../fire.js';
-import {geolocated} from 'react-geolocated';
+import { geolocated } from 'react-geolocated';
 
 
 class Home extends Component {
@@ -17,7 +17,7 @@ class Home extends Component {
 
     this.state = {
       userInfo: "", //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
-      grant: false,
+      grant: true,
       wish: false,
       business: "",
       location: "",
@@ -42,7 +42,7 @@ class Home extends Component {
       .catch(err => console.log(err));
   };
 
-
+ 
   handleInputChange = event => {
     console.log("running")
     const { name, value } = event.target;
@@ -52,8 +52,7 @@ class Home extends Component {
     console.log(this.state)
   };
 
-  handleWishSubmit = event => {
-    event.preventDefault();
+  handleWishSubmit = () => {
     if (this.state.business && this.state.location && this.state.request) {
       let allWishes = this.state.wishes;
       const newWish = {
@@ -63,13 +62,18 @@ class Home extends Component {
       };
       allWishes.push(newWish);
       this.setState({wishes: allWishes})
-      firebase.database().ref('wishes/' + newWish.business + '/' + "wish")
+      firebase.database().ref(newWish.business + '/' + "wishes")
       .push(newWish);
         // this.setState({
         //   message: ''
         // });
+      // findGrantMatch();
       }
     }
+
+    // findGrantMatch = () => {
+      
+    // }
 
       // firebase.database().ref(this.state.business + '/drivers').on('value', driver => {
       //   const allDrivers = driver.val();
@@ -81,19 +85,22 @@ class Home extends Component {
       // });
  
 
-  handleGrantSubmit = event => {
-    event.preventDefault();
+  handleGrantSubmit = () => {
     if (this.state.business && this.state.location && this.state.range) {
-      API.saveGrant({
-        business: this.state.business,
-        location: this.state.location,
-        range: this.state.request
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }else{
-      console.log("please fill out all fields")
-    }
+        let allGrants = this.state.grants;
+        const newGrant = {
+          business: this.state.business,
+          location: this.state.location,
+          request: this.state.range
+        };
+        allGrants.push(newGrant);
+        this.setState({grants: allGrants})
+        firebase.database().ref(newGrant.business + '/' + "grants")
+        .push(newGrant);
+          // this.setState({
+          //   message: ''
+          // });
+        }
   };
 
   toggleWish() {
@@ -124,6 +131,30 @@ class Home extends Component {
   }
 }
 
+getLatLng = (event) => {
+  event.preventDefault();
+  let address = this.state.location;
+  let queryAddress = address.split(' ').join('+');
+  console.log("address", queryAddress);
+    API.getLocation(queryAddress)
+      .then(res => {
+        if(res.status === "ZERO_RESULTS"){
+          console.log("bad address input")
+      }else{
+          let latLong = res.data.results[0].geometry.location.lat + '/' + res.data.results[0].geometry.location.lng;
+
+          this.setState({
+            location: latLong
+          }) 
+      }if(this.state.wish){
+        this.handleWishSubmit()
+      }else if(this.state.grant){
+        this.handleGrantSubmit()
+        console.log("running grant handler")
+      }
+    }); 
+} 
+
 
   render() {
     return (
@@ -150,14 +181,14 @@ class Home extends Component {
                 reqValue={this.state.request}
                 getLocation={this.getCurrentPosition}
                 onChange={this.handleInputChange.bind(this)}
-                onSubmit={this.handleWishSubmit.bind(this)}
+                onSubmit={this.getLatLng}
               /> : <GrantForm
                 type="text"
                 busValue={this.state.business}
                 locValue={this.state.location}
                 rangeValue={this.state.range}
                 onChange={this.handleInputChange.bind(this)}
-                onSubmit={this.handleGrantSubmit.bind(this)}
+                onSubmit={this.getLatLng}
               />}
           </Col>
         </Row>

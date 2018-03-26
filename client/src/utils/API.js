@@ -1,6 +1,12 @@
 import axios from "axios";
+const BASEURL = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+const APIKey = '&key=AIzaSyDoZuuTh9HoRZ2BAiEK4-WWzG8sAflqwKw'
 
 export default {
+  getLocation: function(query) {
+    return axios.get(BASEURL + query + APIKey);
+  },
+
   // Gets all books
   getUser: function() {
     return axios.get("/api/user");
