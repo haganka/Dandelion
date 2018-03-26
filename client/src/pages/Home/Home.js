@@ -21,10 +21,13 @@ class Home extends Component {
       wish: false,
       business: "",
       location: "",
+      lat: 0,
+      long: 0,
       request: "",
       range: "",
       wishes: [],
-      grants: []
+      grants: [],
+      matches: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -58,6 +61,8 @@ class Home extends Component {
       const newWish = {
         business: this.state.business,
         location: this.state.location,
+        lat: this.state.lat,
+        long: this.state.long,
         request: this.state.request
       };
       allWishes.push(newWish);
@@ -67,23 +72,37 @@ class Home extends Component {
         // this.setState({
         //   message: ''
         // });
-      // findGrantMatch();
+      this.findGrantMatch();
       }
     }
 
-    // findGrantMatch = () => {
+    getDistance = (lat1, lon1, lat2, lon2) => {
+        var p = 0.017453292519943295;    // Math.PI / 180
+        var c = Math.cos;
+        var a = 0.5 - c((lat2 - lat1) * p)/2 + 
+                c(lat1 * p) * c(lat2 * p) * 
+                (1 - c((lon2 - lon1) * p))/2;
       
-    // }
+        var km = 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+        var miles = km * 0.62137;
+      return miles;
+    }
 
-      // firebase.database().ref(this.state.business + '/drivers').on('value', driver => {
-      //   const allDrivers = driver.val();
-      //   if (allDrivers != null) {
-      //     this.setState({
-      //       matches: allDrivers
-      //     });
-      //   }
-      // });
- 
+    findGrantMatch = () => {
+      firebase.database().ref(this.state.business + '/grants').on('value', grant => {
+        const allGrants = grant.val();
+        console.log(allGrants)
+        if(this.getDistance(this.state.lat, this.state.long, grant.val().lat, grant.val().long) <= grant.val().request){
+          console.log("match", grant.val())
+        }
+        // if (allGrants != null) {
+        //   this.setState({
+        //     matches: allGrants
+        //   });
+        // }
+      });
+      
+    }
 
   handleGrantSubmit = () => {
     if (this.state.business && this.state.location && this.state.range) {
@@ -91,7 +110,9 @@ class Home extends Component {
         const newGrant = {
           business: this.state.business,
           location: this.state.location,
-          request: this.state.range
+          lat: this.state.lat,
+          long: this.state.long,
+          range: this.state.range
         };
         allGrants.push(newGrant);
         this.setState({grants: allGrants})
@@ -141,10 +162,12 @@ getLatLng = (event) => {
         if(res.status === "ZERO_RESULTS"){
           console.log("bad address input")
       }else{
-          let latLong = res.data.results[0].geometry.location.lat + '/' + res.data.results[0].geometry.location.lng;
+          let lat = res.data.results[0].geometry.location.lat;
+          let long = res.data.results[0].geometry.location.lng;
 
           this.setState({
-            location: latLong
+            lat: lat,
+            long: long
           }) 
       }if(this.state.wish){
         this.handleWishSubmit()

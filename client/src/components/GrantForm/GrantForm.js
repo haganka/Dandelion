@@ -31,7 +31,7 @@ const GrantForm = props =>
                 value={props.locValue}
                 onChange={props.onChange}
                 name="location"
-                placeholder="your location"
+                placeholder="business location"
             />
             </Col>
         </FormGroup>
