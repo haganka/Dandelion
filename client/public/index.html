@@ -15,14 +15,25 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
     crossorigin="anonymous">
 
-
   <title>Project 3</title>
 </head>
 
 <body>
-  <noscript>
-    You need to enable JavaScript to run this app.
-  </noscript>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoZuuTh9HoRZ2BAiEK4-WWzG8sAflqwKw"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+  <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyBzm1rfvBps3JG_u_zEuK9mnjn4Y-l-UZY",
+      authDomain: "wish-grant.firebaseapp.com",
+      databaseURL: "https://wish-grant.firebaseio.com",
+      projectId: "wish-grant",
+      storageBucket: "wish-grant.appspot.com",
+      messagingSenderId: "329160988075"
+    };
+    var fire = firebase.initializeApp(config);
+  </script>
+
   <div id="root"></div>
 </body>
 
