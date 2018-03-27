@@ -13,6 +13,7 @@ const MatchContainer = props =>
                     location={match.location}
                     id={match._id} 
                     key={match._id} 
+                    cb={props.onClick}
                     />))}
             </div>
 

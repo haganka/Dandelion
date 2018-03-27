@@ -11,9 +11,9 @@ const MatchBox = props =>
         <Panel>
           <Panel.Heading>{props.name}</Panel.Heading>
           <Panel.Body>
-            <h5>{props.rating}</h5>
-            <h5>{props.location}</h5>
-            <Button onClick={()=>props.onClick(props.id)}>Choose me!</Button>
+            <h5>Rating: {props.rating}</h5>
+            <h5>Location: {props.location}</h5>
+            <Button onClick={()=>props.cb(props.id)}>Choose {props.name}!</Button>
           </Panel.Body>
         </Panel>
     </Col>

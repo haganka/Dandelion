@@ -256,6 +256,10 @@ class Home extends Component {
       });
   }
 
+  handleSelect = (id) => {
+    console.log("the id of button clicked", id)
+  }
+
   render() {
     return (
       <div>
@@ -296,13 +300,6 @@ class Home extends Component {
         </Row>
         </Grid>
         {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect} />           
-        // this.state.matches.map((match => <MatchBox
-        //             name={match.name}
-        //             rating={match.rating}
-        //             location={match.location}
-        //             id={match._id} 
-        //             key={match._id} 
-        //             />)) 
         : null}
 
       </div>
