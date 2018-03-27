@@ -20,6 +20,8 @@ class Login extends Component {
             name: "",
             email: "",
             password: "",
+            id: "",
+            redirectTo: ""
         };
 
         this.toggleLogIn = this.toggleLogIn.bind(this);
@@ -33,27 +35,32 @@ class Login extends Component {
     signUpSubmit = event => {
         console.log("sign up clicked!")
         event.preventDefault();
-        if (this.state.signEmail && this.state.signPassword && this.state.signName) {
+        this.setState({
+            email: this.state.email,
+            password: this.state.password
+        })
+        // if (this.state.email && this.state.password && this.state.name) {
             API.saveUser({
-                name: this.state.signName,
-                email: this.state.signEmail,
-                password: this.state.signPassword
-            })
-                .then(res =>
-                    console.log(res.data)
-                )
-                .catch(err => console.log(err));
-        }
+                name: this.state.name,
+                email: this.state.email,
+                password: this.state.password
+            }).then(res => console.log(res))
+            .catch(err => console.log(err));
+        // }
     };
 
     logInSubmit = event => {
-        console.log("clicked log in")
+        console.log("clicked log in", this.state.email)
         event.preventDefault();
-        API.getUserId(this.state.logEmail)
-            .then(res =>
-                console.log(res.data)
-            )
-            .catch(err => console.log(err));
+        this.setState({
+            email: this.state.email,
+            password: this.state.password
+        })
+        API.saveUser({
+            email: this.state.email,
+            password: this.state.password
+        }).then(res => console.log(res))
+        .catch(err => console.log(err));
     };
 
 
@@ -110,13 +117,14 @@ class Login extends Component {
                             passValue={this.state.password} 
                             onChange={this.handleInputChange.bind(this)} 
                             onSubmit={this.logInSubmit.bind(this)}
-                        /> : <SignUpBox 
+                        /> : null}
+                        {this.state.signup ? <SignUpBox 
                             nameValue={this.state.name} 
                             emailValue={this.state.email} 
                             passValue={this.state.password} 
                             onChange={this.handleInputChange.bind(this)} 
                             onSubmit={this.signUpSubmit.bind(this)}
-                        />}
+                        />: null}
                     </Col>
                 </Row>
             </Grid>

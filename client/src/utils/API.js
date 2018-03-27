@@ -7,20 +7,21 @@ export default {
     return axios.get(BASEURL + query + APIKey);
   },
 
-  // Gets all books
+  // Gets all users
   getUser: function() {
     return axios.get("/api/user");
   },
-  // Gets the book with the given id
+  // Gets a user with the given id
   getUserId: function(id) {
     return axios.get("/api/user/" + id);
   },
-  // Deletes the book with the given id
+  // Deletes user with given id
   deleteUser: function(id) {
     return axios.delete("/api/user/" + id);
   },
-  // Saves a book to the database
+  // Saves a user on sign up
   saveUser: function(userData) {
+    console.log("UserData API file", userData);
     return axios.post("/api/user", userData);
   }
 };

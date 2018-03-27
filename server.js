@@ -4,6 +4,22 @@ const mongoose = require("mongoose");
 const routes = require("./routes");
 const app = express();
 const PORT = process.env.PORT || 3001;
+// const session = require('express-session')
+// var passport = require("./config/passport");
+
+//sessions
+// app.use(
+//   session({
+//   secret: 'hiccup', //pick a random string to make the hash that is generated secure
+//   resave: false, //required
+//   saveUninitialized: false //required
+//   })
+// )
+
+// app.use( (req, res, next) => {
+//   console.log('req.session', req.session);
+//   return next();
+// });
 
 // Configure body parser for AJAX requests
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -12,6 +28,8 @@ app.use(bodyParser.json());
 app.use(express.static("client/build"));
 // Add routes, both API and view
 app.use(routes);
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // Set up promises with mongoose
 mongoose.Promise = global.Promise;
