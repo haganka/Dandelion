@@ -13,7 +13,7 @@ const MatchBox = props =>
           <Panel.Body>
             <h5>{props.rating}</h5>
             <h5>{props.location}</h5>
-            {/* <Button onClick={()=>props.cb(props.id)}>Choose me!</Button> */}
+            <Button onClick={()=>props.onClick(props.id)}>Choose me!</Button>
           </Panel.Body>
         </Panel>
     </Col>
