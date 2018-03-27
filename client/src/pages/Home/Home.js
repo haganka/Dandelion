@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
-import { Link } from "react-router-dom";
+import { Link, push } from "react-router-dom";
 import { Col, Row, Button, Jumbotron, Grid } from 'react-bootstrap';
 import WishForm from "../../components/WishForm";
 import GrantForm from "../../components/GrantForm";
 import './Home.css';
 import firebase from '../../fire.js';
 import { geolocated } from 'react-geolocated';
+import MatchBox from '../../components/MatchBox';
 
 
 class Home extends Component {
@@ -16,7 +17,7 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      userInfo: "", //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
+      userInfo: "5ab969f63b6ee4536affa213", //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
       grant: false,
       wish: false,
       business: "",
@@ -27,26 +28,35 @@ class Home extends Component {
       range: "",
       wishes: [],
       grants: [],
-      matches: []
+      matches: [],
+      hasMatched: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
-  componentDidMount() {
-    this.userInfo();
-  }
+  // componentDidMount() {
+  //   this.userInfo();
+  // }
 
   //temporary until user authentication working
-  userInfo = () => {
-    API.getUser()
-      .then(res =>
-        this.setState({
-          userInfo: res.data[0]._id
-        })
-      )
-      .catch(err => console.log(err));
-  };
+  // userInfo = () => {
+  //   API.getUser()
+  //     .then(res => {
+  //     console.log(res)
+  //       this.setState({
+  //         userInfo: res.data[0]._id
+  //       })
+  //     })
+  //     .catch(err => console.log(err));
+  // };
+
+  // componentDidMount = () => {
+  //   console.log(this.props)
+  //   this.setState({
+  //     userInfo: this.props.userId
+  //   })
+  // }
 
 
   handleInputChange = event => {
@@ -59,9 +69,26 @@ class Home extends Component {
   };
 
 
-  // displayMatches = (matches) => {
-    
-  // }
+  getMatchedUserInfo = (arr) => {
+    console.log("id of match", arr)
+    let finalMatches = [];
+    for(let i = 0; i < arr.length; i++){
+      API.getUserId(arr[i].userId) 
+      .then(res => {
+        (res.data.location = arr[i].location); 
+        console.log(res.data); 
+        finalMatches.push(res.data);
+          this.setState({
+          matches: finalMatches,
+          hasMatched: true
+          });
+        console.log(this.state.matches)
+      })
+        
+      .catch(err => console.log(err));
+
+    }
+  }
 
 
   getDistance = (lat1, lon1, lat2, lon2) => {
@@ -82,12 +109,15 @@ class Home extends Component {
   }
 
   getGrantMatches = (matches) => {
-    console.log(" get matches running");
+    console.log("get matches running");
+    let grantArr = [];
     for(let i = 0; i < matches.length; i++){
       firebase.database().ref(this.state.business + '/grants/' + matches[i]).on('value', grant => {
         const allGrants = grant.val();
-        console.log("allgrants", allGrants)
-      })
+        grantArr.push(allGrants)
+      }) 
+      console.log("grant array", grantArr)
+      this.getMatchedUserInfo(grantArr)       
     }
   }
 
@@ -104,12 +134,15 @@ class Home extends Component {
   }
 
   getWishMatches = (matches) => {
-    console.log(" get matches running");
+    console.log("get wish matches running");
+    let wishArr = [];
     for(let i = 0; i < matches.length; i++){
       firebase.database().ref(this.state.business + '/wishes/' + matches[i]).on('value', wish => {
         const allWishes = wish.val();
-        console.log("allwishes", allWishes)
+        console.log("all final wish matches for grant", allWishes)
+        wishArr.push(allWishes)
       })
+      this.getMatchedUserInfo(wishArr) 
     }
   }
 
@@ -223,10 +256,12 @@ class Home extends Component {
       });
   }
 
-
   render() {
     return (
-      <Grid fluid>
+      <div>
+
+      {!this.state.hasMatched ?
+        <Grid fluid>
         <Row>
           <Col md={6}>
             <Jumbotron>
@@ -261,12 +296,18 @@ class Home extends Component {
             /> : null}
           </Col>
         </Row>
-        <Row>
-          <Col sm={12}>
-            <div id="map"></div>
-          </Col>
-        </Row>
-      </Grid>
+        </Grid>
+        : null} 
+        {this.state.hasMatched ?                
+        this.state.matches.map((match => <MatchBox
+                    name={match.name}
+                    rating={match.rating}
+                    location={match.location}
+                    // id={match._id} 
+                    // key={match._id} 
+                    />)) : null}
+
+      </div>
     );
   }
 }

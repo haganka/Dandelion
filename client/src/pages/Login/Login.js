@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
-import { Link } from "react-router-dom";
+import { Link, browserHistory } from "react-router-dom";
 import { Col, Row, Form, Button, Jumbotron, Grid } from 'react-bootstrap';
 import LogInBox from "../../components/LogInBox";
 import SignUpBox from "../../components/SignUpBox";
 import './Login.css';
 // import Toggle from 'react-toggle-display';
-
+import Home from '../Home';
 
 class Login extends Component {
     //allows access to props if you pass down, allows console logging
@@ -21,7 +21,8 @@ class Login extends Component {
             email: "",
             password: "",
             id: "",
-            redirectTo: ""
+            redirectTo: "",
+            isLoggedIn: false
         };
 
         this.toggleLogIn = this.toggleLogIn.bind(this);
@@ -56,10 +57,11 @@ class Login extends Component {
             email: this.state.email,
             password: this.state.password
         })
-        API.saveUser({
-            email: this.state.email,
-            password: this.state.password
-        }).then(res => console.log(res))
+        API.checkUser({
+            email: this.state.email
+        })
+        .then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
+        .then(window.location = ('/home'))
         .catch(err => console.log(err));
     };
 
@@ -98,7 +100,8 @@ class Login extends Component {
 
     render() {
         return (
-            <Grid fluid>
+            <div>
+            {!this.state.id ? <Grid fluid>
                 <Row>
                     <Col md={12}>
                         <Jumbotron>
@@ -127,7 +130,8 @@ class Login extends Component {
                         />: null}
                     </Col>
                 </Row>
-            </Grid>
+            </Grid> : <Home userId={this.state.id} />}
+            </div>
         );
     }
 }
