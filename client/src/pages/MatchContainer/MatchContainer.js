@@ -11,8 +11,8 @@ const MatchContainer = props =>
                     name={match.name}
                     rating={match.rating}
                     location={match.location}
-                    // id={match._id} 
-                    // key={match._id} 
+                    id={match._id} 
+                    key={match._id} 
                     />))}
             </div>
 

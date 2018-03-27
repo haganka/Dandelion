@@ -7,7 +7,7 @@ import GrantForm from "../../components/GrantForm";
 import './Home.css';
 import firebase from '../../fire.js';
 import { geolocated } from 'react-geolocated';
-import MatchBox from '../../components/MatchBox';
+import MatchContainer from '../MatchContainer';
 
 
 class Home extends Component {
@@ -259,8 +259,6 @@ class Home extends Component {
   render() {
     return (
       <div>
-
-      {!this.state.hasMatched ?
         <Grid fluid>
         <Row>
           <Col md={6}>
@@ -297,15 +295,15 @@ class Home extends Component {
           </Col>
         </Row>
         </Grid>
-        : null} 
-        {this.state.hasMatched ?                
-        this.state.matches.map((match => <MatchBox
-                    name={match.name}
-                    rating={match.rating}
-                    location={match.location}
-                    // id={match._id} 
-                    // key={match._id} 
-                    />)) : null}
+        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect} />           
+        // this.state.matches.map((match => <MatchBox
+        //             name={match.name}
+        //             rating={match.rating}
+        //             location={match.location}
+        //             id={match._id} 
+        //             key={match._id} 
+        //             />)) 
+        : null}
 
       </div>
     );
