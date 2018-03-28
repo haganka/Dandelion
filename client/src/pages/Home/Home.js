@@ -29,7 +29,8 @@ class Home extends Component {
       wishes: [],
       grants: [],
       matches: [],
-      hasMatched: false
+      hasMatched: false,
+      fireKey: ""
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -69,15 +70,12 @@ class Home extends Component {
   };
 
   
-
-
   getMatchedUserInfo = (arr) => {
     console.log("id of match", arr)
     let finalMatches = [];
     for (let i = 0; i < arr.length; i++) {
       API.getUserId(arr[i].userId)
-        .then(res => {
-          (res.data.location = arr[i].location);
+          .then(res => {(res.data.fire = arr[i].fireKey);
           console.log(res.data);
           finalMatches.push(res.data);
           this.setState({
@@ -122,18 +120,22 @@ class Home extends Component {
       const allGrants = grant.val();
       if (allGrants) {
         const matches = Object.keys(allGrants).filter(e => this.getDistance(this.state.lat, this.state.long, allGrants[e].lat, allGrants[e].long) <= allGrants[e].range)
+        // this.setState({
+        //   matches: matches.push(matches)
+        // })
         this.getGrantMatches(matches);
       } else { console.log("no matches") }
     });
   }
 
   getWishMatches = (matches) => {
-    console.log("get wish matches running");
+    console.log("get wish matches running", matches);
     let wishArr = [];
     for (let i = 0; i < matches.length; i++) {
       firebase.database().ref(this.state.business + '/wishes/' + matches[i]).on('value', wish => {
         const allWishes = wish.val();
         wishArr.push(allWishes)
+        console.log("all wishes", wishArr)
       })
       this.getMatchedUserInfo(wishArr)
     }
@@ -145,6 +147,9 @@ class Home extends Component {
       const allWishes = wish.val();
       if (allWishes) {
         const matches = Object.keys(allWishes).filter(e => this.getDistance(this.state.lat, this.state.long, allWishes[e].lat, allWishes[e].long) <= this.state.range)
+        // this.setState({
+        //   matches: matches
+        // })
         this.getWishMatches(matches);
       } else { console.log("no matches") }
     })
@@ -163,13 +168,22 @@ class Home extends Component {
         long: this.state.long,
         request: this.state.request,
         created: new Date(),
-        requests: []
+        request: false,
+        completed: false,
+        fireKey: ""
       };
       allWishes.push(newWish);
       console.log("new wish", newWish)
       this.setState({ wishes: allWishes })
-      firebase.database().ref(newWish.business + '/wishes')
-        .push(newWish);
+      let newEntry = firebase.database().ref(newWish.business + '/wishes').push(newWish);
+      // newEntry.push(newWish)
+      let key = newEntry.key
+      this.setState({
+        fireKey: key
+      })
+      firebase.database().ref(newWish.business + '/wishes/' + key)
+      .update({ fireKey: key });
+      console.log("LOOK AT ME", this.state)
       this.findGrantMatch();
     }
   }
@@ -187,12 +201,20 @@ class Home extends Component {
         long: this.state.long,
         range: this.state.range,
         created: new Date(),
-        requests: []
+        request: false,
+        completed: false,
+        fireKey: ""
       };
       allGrants.push(newGrant);
       this.setState({ grants: allGrants })
-      firebase.database().ref(newGrant.business + '/grants')
-        .push(newGrant);
+      let newEntry = firebase.database().ref(newGrant.business + '/grants').push(newGrant);
+      let key = newEntry.key
+      this.setState({
+        fireKey: key
+      })
+      console.log("LOOK AT ME", this.state)
+      firebase.database().ref(newGrant.business + '/grants/' + key)
+      .update({ fireKey: key });
     }
     this.findWishMatch();
   };
@@ -262,8 +284,8 @@ class Home extends Component {
     //   firebase.database().ref(this.state.business + request)
     //   .update({requests: match});
 
-    // };
-  };
+    };
+
 
 
 
