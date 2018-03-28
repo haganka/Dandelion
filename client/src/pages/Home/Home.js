@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, ReactDOM } from "react";
 import API from "../../utils/API";
 import { Link, push } from "react-router-dom";
 import { Col, Row, Button, Jumbotron, Grid } from 'react-bootstrap';
@@ -65,7 +65,10 @@ class Home extends Component {
       [name]: value
     });
     console.log(this.state)
+    console.dir(event.target)
   };
+
+  
 
 
   getMatchedUserInfo = (arr) => {
@@ -255,12 +258,14 @@ class Home extends Component {
       request = "/grants"
     }else{request = "/wishes"}
     console.log("request", request)
-    let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.userInfo}
-    firebase.database().ref(this.state.business + request + id)
-    .update({requests: match});
+    // let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.userInfo}
+    //   firebase.database().ref(this.state.business + request)
+    //   .update({requests: match});
 
-    };
-  
+    // };
+  };
+
+
 
 
   render() {
@@ -302,7 +307,7 @@ class Home extends Component {
             </Col>
           </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect} />
+        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} wish={this.state.wish} onClick={this.handleSelect} />
           : null}
 
       </div>

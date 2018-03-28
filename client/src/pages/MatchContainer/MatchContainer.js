@@ -5,7 +5,7 @@ import MatchBox from '../../components/MatchBox';
 
 const MatchContainer = props =>
              <div>
-                <h1 className="match">Match List</h1>
+                {props.wish ? <h1 className="match">Grant Match List</h1> : <h1 className="match">Wish Match List</h1>}
                 {props.matches.map((match => <MatchBox
                     name={match.name}
                     rating={match.rating}

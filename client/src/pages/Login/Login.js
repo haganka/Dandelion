@@ -45,7 +45,7 @@ class Login extends Component {
                 name: this.state.name,
                 email: this.state.email,
                 password: this.state.password
-            }).then(res => console.log(res))
+            }).then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
             .catch(err => console.log(err));
         // }
     };
@@ -118,7 +118,7 @@ class Login extends Component {
                     <Col>
                         {this.state.login ? <LogInBox
                             emailValue={this.state.email} 
-                            passValue={this.state.password} 
+                            passValue={this.state.password}
                             onChange={this.handleInputChange.bind(this)} 
                             onSubmit={this.logInSubmit.bind(this)}
                         /> : null}

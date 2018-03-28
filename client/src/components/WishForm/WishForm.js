@@ -3,6 +3,7 @@ import { Form, FormGroup, Col, Row, FormControl, ControlLabel, Button } from 're
 // import {geolocated} from 'react-geolocated';
 import Geolocation from "react-geolocation";
 
+const options = ["starbucks", "walgreens", "chipotle"];
 
 const WishForm = props =>
 
@@ -26,6 +27,7 @@ const WishForm = props =>
             </Col>
         </Row>
             <Row>
+
             <Col sm={8}>
             <FormControl
                 type="text"
@@ -44,22 +46,14 @@ const WishForm = props =>
             Choose a business
             </Col>
             <Col sm={10}>
-                {/* <FormControl 
-                onChange={props.onChange}
-                value={props.busValue}
-                componentClass="select" placeholder="select">
-                    <option value={props.busSelect}>Starbucks</option>
-                    <option value="walgreens">Walgreens</option>
-                    <option value="dominoes">Dominoes</option>
-                </FormControl> */}
-
-            <FormControl
-                type="text"
-                value={props.busValue}
+                <FormControl 
                 onChange={props.onChange}
                 name="business"
-                placeholder="business name"
-            />
+                componentClass="select" placeholder="select">
+                    <option value="starbucks">Starbucks</option>
+                    <option value="walgreens">Walgreens</option>
+                    <option value="dominoes">Dominoes</option>
+                </FormControl>
             </Col>
             </Row>
         </FormGroup>
