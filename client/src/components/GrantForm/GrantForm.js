@@ -1,26 +1,29 @@
 import React from "react";
-import { Form, FormGroup, Col, FormControl, ControlLabel, Button } from 'react-bootstrap';
+import { Form, FormGroup, Col, Row, FormControl, ControlLabel, Button } from 'react-bootstrap';
 
 
 const GrantForm = props =>
     
     <div className="grant-box">
     <Form>
-        <FormGroup>
-            <Col sm={2}>
-            Business Name
-            </Col>
-            <Col componentClass={ControlLabel} sm={10}>
-            <FormControl
-                type="text"
-                value={props.busValue}
-                onChange={props.onChange}
-                name="business"
-                placeholder="Business name"
-            />
-            </Col>
-        </FormGroup>
-
+        <Row>
+            <FormGroup>
+                <Col sm={2}>
+                Business Name
+                </Col>
+                <Col sm={8}>
+                <FormControl 
+                    onChange={props.onChange}
+                    name="business"
+                    componentClass="select" placeholder="select">
+                        <option value="starbucks">Starbucks</option>
+                        <option value="walgreens">Walgreens</option>
+                        <option value="dominoes">Dominoes</option>
+                </FormControl>
+                </Col>
+            </FormGroup>
+        </Row>
+    <Row>
         <FormGroup>
             <Col sm={2}>
             Business Location 
@@ -35,7 +38,8 @@ const GrantForm = props =>
             />
             </Col>
         </FormGroup>
-
+    </Row>
+    <Row>
         <FormGroup>
             <Col sm={2}>
             Range 
@@ -50,12 +54,17 @@ const GrantForm = props =>
             />
             </Col>
         </FormGroup>
+    </Row>
+    <Row>
+        <Col sm={2}>
         <Button
             onClick={props.onSubmit}
             disabled={!(props.busValue && props.locValue && props.rangeValue)}
             >Grant
         </Button>
-    </Form>
-    </div>;
+        </Col>
+    </Row>
+</Form>
+</div>;
 
 export default GrantForm;
