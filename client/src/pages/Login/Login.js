@@ -61,7 +61,7 @@ class Login extends Component {
             email: this.state.email
         })
         .then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
-        .then(window.location = ('/home'))
+        // .then(window.location = ('/home'))
         .catch(err => console.log(err));
     };
 
@@ -97,6 +97,7 @@ class Login extends Component {
             this.setState({ login: false});
         }
     }
+
 
     render() {
         return (

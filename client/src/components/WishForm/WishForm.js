@@ -1,21 +1,31 @@
 import React from "react";
 import { Form, FormGroup, Col, Row, FormControl, ControlLabel, Button } from 'react-bootstrap';
-import {geolocated} from 'react-geolocated';
+// import {geolocated} from 'react-geolocated';
+import Geolocation from "react-geolocation";
 
 
 const WishForm = props =>
 
     <div className="wish-box">
     <Form>
-
         <FormGroup>
+        <Row>
+            <Col sm={10}>
+            <Geolocation
+                onSuccess={console.log}
+                render={({
+                    fetchingPosition,
+                    position: { coords: { latitude, longitude } = {} } = {},
+                    error,
+                    getCurrentPosition
+                }) =>
+                    <div>
+                        <Button onClick={getCurrentPosition}>Use my Current Location</Button><span>  or enter delivery location below</span> 
+                    </div>}
+                />
+            </Col>
+        </Row>
             <Row>
-            <Col sm={2}>
-                <Button onClick={props.getLocation}>Use my current location</Button>
-            </Col>
-            <Col sm={2} componentClass={ControlLabel}>
-            or enter delivery location 
-            </Col>
             <Col sm={8}>
             <FormControl
                 type="text"

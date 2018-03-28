@@ -17,7 +17,7 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      userInfo: "5ab969f63b6ee4536affa213", //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
+      userInfo: this.props.userId, //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
       grant: false,
       wish: false,
       business: "",
@@ -60,7 +60,6 @@ class Home extends Component {
 
 
   handleInputChange = event => {
-    console.log("running")
     const { name, value } = event.target;
     this.setState({
       [name]: value
@@ -72,30 +71,24 @@ class Home extends Component {
   getMatchedUserInfo = (arr) => {
     console.log("id of match", arr)
     let finalMatches = [];
-    for(let i = 0; i < arr.length; i++){
-      API.getUserId(arr[i].userId) 
-      .then(res => {
-        (res.data.location = arr[i].location); 
-        console.log(res.data); 
-        finalMatches.push(res.data);
+    for (let i = 0; i < arr.length; i++) {
+      API.getUserId(arr[i].userId)
+        .then(res => {
+          (res.data.location = arr[i].location);
+          console.log(res.data);
+          finalMatches.push(res.data);
           this.setState({
-          matches: finalMatches,
-          hasMatched: true
+            matches: finalMatches,
+            hasMatched: true
           });
-        console.log(this.state.matches)
-      })
-        
-      .catch(err => console.log(err));
-
+          console.log(this.state.matches)
+        })
+        .catch(err => console.log(err));
     }
   }
 
 
   getDistance = (lat1, lon1, lat2, lon2) => {
-    console.log("lat 1", lat1)
-    console.log("lon 1", lon1)
-    console.log("lat 2", lat2)
-    console.log("long 1", lon2)
     var p = 0.017453292519943295;    // Math.PI / 180
     var c = Math.cos;
     var a = 0.5 - c((lat2 - lat1) * p) / 2 +
@@ -111,13 +104,12 @@ class Home extends Component {
   getGrantMatches = (matches) => {
     console.log("get matches running");
     let grantArr = [];
-    for(let i = 0; i < matches.length; i++){
+    for (let i = 0; i < matches.length; i++) {
       firebase.database().ref(this.state.business + '/grants/' + matches[i]).on('value', grant => {
         const allGrants = grant.val();
         grantArr.push(allGrants)
-      }) 
-      console.log("grant array", grantArr)
-      this.getMatchedUserInfo(grantArr)       
+      })
+      this.getMatchedUserInfo(grantArr)
     }
   }
 
@@ -125,24 +117,22 @@ class Home extends Component {
     console.log("running find grant match")
     firebase.database().ref(this.state.business + '/grants').on('value', grant => {
       const allGrants = grant.val();
-      if(allGrants){
+      if (allGrants) {
         const matches = Object.keys(allGrants).filter(e => this.getDistance(this.state.lat, this.state.long, allGrants[e].lat, allGrants[e].long) <= allGrants[e].range)
-        console.log("matches", matches)
         this.getGrantMatches(matches);
-      }else{console.log("no matches")}
+      } else { console.log("no matches") }
     });
   }
 
   getWishMatches = (matches) => {
     console.log("get wish matches running");
     let wishArr = [];
-    for(let i = 0; i < matches.length; i++){
+    for (let i = 0; i < matches.length; i++) {
       firebase.database().ref(this.state.business + '/wishes/' + matches[i]).on('value', wish => {
         const allWishes = wish.val();
-        console.log("all final wish matches for grant", allWishes)
         wishArr.push(allWishes)
       })
-      this.getMatchedUserInfo(wishArr) 
+      this.getMatchedUserInfo(wishArr)
     }
   }
 
@@ -150,13 +140,10 @@ class Home extends Component {
     console.log("running find wish match")
     firebase.database().ref(this.state.business + '/wishes').on('value', wish => {
       const allWishes = wish.val();
-      console.log("wishes", allWishes)
-      if(allWishes){
+      if (allWishes) {
         const matches = Object.keys(allWishes).filter(e => this.getDistance(this.state.lat, this.state.long, allWishes[e].lat, allWishes[e].long) <= this.state.range)
-        console.log("matches", matches);
-      // return matches;
         this.getWishMatches(matches);
-      }else{console.log("no matches")}
+      } else { console.log("no matches") }
     })
 
   }
@@ -171,9 +158,12 @@ class Home extends Component {
         location: this.state.location,
         lat: this.state.lat,
         long: this.state.long,
-        request: this.state.request
+        request: this.state.request,
+        created: new Date(),
+        requests: []
       };
       allWishes.push(newWish);
+      console.log("new wish", newWish)
       this.setState({ wishes: allWishes })
       firebase.database().ref(newWish.business + '/wishes')
         .push(newWish);
@@ -192,7 +182,9 @@ class Home extends Component {
         location: this.state.location,
         lat: this.state.lat,
         long: this.state.long,
-        range: this.state.range
+        range: this.state.range,
+        created: new Date(),
+        requests: []
       };
       allGrants.push(newGrant);
       this.setState({ grants: allGrants })
@@ -245,8 +237,8 @@ class Home extends Component {
             lat: lat,
             long: long
           })
-        }else{
-          console.log("bad address input, try again") 
+        } else {
+          console.log("bad address input, try again")
         } if (this.state.wish) {
           this.handleWishSubmit()
         } else if (this.state.grant) {
@@ -258,49 +250,60 @@ class Home extends Component {
 
   handleSelect = (id) => {
     console.log("the id of button clicked", id)
-  }
+    let request;
+    if(this.state.grant){
+      request = "/grants"
+    }else{request = "/wishes"}
+    console.log("request", request)
+    let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.userInfo}
+    firebase.database().ref(this.state.business + request + id)
+    .update({requests: match});
+
+    };
+  
+
 
   render() {
     return (
       <div>
         <Grid fluid>
-        <Row>
-          <Col md={6}>
-            <Jumbotron>
-              <button className="home-btns" onClick={this.toggleWish.bind(this)}>Make a Wish</button>
-            </Jumbotron>
-          </Col>
-          <Col md={6}>
-            <Jumbotron>
-              <button className="home-btns" onClick={this.toggleGrant.bind(this)}>Grant a Wish</button>
-            </Jumbotron>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={12}>
-            {this.state.wish ? <WishForm
-              type="text"
-              busSelect={this.state.businessOptions}
-              busValue={this.state.business}
-              locValue={this.state.location}
-              reqValue={this.state.request}
-              getLocation={this.getCurrentPosition}
-              onChange={this.handleInputChange.bind(this)}
-              onSubmit={this.getLatLng}
-            /> : null}
-            {this.state.grant ? <GrantForm
-              type="text"
-              busValue={this.state.business}
-              locValue={this.state.location}
-              rangeValue={this.state.range}
-              onChange={this.handleInputChange.bind(this)}
-              onSubmit={this.getLatLng}
-            /> : null}
-          </Col>
-        </Row>
+          <Row>
+            <Col md={6}>
+              <Jumbotron>
+                <button className="home-btns" onClick={this.toggleWish.bind(this)}>Make a Wish</button>
+              </Jumbotron>
+            </Col>
+            <Col md={6}>
+              <Jumbotron>
+                <button className="home-btns" onClick={this.toggleGrant.bind(this)}>Grant a Wish</button>
+              </Jumbotron>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={12}>
+              {this.state.wish ? <WishForm
+                type="text"
+                busSelect={this.state.businessOptions}
+                busValue={this.state.business}
+                locValue={this.state.location}
+                reqValue={this.state.request}
+                getLocation={this.getCurrentPosition}
+                onChange={this.handleInputChange.bind(this)}
+                onSubmit={this.getLatLng}
+              /> : null}
+              {this.state.grant ? <GrantForm
+                type="text"
+                busValue={this.state.business}
+                locValue={this.state.location}
+                rangeValue={this.state.range}
+                onChange={this.handleInputChange.bind(this)}
+                onSubmit={this.getLatLng}
+              /> : null}
+            </Col>
+          </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect} />           
-        : null}
+        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect} />
+          : null}
 
       </div>
     );

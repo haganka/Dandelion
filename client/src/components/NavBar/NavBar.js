@@ -11,9 +11,6 @@ const NavBar = () =>
   <NavItem eventKey="2" href="/home">
     Home
   </NavItem>
-  <NavItem eventKey="3" href="/matches">
-    Matches
-  </NavItem>
   <NavItem eventKey="4" href="/account">
     Account
   </NavItem>
