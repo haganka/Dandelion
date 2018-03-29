@@ -14,6 +14,10 @@ const Home = props =>
       <div>
         <Grid fluid>
           <Row>
+            <Col sm={12}>{props.name}
+            </Col>
+          </Row>
+          <Row>
             <Col md={6}>
               <Jumbotron>
                 <button className="home-btns" onClick={props.wishClick}>Make a Wish</button>

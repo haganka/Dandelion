@@ -29,7 +29,9 @@ class Grant extends Component {
       matches: [],
       hasMatched: false,
       fireKey: "",
-      clickedKey: ""
+      clickedKey: "",
+      requests: "",
+      wishReceived: {name: "", location: "", id: "", key: "", request: ""}
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -136,6 +138,7 @@ class Grant extends Component {
       .update({ fireKey: key });
     }
     this.findWishMatch();
+    this.listenForRequest();
   };
 
   getLatLng = (event) => {
@@ -177,10 +180,20 @@ class Grant extends Component {
     
 
     listenForRequest = () => {
-      console.log("LISTEN FOR RE RUNNING")
-        const requestEntry = firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests');
-        requestEntry.on('child_added', function(snapshot) {
+        console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
+        firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
         console.log("snapshot", snapshot.val());
+        if(snapshot.val() === null || snapshot.val().id === ""){
+            console.log("nothing to snap");
+        }else{
+            this.setState({
+                wishReceived: {name: snapshot.val().name, 
+                location: snapshot.val().location, 
+                id: snapshot.val().id, 
+                key: snapshot.val().key }
+            })
+            console.log("state after request comes through", this.state)
+        }
     });
   }
 

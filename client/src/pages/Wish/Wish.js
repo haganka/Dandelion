@@ -1,13 +1,13 @@
 import React, { Component, ReactDOM } from "react";
 import API from "../../utils/API";
-import { Link, push } from "react-router-dom";
-import { Col, Row, Button, Jumbotron, Grid } from 'react-bootstrap';
+// import { Link, push } from "react-router-dom";
+import { Col, Row, Grid } from 'react-bootstrap';
 import WishForm from "../../components/WishForm";
 import './Wish.css';
 import firebase from '../../fire.js';
-import { geolocated } from 'react-geolocated';
+// import { geolocated } from 'react-geolocated';
 import MatchContainer from '../../components/MatchContainer';
-import moment from 'moment';
+// import moment from 'moment';
 
 
 class Wish extends Component {
@@ -29,7 +29,8 @@ class Wish extends Component {
       matches: [],
       hasMatched: false,
       fireKey: "",
-      clickedKey: ""
+      clickedKey: "",
+      grantReceived: {name: "", location: "", id:"", key:""}
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -136,6 +137,7 @@ class Wish extends Component {
       .update({ fireKey: key });
       console.log("LOOK AT ME", this.state)
       this.findGrantMatch();
+      this.listenForRequest();
     }
   }
 
@@ -181,10 +183,20 @@ class Wish extends Component {
     };
 
     listenForRequest = () => {
-      console.log("LISTEN FOR RE RUNNING")
-        const requests = firebase.database().ref(this.state.business + '/wishes/' + this.state.fireKey + requests);
-        requests.on('child_added', function(snapshot) {
+        console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
+        firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
         console.log("snapshot", snapshot.val());
+        if(snapshot.val() === null || snapshot.val().id === ""){
+            console.log("nothing to snap");
+        }else{
+            this.setState({
+                grantReceived: {name: snapshot.val().name, 
+                location: snapshot.val().location, 
+                id: snapshot.val().id, 
+                key: snapshot.val().key }
+            })
+            console.log("state after request comes through", this.state)
+        }
     });
   }
 
@@ -208,7 +220,7 @@ class Wish extends Component {
             </Col>
           </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect} />
+        {this.state.hasMatched ? <MatchContainer grantReq={this.state.grantReq} matches={this.state.matches} onClick={this.handleSelect} />
           : null}
 
       </div>
