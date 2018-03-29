@@ -45,7 +45,7 @@ class Login extends Component {
                 name: this.state.name,
                 email: this.state.email,
                 password: this.state.password
-            }).then(res => console.log(res))
+            }).then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
             .catch(err => console.log(err));
         // }
     };
@@ -60,8 +60,8 @@ class Login extends Component {
         API.checkUser({
             email: this.state.email
         })
-        .then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
-        .then(window.location = ('/home'))
+        .then(res => {console.log(res.data._id); this.setState({id: res.data._id, name: res.data.name});})
+        // .then(window.location = ('/home'))
         .catch(err => console.log(err));
     };
 
@@ -98,6 +98,7 @@ class Login extends Component {
         }
     }
 
+
     render() {
         return (
             <div>
@@ -117,7 +118,7 @@ class Login extends Component {
                     <Col>
                         {this.state.login ? <LogInBox
                             emailValue={this.state.email} 
-                            passValue={this.state.password} 
+                            passValue={this.state.password}
                             onChange={this.handleInputChange.bind(this)} 
                             onSubmit={this.logInSubmit.bind(this)}
                         /> : null}
@@ -130,7 +131,7 @@ class Login extends Component {
                         />: null}
                     </Col>
                 </Row>
-            </Grid> : <Home userId={this.state.id} />}
+            </Grid> : <Home userId={this.state.id} name={this.state.name}/>}
             </div>
         );
     }
