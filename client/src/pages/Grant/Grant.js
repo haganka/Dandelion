@@ -1,13 +1,15 @@
 import React, { Component, ReactDOM } from "react";
 import API from "../../utils/API";
 // import { Link, push } from "react-router-dom";
-import { Col, Row, Grid } from 'react-bootstrap';
+import { Col, Row, Grid, Button } from 'react-bootstrap';
 import GrantForm from "../../components/GrantForm";
 import './Grant.css';
 import firebase from '../../fire.js';
 // import { geolocated } from 'react-geolocated';
 import MatchContainer from '../../components/MatchContainer';
 import moment from 'moment';
+import OutgoingContainer from '../../components/OutgoingContainer';
+import IncomingContainer from '../../components/IncomingContainer';
 
 
 class Grant extends Component {
@@ -31,7 +33,10 @@ class Grant extends Component {
       fireKey: "",
       clickedKey: "",
       requests: "",
-      wishReceived: {name: "", location: "", id: "", key: "", request: ""}
+      wishReceived: [],
+      grantSent: [],
+      viewOutgoingReq: false,
+      viewIncomingReq: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -164,9 +169,12 @@ class Grant extends Component {
       });
   }
 
-    handleSelect = (id) => {
+    handleSelect = (id, name, location, request) => {
         console.log("the id of button clicked", id)
-        this.setState({clickedKey: id},
+        let allRequests = [];
+        let newReq = {name: name, location: location, id: id, request: request};
+        allRequests.push(newReq)
+        this.setState({clickedKey: id, grantSent: allRequests}, 
             () => this.updateUserSelected())
     }
 
@@ -186,16 +194,54 @@ class Grant extends Component {
         if(snapshot.val() === null || snapshot.val().id === ""){
             console.log("nothing to snap");
         }else{
-            this.setState({
-                wishReceived: {name: snapshot.val().name, 
+            let newWish = {name: snapshot.val().name, 
                 location: snapshot.val().location, 
                 id: snapshot.val().id, 
-                key: snapshot.val().key }
+                key: snapshot.val().key,
+                request: snapshot.val().request };
+                    let allWishesReceived = this.state.wishReceived;
+                    allWishesReceived.push(newWish);
+                    this.setState({
+                    wishReceived: allWishesReceived
             })
             console.log("state after request comes through", this.state)
-        }
-    });
-  }
+            }
+        });
+    }
+
+    toggleViewOutgoing = () => {
+        this.setState({
+            viewOutgoingReq: !this.state.viewOutgoingReq
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewIncoming === true) {
+            this.setState({
+              viewIncoming: false
+            })
+          }
+          console.log(this.state)
+    }
+
+    toggleViewIncoming = () => {
+        this.setState({
+            viewIncomingReq: !this.state.viewIncomingReq
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewOutgoing === true) {
+            this.setState({
+              viewOutgoing: false
+            })
+          }
+          console.log(this.state)
+    }
 
 
   render() {
@@ -215,9 +261,21 @@ class Grant extends Component {
             </Col>
           </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect} />
+        <Grid>
+            <Row>
+                <Col sm={3}>
+                <Button onClick={this.toggleViewOutgoing}>View My Outgoing Requests</Button>
+                </Col>
+                <Col sm={3}>
+                <Button onClick={this.toggleViewIncoming}>View My Incoming Requests</Button>
+                </Col>
+            </Row>
+        </Grid>
+        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
+        {this.state.viewOutgoingReq ? <MatchContainer matches={this.state.grantSent} /> : null}
 
+        {this.state.viewIncomingReq ? <MatchContainer matches={this.state.wishReceived} /> : null}
       </div>
     );
   }

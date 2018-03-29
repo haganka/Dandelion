@@ -30,7 +30,7 @@ class Wish extends Component {
       hasMatched: false,
       fireKey: "",
       clickedKey: "",
-      grantReceived: {name: "", location: "", id:"", key:""}
+      grantReceived: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -189,11 +189,14 @@ class Wish extends Component {
         if(snapshot.val() === null || snapshot.val().id === ""){
             console.log("nothing to snap");
         }else{
-            this.setState({
-                grantReceived: {name: snapshot.val().name, 
+            let newGrant = {name: snapshot.val().name, 
                 location: snapshot.val().location, 
                 id: snapshot.val().id, 
-                key: snapshot.val().key }
+                key: snapshot.val().key}
+            let allGrantsReceived = this.state.grantRecieved;
+            allGrantsReceived.push(newGrant)
+            this.setState({
+                grantReceived: allGrantsReceived
             })
             console.log("state after request comes through", this.state)
         }
@@ -220,7 +223,7 @@ class Wish extends Component {
             </Col>
           </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer grantReq={this.state.grantReq} matches={this.state.matches} onClick={this.handleSelect} />
+        {this.state.hasMatched ? <MatchContainer grantReq={this.state.grantReq} wish='true' matches={this.state.matches} onClick={this.handleSelect} />
           : null}
 
       </div>

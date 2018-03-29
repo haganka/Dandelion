@@ -7,7 +7,7 @@ import Grant from "../Grant";
 import './Home.css';
 import firebase from '../../fire.js';
 import { geolocated } from 'react-geolocated';
-import MatchContainer from '../MatchContainer';
+// import MatchContainer from '../MatchContainer';
 
 
 const Home = props =>

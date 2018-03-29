@@ -1,24 +1,22 @@
 import React from "react";
-import "./MatchBox.css";
+import "./ReqBox.css";
 import { Link } from "react-router-dom";
 import { Col, Row, Form, Button, Jumbotron, Grid, Panel } from 'react-bootstrap';
 
-
-const MatchBox = props => 
+const ReqBox = props => 
 
   <Row>
     <Col sm={10}>
         <Panel>
           <Panel.Heading>{props.name}</Panel.Heading>
           <Panel.Body>
-            <h5>Rating: {props.rating}</h5>
-            <h5>Location: {props.location}</h5>
-            <Button onClick={()=>props.cb(props.fireKey, props.name, props.location, props.request)}>Choose {props.name}!</Button>
+            <p>Location: {props.location}</p>
+            <p>Request: {props.request}</p>
             {/* {props.snapshot} ? <Button>Accept request from</Button> */}
           </Panel.Body>
         </Panel>
     </Col>
   </Row>
-;
 
-export default MatchBox;
+
+export default ReqBox;
