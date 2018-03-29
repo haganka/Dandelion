@@ -1,7 +1,7 @@
 import React, { Component, ReactDOM } from "react";
 import API from "../../utils/API";
 // import { Link, push } from "react-router-dom";
-import { Col, Row, Grid } from 'react-bootstrap';
+import { Col, Row, Grid, Button } from 'react-bootstrap';
 import WishForm from "../../components/WishForm";
 import './Wish.css';
 import firebase from '../../fire.js';
@@ -136,7 +136,7 @@ class Wish extends Component {
     if (this.state.business && this.state.location && this.state.request) {
       let allWishes = this.state.wishes;
       const newWish = {
-        userId: this.state.userInfo,
+        userId: this.state.id,
         business: this.state.business,
         location: this.state.location,
         lat: this.state.lat,
@@ -239,9 +239,9 @@ class Wish extends Component {
           hasMatched: false
         })
       }
-      if (this.state.viewIncoming === true) {
+      if (this.state.viewIncomingReq === true) {
         this.setState({
-          viewIncoming: false
+          viewIncomingReq: false
         })
       }
       console.log(this.state)
@@ -256,9 +256,9 @@ toggleViewIncoming = () => {
           hasMatched: false
         })
       }
-      if (this.state.viewOutgoing === true) {
+      if (this.state.viewOutgoingReq === true) {
         this.setState({
-          viewOutgoing: false
+          viewOutgoingReq: false
         })
       }
       console.log(this.state)
@@ -282,6 +282,16 @@ toggleViewIncoming = () => {
               /> 
             </Col>
           </Row>
+        </Grid>
+        <Grid>
+            <Row>
+                <Col sm={3}>
+                <Button onClick={this.toggleViewOutgoing}>View My Outgoing Requests</Button>
+                </Col>
+                <Col sm={3}>
+                <Button onClick={this.toggleViewIncoming}>View My Incoming Requests</Button>
+                </Col>
+            </Row>
         </Grid>
         {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
