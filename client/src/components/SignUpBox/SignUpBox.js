@@ -50,7 +50,7 @@ const SignUpBox = props =>
     </FormGroup>
 
     <Button
-      onClick={props.onSubmit}
+      onClick={()=>props.onSubmit(props.emailValue, props.passValue)}
       disabled={!(props.emailValue && props.passValue)}
       >Sign Up
     </Button>

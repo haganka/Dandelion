@@ -54,7 +54,7 @@ const WishForm = props =>
                     <option value="">Select</option>
                     <option value="starbucks">Starbucks</option>
                     <option value="walgreens">Walgreens</option>
-                    <option value="dominoes">Chipotle</option>
+                    <option value="chipotle">Chipotle</option>
                 </FormControl>
             </Col>
             </Row>
