@@ -11,7 +11,7 @@ const WishForm = props =>
     <Form>
         <FormGroup>
         <Row>
-            <Col sm={10}>
+
             <Geolocation
                 onSuccess={console.log}
                 render={({
@@ -21,24 +21,25 @@ const WishForm = props =>
                     getCurrentPosition
                 }) =>
                     <div>
-                        <Button onClick={getCurrentPosition}>Use my Current Location</Button><span>  or enter delivery location below</span> 
+                        <Col sm={4}>
+                            <Button onClick={getCurrentPosition}>Use my Current Location</Button><span>  or enter delivery location </span>
+                        </Col>
+                        <Col sm={8}>
+                            <FormControl
+                                type="text"
+                                value={props.locValue}
+                                onChange={props.onChange}
+                                name="location"
+                                placeholder="delivery location (address, city, state)"
+                            />
+                        </Col>
                     </div>}
-                />
-            </Col>
-        </Row>
-            <Row>
-
-            <Col sm={8}>
-            <FormControl
-                type="text"
-                value={props.locValue}
-                onChange={props.onChange}
-                name="location"
-                placeholder="delivery location (address, city, state)"
             />
-            </Col>
+                
+            
             </Row>
-        </FormGroup>
+        </FormGroup> 
+
 
         <FormGroup controlId="formControlsSelect">
             <Row>
@@ -53,7 +54,7 @@ const WishForm = props =>
                     <option value="">Select</option>
                     <option value="starbucks">Starbucks</option>
                     <option value="walgreens">Walgreens</option>
-                    <option value="dominoes">Chipotle</option>
+                    <option value="chipotle">Chipotle</option>
                 </FormControl>
             </Col>
             </Row>

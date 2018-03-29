@@ -35,7 +35,7 @@ const LogInBox = props =>
       </Col>
     </FormGroup>
     <Button
-      onClick={props.onSubmit}
+      onClick={()=>props.onSubmit(props.emailValue, props.passValue)}
       disabled={!(props.emailValue && props.passValue)}
       >Log In
     </Button>

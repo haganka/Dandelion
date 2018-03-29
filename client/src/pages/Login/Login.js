@@ -5,8 +5,11 @@ import { Col, Row, Form, Button, Jumbotron, Grid } from 'react-bootstrap';
 import LogInBox from "../../components/LogInBox";
 import SignUpBox from "../../components/SignUpBox";
 import './Login.css';
-// import Toggle from 'react-toggle-display';
+import Wish from '../Wish';
+import Grant from '../Grant';
 import Home from '../Home';
+import {firebase, auth} from '../../fire.js';
+
 
 class Login extends Component {
     //allows access to props if you pass down, allows console logging
@@ -22,7 +25,10 @@ class Login extends Component {
             password: "",
             id: "",
             redirectTo: "",
-            isLoggedIn: false
+            isLoggedIn: false,
+            fireId: null,
+            grant: false,
+            wish: false
         };
 
         this.toggleLogIn = this.toggleLogIn.bind(this);
@@ -33,9 +39,11 @@ class Login extends Component {
     }
 
 
-    signUpSubmit = event => {
-        console.log("sign up clicked!")
-        event.preventDefault();
+    signUpSubmit = (email, password) => {
+        // console.log("sign up clicked!")
+        // event.preventDefault();
+        auth.createUserWithEmailAndPassword(email, password)
+        .catch(err => console.error(err));
         this.setState({
             email: this.state.email,
             password: this.state.password
@@ -50,13 +58,21 @@ class Login extends Component {
         // }
     };
 
-    logInSubmit = event => {
-        console.log("clicked log in", this.state.email)
-        event.preventDefault();
-        this.setState({
-            email: this.state.email,
-            password: this.state.password
+    logInSubmit = (email, password) => {
+        auth.signInWithEmailAndPassword(email, password)
+        .then(user => {
+          const { email, fireId } = user;
+          this.setState({
+            isLoggedIn: true,
+            email,
+            fireId
+          });
         })
+        .catch(err => console.error(err));
+        // this.setState({
+        //     email: this.state.email,
+        //     password: this.state.password
+        // })
         API.checkUser({
             email: this.state.email
         })
@@ -99,6 +115,35 @@ class Login extends Component {
     }
 
 
+  toggleWish() {
+    // this.setState({
+    //   business: "", location: "", request: "", range: ""
+    // })
+    this.setState({
+      wish: !this.state.wish
+    })
+    if (this.state.grant === true) {
+      this.setState({
+        grant: false
+      })
+    }
+  }
+
+  toggleGrant() {
+    // this.setState({
+    //   business: "", location: "", request: "", range: ""
+    // })
+    this.setState({
+      grant: !this.state.grant
+    })
+    if (this.state.wish === true) {
+      this.setState({
+        wish: false
+      })
+    }
+  }
+
+
     render() {
         return (
             <div>
@@ -111,8 +156,10 @@ class Login extends Component {
                     </Col>
                 </Row>
                 <Row>
+                    <Col sm={12} className="login-box">
                     <button className="login-btns" onClick={this.toggleLogIn.bind(this)}>Log in</button>
                     <button className="login-btns" onClick={this.toggleSignUp.bind(this)}>Sign up</button>
+                    </Col>
                 </Row>
                 <Row>
                     <Col>
@@ -131,7 +178,13 @@ class Login extends Component {
                         />: null}
                     </Col>
                 </Row>
-            </Grid> : <Home userId={this.state.id} name={this.state.name}/>}
+            </Grid> : <Home userId={this.state.id} 
+                        name={this.state.name} 
+                        isLoggedIn={this.state.isLoggedIn} 
+                        wishClick={this.toggleWish.bind(this)} 
+                        grantClick={this.toggleGrant.bind(this)}
+                        wish={this.state.wish}
+                        grant={this.state.grant}/>}
             </div>
         );
     }
