@@ -8,7 +8,7 @@ import './Login.css';
 import Wish from '../Wish';
 import Grant from '../Grant';
 import Home from '../Home';
-import {firebase, auth} from '../../fire.js';
+import {fire, auth} from '../../fire.js';
 
 
 class Login extends Component {
@@ -28,7 +28,8 @@ class Login extends Component {
             isLoggedIn: false,
             fireId: null,
             grant: false,
-            wish: false
+            wish: false,
+            submitSuccess: false
         };
 
         this.toggleLogIn = this.toggleLogIn.bind(this);
@@ -46,7 +47,8 @@ class Login extends Component {
         .catch(err => console.error(err));
         this.setState({
             email: this.state.email,
-            password: this.state.password
+            password: this.state.password,
+            submitSuccess: true
         })
         // if (this.state.email && this.state.password && this.state.name) {
             API.saveUser({
@@ -61,11 +63,12 @@ class Login extends Component {
     logInSubmit = (email, password) => {
         auth.signInWithEmailAndPassword(email, password)
         .then(user => {
-          const { email, fireId } = user;
+          const { email, uid } = user;
           this.setState({
             isLoggedIn: true,
-            email,
-            fireId
+            email: email,
+            fireId: uid,
+            submitSuccess: true
           });
         })
         .catch(err => console.error(err));
@@ -80,6 +83,13 @@ class Login extends Component {
         // .then(window.location = ('/home'))
         .catch(err => console.log(err));
     };
+
+    // logout = () => {
+    //     auth.signOut().then(function() {
+    //         this.setState({isLoggedIn: false, email: "", name: "", password: "", id: ""})
+    //       }).catch(function(error) {
+    //     });
+    // }
 
 
     handleInputChange = (event) => {
@@ -143,11 +153,30 @@ class Login extends Component {
     }
   }
 
+  componentDidMount = () => {
+    this.authListener();
+  };
+
+  authListener = () => {
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            this.setState({
+                email: user.email,
+                id: user.uid
+            })
+        } else {
+        console.log("user signed out");
+        }
+
+    });
+    }
 
     render() {
         return (
             <div>
-            {!this.state.id ? <Grid fluid>
+            {!this.state.submitSuccess ? 
+            <Grid fluid>
+                {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null}
                 <Row>
                     <Col md={12}>
                         <Jumbotron>
@@ -178,7 +207,8 @@ class Login extends Component {
                         />: null}
                     </Col>
                 </Row>
-            </Grid> : <Home userId={this.state.id} 
+            </Grid> : 
+             <Home userId={this.state.id} 
                         name={this.state.name} 
                         isLoggedIn={this.state.isLoggedIn} 
                         wishClick={this.toggleWish.bind(this)} 

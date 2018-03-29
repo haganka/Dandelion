@@ -12,10 +12,10 @@ const NavBar = () =>
     </Navbar.Brand>
   </Navbar.Header>
   <Nav>
-    <NavItem eventKey={1} href="/home" className="nav-item">
+    <NavItem eventKey={1} href="/" className="nav-item">
       Home
     </NavItem>
-    <NavItem eventKey={2} href="/account" className="nav-item">
+    <NavItem eventKey={2} href="/user/account" className="nav-item">
       Account
     </NavItem>
     <NavItem eventKey={3} href="/logout" className="nav-item">

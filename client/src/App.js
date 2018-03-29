@@ -13,8 +13,9 @@ const App = () =>
       <NavBar />
       <Switch>
         <Route exact path="/" component={Login} />
+        <Route exact path="/user" component={Login} />
         <Route exact path="/logout" component={Login} />
-         <Route exact path="/home" component={Home} /> 
+         <Route exact path="/user/home" component={Home} /> 
         {/* <Route exact path="/account" component={Account} /> */}
         {/* <Route component={NoMatch} /> */}
       </Switch>

@@ -10,7 +10,7 @@ import MatchContainer from '../../components/MatchContainer';
 import moment from 'moment';
 import OutgoingContainer from '../../components/OutgoingContainer';
 import IncomingContainer from '../../components/IncomingContainer';
-
+import {fire, auth} from '../../fire.js';
 
 class Grant extends Component {
   //allows access to props if you pass down, allows console logging
@@ -19,7 +19,8 @@ class Grant extends Component {
     super(props);
 
     this.state = {
-      userInfo: this.props.userId,
+      email: "",
+      id: "",
       isLoggedIn: this.props.isLoggedIn, //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
       name: this.props.name,
       business: "",
@@ -41,6 +42,24 @@ class Grant extends Component {
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
+
+  componentDidMount = () => {
+    this.authListener();
+  };
+
+  authListener = () => {
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            this.setState({
+                email: user.email,
+                id: user.uid
+            })
+        } else {
+        console.log("user signed out");
+    }
+
+  });
+}
 
 
   handleInputChange = event => {
@@ -119,7 +138,7 @@ class Grant extends Component {
       console.log("saving grant data")
       let allGrants = this.state.grants;
       const newGrant = {
-        userId: this.state.userInfo,
+        userId: this.state.id,
         business: this.state.business,
         location: this.state.location,
         lat: this.state.lat,
@@ -180,7 +199,7 @@ class Grant extends Component {
 
     updateUserSelected = () => {
         console.log("clicked key on state", this.state.clickedKey)
-        let match = {name: this.state.name, location: this.state.location, id: this.state.userInfo, key:this.state.fireKey}
+        let match = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
         console.log("match passing to FB", match)
          firebase.database().ref(this.state.business + '/wishes/' + this.state.clickedKey)
         .update({requests: match, requested: true});
@@ -199,10 +218,10 @@ class Grant extends Component {
                 id: snapshot.val().id, 
                 key: snapshot.val().key,
                 request: snapshot.val().request };
-                    let allWishesReceived = this.state.wishReceived;
-                    allWishesReceived.push(newWish);
-                    this.setState({
-                    wishReceived: allWishesReceived
+            let allWishesReceived = this.state.wishReceived;
+            allWishesReceived.push(newWish);
+            this.setState({
+                wishReceived: allWishesReceived
             })
             console.log("state after request comes through", this.state)
             }

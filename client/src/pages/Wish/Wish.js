@@ -8,6 +8,7 @@ import firebase from '../../fire.js';
 // import { geolocated } from 'react-geolocated';
 import MatchContainer from '../../components/MatchContainer';
 // import moment from 'moment';
+import {fire, auth} from '../../fire.js';
 
 
 class Wish extends Component {
@@ -17,7 +18,8 @@ class Wish extends Component {
     super(props);
 
     this.state = {
-      userInfo: this.props.userId, //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
+      id: "",
+      email: "", //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
       name: this.props.name,
       isLoggedIn: true,
       business: "",
@@ -30,11 +32,33 @@ class Wish extends Component {
       hasMatched: false,
       fireKey: "",
       clickedKey: "",
-      grantReceived: []
+      grantReceived: [],
+      wishSent: [],
+      viewOutgoingReq: false,
+      viewIncomingReq: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
+
+
+  componentDidMount = () => {
+    this.authListener();
+  };
+
+  authListener = () => {
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            this.setState({
+                email: user.email,
+                id: user.uid
+            })
+        } else {
+        console.log("user signed out");
+    }
+
+  });
+}
 
 
   handleInputChange = event => {
@@ -166,16 +190,19 @@ class Wish extends Component {
       });
   }
 
-  handleSelect = (id) => {
+  handleSelect = (id, name, location) => {
     console.log("the id of button clicked", id)
-    this.setState({clickedKey: id},
+    let allRequests = [];
+    let newReq = {name: name, location: location, id: id};
+    allRequests.push(newReq)
+    this.setState({clickedKey: id, wishSent: allRequests}, 
         () => this.updateUserSelected())
      }
  
 
     updateUserSelected = () => {
     console.log("clicked key on state", this.state.clickedKey)
-    let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.userInfo, key:this.state.fireKey}
+    let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.id, key: this.state.fireKey}
     console.log("match passing to FB", match)
       firebase.database().ref(this.state.business + "/grants/" + this.state.clickedKey)
       .update({requests: match, requested: true});
@@ -203,6 +230,39 @@ class Wish extends Component {
     });
   }
 
+  toggleViewOutgoing = () => {
+    this.setState({
+        viewOutgoingReq: !this.state.viewOutgoingReq
+      })
+      if (this.state.hasMatched === true) {
+        this.setState({
+          hasMatched: false
+        })
+      }
+      if (this.state.viewIncoming === true) {
+        this.setState({
+          viewIncoming: false
+        })
+      }
+      console.log(this.state)
+}
+
+toggleViewIncoming = () => {
+    this.setState({
+        viewIncomingReq: !this.state.viewIncomingReq
+      })
+      if (this.state.hasMatched === true) {
+        this.setState({
+          hasMatched: false
+        })
+      }
+      if (this.state.viewOutgoing === true) {
+        this.setState({
+          viewOutgoing: false
+        })
+      }
+      console.log(this.state)
+}
 
   render() {
     return (
@@ -223,9 +283,11 @@ class Wish extends Component {
             </Col>
           </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer grantReq={this.state.grantReq} wish='true' matches={this.state.matches} onClick={this.handleSelect} />
+        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
+        {this.state.viewOutgoingReq ? <MatchContainer matches={this.state.wishSent} /> : null}
 
+        {this.state.viewIncomingReq ? <MatchContainer matches={this.state.grantReceived} /> : null}
       </div>
     );
   }
