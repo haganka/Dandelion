@@ -16,9 +16,10 @@ const GrantForm = props =>
                     onChange={props.onChange}
                     name="business"
                     componentClass="select" placeholder="select">
+                        <option value="">Select</option>
                         <option value="starbucks">Starbucks</option>
                         <option value="walgreens">Walgreens</option>
-                        <option value="dominoes">Dominoes</option>
+                        <option value="dominoes">Chipotle</option>
                 </FormControl>
                 </Col>
             </FormGroup>

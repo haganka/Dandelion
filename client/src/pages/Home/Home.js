@@ -20,6 +20,7 @@ class Home extends Component {
       userInfo: this.props.userId, //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
       grant: false,
       wish: false,
+      name: this.props.name,
       business: "",
       location: "",
       lat: "",
@@ -167,8 +168,9 @@ class Home extends Component {
         lat: this.state.lat,
         long: this.state.long,
         request: this.state.request,
-        created: new Date(),
-        request: false,
+        created: Date.now(),
+        requested: false,
+        requests: "",
         completed: false,
         fireKey: ""
       };
@@ -200,8 +202,9 @@ class Home extends Component {
         lat: this.state.lat,
         long: this.state.long,
         range: this.state.range,
-        created: new Date(),
+        created: Date.now(),
         request: false,
+        requests: "",
         completed: false,
         fireKey: ""
       };
@@ -277,12 +280,13 @@ class Home extends Component {
     console.log("the id of button clicked", id)
     let request;
     if(this.state.grant){
-      request = "/grants"
-    }else{request = "/wishes"}
+      request = "/wishes/"
+    }else{request = "/grants/"}
     console.log("request", request)
-    // let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.userInfo}
-    //   firebase.database().ref(this.state.business + request)
-    //   .update({requests: match});
+    let match = {location: this.state.location, request: this.state.request, id: this.state.userInfo, key:this.state.fireKey}
+    console.log("match passing to FB", match)
+      firebase.database().ref(this.state.business + request + id)
+      .update({requests: match.id});
 
     };
 
