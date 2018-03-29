@@ -53,12 +53,9 @@ class Home extends Component {
   //     .catch(err => console.log(err));
   // };
 
-  // componentDidMount = () => {
-  //   console.log(this.props)
-  //   this.setState({
-  //     userInfo: this.props.userId
-  //   })
-  // }
+  componentDidMount = () => {
+    this.listenForRequest();
+  }
 
 
   handleInputChange = event => {
@@ -170,7 +167,7 @@ class Home extends Component {
         request: this.state.request,
         created: Date.now(),
         requested: false,
-        requests: "",
+        requests: {name: "", location:"", id:"", key:""},
         completed: false,
         fireKey: ""
       };
@@ -204,7 +201,7 @@ class Home extends Component {
         range: this.state.range,
         created: Date.now(),
         request: false,
-        requests: "",
+        requests: {name: "", location:"", request: "", id:"", key:""},
         completed: false,
         fireKey: ""
       };
@@ -283,15 +280,24 @@ class Home extends Component {
       request = "/wishes/"
     }else{request = "/grants/"}
     console.log("request", request)
-    let match = {location: this.state.location, request: this.state.request, id: this.state.userInfo, key:this.state.fireKey}
+    let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.userInfo, key:this.state.fireKey}
     console.log("match passing to FB", match)
       firebase.database().ref(this.state.business + request + id)
-      .update({requests: match.id});
+      .update({requests: match});
 
     };
 
-
-
+    listenForRequest = () => {
+      console.log("LISTEN FOR RE RUNNING")
+      let path;
+      if(this.state.grant){
+        path = "/grants";
+      }else{path = "/wishes";}
+        const requests = firebase.database().ref(this.state.business + path + this.state.fireKey + requests);
+        requests.on('value', function(snapshot) {
+        console.log("snapshot", snapshot.val());
+    });
+  }
 
 
   render() {
