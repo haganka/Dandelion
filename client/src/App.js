@@ -5,6 +5,7 @@ import Login from "./pages/Login";
 import Account from "./pages/Account";
 // import NoMatch from "./pages/NoMatch";
 import NavBar from "./components/NavBar";
+import './App.css';
 
 const App = () =>
   <Router>

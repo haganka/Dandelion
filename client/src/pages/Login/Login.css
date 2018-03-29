@@ -1,0 +1,10 @@
+.login-box {
+    text-align: center;
+}
+
+.login-btns {
+    background: rgb(187, 166, 228);
+    color: rgb(50, 50, 50);
+    border-radius: 10px;
+    margin: 10px;
+}

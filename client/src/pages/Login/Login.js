@@ -111,8 +111,10 @@ class Login extends Component {
                     </Col>
                 </Row>
                 <Row>
+                    <Col sm={12} className="login-box">
                     <button className="login-btns" onClick={this.toggleLogIn.bind(this)}>Log in</button>
                     <button className="login-btns" onClick={this.toggleSignUp.bind(this)}>Sign up</button>
+                    </Col>
                 </Row>
                 <Row>
                     <Col>
