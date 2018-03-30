@@ -16,9 +16,7 @@ const MatchBox = props =>
           <Panel.Body>
             <h5>Rating: {props.rating}</h5>
             <p>Location: {props.location}</p>
-            {props.match && props.grant ? <p>Request: {props.request}</p> : null}
-            {props.outgoing && props.wish ? <p>Request: {props.request}</p> : null}
-            {props.incoming && props.grant ? <p>Request: {props.request}</p> : null}
+            {props.grant ? <p>Request: {props.request}</p> : null}
             {props.wish && props.match ? 
             <Button onClick={()=>props.cb(props.fire, props.name, props.location)}>Choose {props.name}!</Button> : null}
           

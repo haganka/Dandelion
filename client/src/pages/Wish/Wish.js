@@ -240,7 +240,7 @@ class Wish extends Component {
 
   toggleViewOutgoing = () => {
     this.setState({
-        viewOutgoingReq: !this.state.viewOutgoingReq
+        viewOutgoingReq: true
       })
       if (this.state.hasMatched === true) {
         this.setState({
@@ -257,7 +257,7 @@ class Wish extends Component {
 
 toggleViewIncoming = () => {
     this.setState({
-        viewIncomingReq: !this.state.viewIncomingReq
+        viewIncomingReq: true
       })
       if (this.state.hasMatched === true) {
         this.setState({
