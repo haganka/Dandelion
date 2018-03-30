@@ -1,14 +1,16 @@
 import React, { Component, ReactDOM } from "react";
 import API from "../../utils/API";
 // import { Link, push } from "react-router-dom";
-import { Col, Row, Grid } from 'react-bootstrap';
+import { Col, Row, Grid, Button } from 'react-bootstrap';
 import GrantForm from "../../components/GrantForm";
 import './Grant.css';
 import firebase from '../../fire.js';
 // import { geolocated } from 'react-geolocated';
 import MatchContainer from '../../components/MatchContainer';
 import moment from 'moment';
-
+import OutgoingContainer from '../../components/OutgoingContainer';
+import IncomingContainer from '../../components/IncomingContainer';
+import {fire, auth} from '../../fire.js';
 
 class Grant extends Component {
   //allows access to props if you pass down, allows console logging
@@ -17,7 +19,8 @@ class Grant extends Component {
     super(props);
 
     this.state = {
-      userInfo: this.props.userId,
+      email: "",
+      id: this.props.userId,
       isLoggedIn: this.props.isLoggedIn, //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
       name: this.props.name,
       business: "",
@@ -29,11 +32,34 @@ class Grant extends Component {
       matches: [],
       hasMatched: false,
       fireKey: "",
-      clickedKey: ""
+      clickedKey: "",
+      requests: "",
+      wishReceived: [],
+      grantSent: [],
+      viewOutgoingReq: false,
+      viewIncomingReq: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
   }
+
+  componentDidMount = () => {
+    this.authListener();
+  };
+
+  authListener = () => {
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            this.setState({
+                email: user.email,
+                fireId: user.uid
+            })
+        } else {
+        console.log("user signed out");
+    }
+
+  });
+}
 
 
   handleInputChange = event => {
@@ -52,7 +78,10 @@ class Grant extends Component {
     for (let i = 0; i < arr.length; i++) {
       console.log("made it to for loop", arr[i].userId);
       API.getUserId(arr[i].userId)
-          .then(res => {(res.data.fire = arr[i].fireKey);
+          .then(res => {
+          (res.data.fire = arr[i].fireKey);
+          (res.data.location = arr[i].location);
+          (res.data.request = arr[i].request);
           console.log(res.data);
           finalMatches.push(res.data);
           this.setState({
@@ -112,7 +141,7 @@ class Grant extends Component {
       console.log("saving grant data")
       let allGrants = this.state.grants;
       const newGrant = {
-        userId: this.state.userInfo,
+        userId: this.state.id,
         business: this.state.business,
         location: this.state.location,
         lat: this.state.lat,
@@ -136,6 +165,7 @@ class Grant extends Component {
       .update({ fireKey: key });
     }
     this.findWishMatch();
+    this.listenForRequest();
   };
 
   getLatLng = (event) => {
@@ -161,15 +191,20 @@ class Grant extends Component {
       });
   }
 
-    handleSelect = (id) => {
+    handleSelect = (id, name, location, request) => {
         console.log("the id of button clicked", id)
-        this.setState({clickedKey: id},
+        let allRequests = this.state.grantSent;
+        let newReq = {name: name, location: location, id: id, request: request};
+        allRequests.push(newReq)
+        this.setState({clickedKey: id, grantSent: allRequests}, 
             () => this.updateUserSelected())
+  
     }
 
     updateUserSelected = () => {
+        console.log("handle select", this.state.grantSent)
         console.log("clicked key on state", this.state.clickedKey)
-        let match = {name: this.state.name, location: this.state.location, id: this.state.userInfo, key:this.state.fireKey}
+        let match = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
         console.log("match passing to FB", match)
          firebase.database().ref(this.state.business + '/wishes/' + this.state.clickedKey)
         .update({requests: match, requested: true});
@@ -177,12 +212,60 @@ class Grant extends Component {
     
 
     listenForRequest = () => {
-      console.log("LISTEN FOR RE RUNNING")
-        const requestEntry = firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests');
-        requestEntry.on('child_added', function(snapshot) {
+        console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
+        firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
         console.log("snapshot", snapshot.val());
-    });
-  }
+        if(snapshot.val() === null || snapshot.val().id === ""){
+            console.log("nothing to snap");
+        }else{
+            let newWish = {name: snapshot.val().name, 
+                location: snapshot.val().location, 
+                id: snapshot.val().id, 
+                key: snapshot.val().key,
+                request: snapshot.val().request };
+            let allWishesReceived = this.state.wishReceived;
+            allWishesReceived.push(newWish);
+            this.setState({
+                wishReceived: allWishesReceived
+            })
+            console.log("state after request comes through", this.state.wishReceived)
+            }
+        });
+    }
+
+    toggleViewOutgoing = () => {
+        this.setState({
+            viewOutgoingReq: !this.state.viewOutgoingReq
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewIncoming === true) {
+            this.setState({
+              viewIncoming: false
+            })
+          }
+          console.log(this.state)
+    }
+
+    toggleViewIncoming = () => {
+        this.setState({
+            viewIncomingReq: !this.state.viewIncomingReq
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewOutgoing === true) {
+            this.setState({
+              viewOutgoing: false
+            })
+          }
+          console.log(this.state)
+    }
 
 
   render() {
@@ -202,9 +285,21 @@ class Grant extends Component {
             </Col>
           </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect} />
+        <Grid>
+            <Row>
+                <Col sm={3}>
+                <Button onClick={this.toggleViewOutgoing}>View My Outgoing Requests</Button>
+                </Col>
+                <Col sm={3}>
+                <Button onClick={this.toggleViewIncoming}>View My Incoming Requests</Button>
+                </Col>
+            </Row>
+        </Grid>
+        {this.state.hasMatched ? <MatchContainer wish={false} matches={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
+        {this.state.viewOutgoingReq ? <MatchContainer matches={false} outgoing={true} incoming={false} matches={this.state.wishSent} /> : null}
 
+        {this.state.viewIncomingReq ? <MatchContainer matches={false} outgoing={false} incoming={true} matches={this.state.grantReceived} /> : null}
       </div>
     );
   }

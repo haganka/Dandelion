@@ -5,19 +5,25 @@ import { Col, Row, Form, Button, Jumbotron, Grid, Panel } from 'react-bootstrap'
 
 
 const MatchBox = props => 
-
+<Grid>
+  <Row>
+    <Col sm={12}>{props.header}</Col>
+  </Row>
   <Row>
     <Col sm={10}>
         <Panel>
           <Panel.Heading>{props.name}</Panel.Heading>
           <Panel.Body>
             <h5>Rating: {props.rating}</h5>
-            <h5>Location: {props.location}</h5>
-            <Button onClick={()=>props.cb(props.fireKey)}>Choose {props.name}!</Button>
+            <p>Location: {props.location}</p>
+            {props.outgoing && props.wish ? <p>Request: {props.request}</p> : null}
+            {props.incoming && props.grant ? <p>Request: {props.request}</p> : null}
+            <Button onClick={()=>props.cb(props.fireKey, props.name, props.location, props.request)}>Choose {props.name}!</Button>
           </Panel.Body>
         </Panel>
     </Col>
   </Row>
+</Grid>
 ;
 
 export default MatchBox;
