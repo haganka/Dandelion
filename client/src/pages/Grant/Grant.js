@@ -138,7 +138,7 @@ class Grant extends Component {
 
   handleGrantSubmit = () => {
     if (this.state.business && this.state.location && this.state.range) {
-      console.log("saving grant data")
+      console.log("saving grant data", this.state)
       let allGrants = this.state.grants;
       const newGrant = {
         userId: this.state.id,
@@ -161,6 +161,7 @@ class Grant extends Component {
         fireKey: key
       })
       console.log("LOOK AT ME", this.state)
+      console.log("this is the new grant", newGrant)
       firebase.database().ref(newGrant.business + '/grants/' + key)
       .update({ fireKey: key });
     }

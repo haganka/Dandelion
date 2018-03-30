@@ -16,11 +16,12 @@ const MatchContainer = props =>
                         location={match.location}
                         id={match._id} 
                         key={match.fire}
-                        fireKey={match.fire} 
+                        fire={match.fire} 
                         cb={props.onClick}
+                        wish={props.wish}
                         />)) : null}
                     
-                    {props.incoming ?
+                    {/* {props.incoming ?
                     props.matches.map((match => <MatchBox
                         header="Incoming Requests"
                         name={match.name}
@@ -46,7 +47,7 @@ const MatchContainer = props =>
                         cb={props.onClick}
                         wish={true}
                         outgoing={true}
-                        />)) : null}
+                        />)) : null} */}
                     </Col>
                 </Row>
             </div>

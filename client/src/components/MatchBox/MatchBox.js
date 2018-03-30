@@ -18,7 +18,11 @@ const MatchBox = props =>
             <p>Location: {props.location}</p>
             {props.outgoing && props.wish ? <p>Request: {props.request}</p> : null}
             {props.incoming && props.grant ? <p>Request: {props.request}</p> : null}
-            <Button onClick={()=>props.cb(props.fireKey, props.name, props.location, props.request)}>Choose {props.name}!</Button>
+            {props.wish ? 
+            <Button onClick={()=>props.cb(props.fire, props.name, props.location)}>Choose {props.name}!</Button> : null}
+          
+            {props.grant ? 
+            <Button onClick={()=>props.cb(props.fire, props.name, props.location, props.request)}>Choose {props.name}!</Button> : null}
           </Panel.Body>
         </Panel>
     </Col>

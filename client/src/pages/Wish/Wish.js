@@ -77,8 +77,8 @@ class Wish extends Component {
       console.log("made it to for loop", arr[i].userId);
       API.getUserId(arr[i].userId)
           .then(res => {
-        //   (res.data.fire = arr[i].fireKey);
-        //   (res.data.location = arr[i].location);
+          (res.data.fire = arr[i].fireKey);
+          (res.data.location = arr[i].location);
           console.log(res.data);
           finalMatches.push(res.data);
           this.setState({
@@ -295,7 +295,7 @@ toggleViewIncoming = () => {
                 </Col>
             </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer wish={true} matches={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
+        {this.state.hasMatched ? <MatchContainer wish={this.state.hasMatched} matches={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
         {this.state.viewOutgoingReq ? <MatchContainer matches={false} outgoing={true} incoming={false} matches={this.state.wishSent} /> : null}
 
