@@ -38,7 +38,9 @@ class Grant extends Component {
       grantSent: [],
       viewOutgoingReq: false,
       viewIncomingReq: false,
-      matched: false
+      viewFinal: false,
+      matched: false,
+      finalMatches: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -250,8 +252,11 @@ class Grant extends Component {
         for(let i = 0; i < this.state.grantSent.length; i++){
             if(req.key === this.state.grantSent[i].id){
                 alert("it's a match!", this.state.grantSent[i])
+                let newMatch = this.state.finalMatches;
+                newMatch.push(req)
                 this.setState({
-                    matched: true
+                    matched: true,
+                    finalMatches: newMatch
                 })
             }
         }
@@ -263,6 +268,12 @@ class Grant extends Component {
         for(let i = 0; i < this.state.wishReceived.length; i++){
             if(req.id === this.state.wishReceived[i].key){
                 alert("it's a match!", this.state.wishReceived[i])
+                let newMatch = this.state.finalMatches;
+                newMatch.push(req)
+                this.setState({
+                    matched: true,
+                    finalMatches: newMatch
+                })
             }
         }
 
@@ -282,6 +293,11 @@ class Grant extends Component {
               viewIncomingReq: false
             })
           }
+          if (this.state.viewFinal === true) {
+            this.setState({
+              viewFinal: false
+            })
+          }
           console.log(this.state)
     }
 
@@ -297,6 +313,33 @@ class Grant extends Component {
           if (this.state.viewOutgoingReq === true) {
             this.setState({
               viewOutgoingReq: false
+            })
+          }          
+          if (this.state.viewFinal === true) {
+            this.setState({
+              viewFinal: false
+            })
+          }
+          console.log(this.state)
+    }
+
+    toggleViewFinal = () => {
+        this.setState({
+            viewFinal: true
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewOutgoingReq === true) {
+            this.setState({
+              viewOutgoingReq: false
+            })
+          }
+          if (this.state.viewIncoming === true) {
+            this.setState({
+              viewIncomingReq: false
             })
           }
           console.log(this.state)
@@ -328,6 +371,7 @@ class Grant extends Component {
                 <Col sm={3}>
                 <Button onClick={this.toggleViewIncoming}>View My Incoming Requests</Button>
                 </Col>
+                {this.state.matched ? <Col sm={3}><Button onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
         </Grid>
         {this.state.hasMatched ? <MatchContainer grant={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
@@ -335,6 +379,8 @@ class Grant extends Component {
         {this.state.viewOutgoingReq ? <MatchContainer grant={true} match={false} outgoing={true} incoming={false} matches={this.state.grantSent} /> : null}
 
         {this.state.viewIncomingReq ? <MatchContainer grant={true} match={false} outgoing={false} incoming={true} matches={this.state.wishReceived} /> : null}
+      
+        {this.state.matched ? <MatchContainer finalMatch={this.state.matched} matches={this.state.finalMatches}/> : null}
       </div>
     );
   }

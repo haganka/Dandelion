@@ -36,7 +36,8 @@ class Wish extends Component {
       wishSent: [],
       viewOutgoingReq: false,
       viewIncomingReq: false,
-      matched: false
+      matched: false,
+      finalMatches: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -246,8 +247,11 @@ class Wish extends Component {
         for(let i = 0; i < this.state.wishSent.length; i++){
             if(req.key === this.state.wishSent[i].id){
                 alert("it's a match!", this.state.wishSent[i])
+                let newMatch = this.state.finalMatches;
+                newMatch.push(req)
                 this.setState({
-                    matched: true
+                    matched: true,
+                    finalMatches: newMatch
                 })
             }
         }
@@ -259,47 +263,81 @@ class Wish extends Component {
         for(let i = 0; i < this.state.grantReceived.length; i++){
             if(req.id === this.state.grantReceived[i].key){
                 alert("it's a match!", this.state.grantReceived[i])
+                let newMatch = this.state.finalMatches;
+                newMatch.push(req)
                 this.setState({
-                    matched: true
+                    matched: true,
+                    finalMatches: newMatch
                 })
             }
         }
 
     }
+    toggleViewOutgoing = () => {
+        this.setState({
+            viewOutgoingReq: true
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewIncomingReq === true) {
+            this.setState({
+              viewIncomingReq: false
+            })
+          }
+          if (this.state.viewFinal === true) {
+            this.setState({
+              viewFinal: false
+            })
+          }
+          console.log(this.state)
+    }
 
-  toggleViewOutgoing = () => {
-    this.setState({
-        viewOutgoingReq: true
-      })
-      if (this.state.hasMatched === true) {
+    toggleViewIncoming = () => {
         this.setState({
-          hasMatched: false
-        })
-      }
-      if (this.state.viewIncomingReq === true) {
-        this.setState({
-          viewIncomingReq: false
-        })
-      }
-      console.log(this.state)
-}
+            viewIncomingReq: true
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewOutgoingReq === true) {
+            this.setState({
+              viewOutgoingReq: false
+            })
+          }          
+          if (this.state.viewFinal === true) {
+            this.setState({
+              viewFinal: false
+            })
+          }
+          console.log(this.state)
+    }
 
-toggleViewIncoming = () => {
-    this.setState({
-        viewIncomingReq: true
-      })
-      if (this.state.hasMatched === true) {
+    toggleViewFinal = () => {
         this.setState({
-          hasMatched: false
-        })
-      }
-      if (this.state.viewOutgoingReq === true) {
-        this.setState({
-          viewOutgoingReq: false
-        })
-      }
-      console.log(this.state)
-}
+            viewFinal: true
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewOutgoingReq === true) {
+            this.setState({
+              viewOutgoingReq: false
+            })
+          }
+          if (this.state.viewIncoming === true) {
+            this.setState({
+              viewIncomingReq: false
+            })
+          }
+          console.log(this.state)
+    }
 
   render() {
     return (
@@ -328,6 +366,7 @@ toggleViewIncoming = () => {
                 <Col sm={3}>
                 <Button onClick={this.toggleViewIncoming}>View My Incoming Requests</Button>
                 </Col>
+                {this.state.matched ? <Col sm={3}><Button onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
         </Grid>
         {this.state.hasMatched ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}>Results</MatchContainer>
@@ -335,6 +374,8 @@ toggleViewIncoming = () => {
         {this.state.viewOutgoingReq ? <MatchContainer wish={true} match={false} outgoing={true} incoming={false} matches={this.state.wishSent}>Incoming Requests</MatchContainer> : null}
 
         {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived}>Outgoing Requests</MatchContainer> : null}
+        {this.state.matched ? <MatchContainer finalMatch={this.state.matched} matches={this.state.finalMatches}/> : null}
+      
       </div>
     );
   }
