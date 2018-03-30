@@ -213,27 +213,34 @@ class Grant extends Component {
     };
     
 
-    listenForRequest = () => {
-        console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
-        firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
-        console.log("snapshot", snapshot.val());
-        if(snapshot.val() === null || snapshot.val().id === ""){
-            console.log("nothing to snap");
-        }else{
-            let newWish = {name: snapshot.val().name, 
-                location: snapshot.val().location, 
-                id: snapshot.val().id, 
-                key: snapshot.val().key,
-                request: snapshot.val().request };
-            let allWishesReceived = this.state.wishReceived;
-            allWishesReceived.push(newWish);
-            this.setState({
-                wishReceived: allWishesReceived
-            })
-            console.log("state after request comes through", this.state.wishReceived)
-            }
-        });
-    }
+
+    updateWishesReceivedState = (received) => {
+        this.setState({
+          wishReceived: received
+        })
+        console.log("state after request comes through", this.state.wishReceived)
+        }
+      
+      
+  
+      listenForRequest = () => {
+          console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
+          firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
+          console.log("snapshot", snapshot.val())
+          if(snapshot.val() === null || snapshot.val().id === ""){
+              console.log("nothing to snap");
+          }else{
+              let newWish = {name: snapshot.val().name, 
+                  location: snapshot.val().location, 
+                  id: snapshot.val().id, 
+                  key: snapshot.val().key,
+                  request: snapshot.val().request };
+              let allWishesReceived = this.state.wishReceived;
+              allWishesReceived.push(newWish);
+              this.updateWishesReceivedState(allWishesReceived)
+              }
+          });
+      }
 
     toggleViewOutgoing = () => {
         this.setState({

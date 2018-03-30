@@ -212,6 +212,13 @@ class Wish extends Component {
 
     };
 
+    updateGrantsReceivedState = (received) => {
+        this.setState({
+            grantReceived: received
+        })
+        console.log("state after request comes through", this.state)
+    }
+
     listenForRequest = () => {
         console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
         firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
@@ -224,11 +231,9 @@ class Wish extends Component {
                 id: snapshot.val().id, 
                 key: snapshot.val().key}
             let allGrantsReceived = this.state.grantRecieved;
+            console.log("received", allGrantsReceived)
             allGrantsReceived.push(newGrant)
-            this.setState({
-                grantReceived: allGrantsReceived
-            })
-            console.log("state after request comes through", this.state)
+            this.updateGrantsReceivedState(allGrantsReceived);
         }
     });
   }
