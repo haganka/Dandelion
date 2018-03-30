@@ -37,7 +37,8 @@ class Grant extends Component {
       wishReceived: [],
       grantSent: [],
       viewOutgoingReq: false,
-      viewIncomingReq: false
+      viewIncomingReq: false,
+      matched: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -200,6 +201,7 @@ class Grant extends Component {
         allRequests.push(newReq)
         this.setState({clickedKey: id, grantSent: allRequests}, 
             () => this.updateUserSelected())
+            this.keyMatchReq(newReq)
   
     }
 
@@ -238,9 +240,33 @@ class Grant extends Component {
               let allWishesReceived = this.state.wishReceived;
               allWishesReceived.push(newWish);
               this.updateWishesReceivedState(allWishesReceived)
+              this.reqMatchKey(newWish);
               }
           });
       }
+
+    reqMatchKey = (req) => {
+        console.log("find req match running", req);
+        for(let i = 0; i < this.state.grantSent.length; i++){
+            if(req.key === this.state.grantSent[i].id){
+                alert("it's a match!", this.state.grantSent[i])
+                this.setState({
+                    matched: true
+                })
+            }
+        }
+
+    }
+
+    keyMatchReq = (req) => {
+        console.log("key match req running", req);
+        for(let i = 0; i < this.state.wishReceived.length; i++){
+            if(req.id === this.state.wishReceived[i].key){
+                alert("it's a match!", this.state.wishReceived[i])
+            }
+        }
+
+    }
 
     toggleViewOutgoing = () => {
         this.setState({

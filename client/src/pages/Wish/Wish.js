@@ -35,7 +35,8 @@ class Wish extends Component {
       grantReceived: [],
       wishSent: [],
       viewOutgoingReq: false,
-      viewIncomingReq: false
+      viewIncomingReq: false,
+      matched: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -200,7 +201,8 @@ class Wish extends Component {
     allRequests.push(newReq)
     this.setState({clickedKey: id, wishSent: allRequests}, 
         () => this.updateUserSelected())
-     }
+        this.keyMatchReq(newReq);
+    }
  
 
     updateUserSelected = () => {
@@ -220,8 +222,8 @@ class Wish extends Component {
     }
 
     listenForRequest = () => {
-        console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
-        firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
+        console.log("LISTEN FOR RE RUNNING", this.state)
+        firebase.database().ref(this.state.business + '/wishes/' + this.state.fireKey + '/requests').on('value', snapshot => {
         console.log("snapshot", snapshot.val());
         if(snapshot.val() === null || snapshot.val().id === ""){
             console.log("nothing to snap");
@@ -230,13 +232,40 @@ class Wish extends Component {
                 location: snapshot.val().location, 
                 id: snapshot.val().id, 
                 key: snapshot.val().key}
-            let allGrantsReceived = this.state.grantRecieved;
+            let allGrantsReceived = this.state.grantReceived;
             console.log("received", allGrantsReceived)
             allGrantsReceived.push(newGrant)
             this.updateGrantsReceivedState(allGrantsReceived);
+            this.reqMatchKey(newGrant);
         }
     });
   }
+
+    reqMatchKey = (req) => {
+        console.log("find req match running", req);
+        for(let i = 0; i < this.state.wishSent.length; i++){
+            if(req.key === this.state.wishSent[i].id){
+                alert("it's a match!", this.state.wishSent[i])
+                this.setState({
+                    matched: true
+                })
+            }
+        }
+
+    }
+
+    keyMatchReq = (req) => {
+        console.log("key match req running", req);
+        for(let i = 0; i < this.state.grantReceived.length; i++){
+            if(req.id === this.state.grantReceived[i].key){
+                alert("it's a match!", this.state.grantReceived[i])
+                this.setState({
+                    matched: true
+                })
+            }
+        }
+
+    }
 
   toggleViewOutgoing = () => {
     this.setState({
