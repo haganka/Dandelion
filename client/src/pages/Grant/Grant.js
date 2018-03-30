@@ -20,7 +20,7 @@ class Grant extends Component {
 
     this.state = {
       email: "",
-      id: "",
+      id: this.props.userId,
       isLoggedIn: this.props.isLoggedIn, //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
       name: this.props.name,
       business: "",
@@ -52,7 +52,7 @@ class Grant extends Component {
         if (user) {
             this.setState({
                 email: user.email,
-                id: user.uid
+                fireId: user.uid
             })
         } else {
         console.log("user signed out");
@@ -78,7 +78,10 @@ class Grant extends Component {
     for (let i = 0; i < arr.length; i++) {
       console.log("made it to for loop", arr[i].userId);
       API.getUserId(arr[i].userId)
-          .then(res => {(res.data.fire = arr[i].fireKey);
+          .then(res => {
+          (res.data.fire = arr[i].fireKey);
+          (res.data.location = arr[i].location);
+          (res.data.request = arr[i].request);
           console.log(res.data);
           finalMatches.push(res.data);
           this.setState({
@@ -292,11 +295,11 @@ class Grant extends Component {
                 </Col>
             </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect}/>
+        {this.state.hasMatched ? <MatchContainer wish={false} matches={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
-        {this.state.viewOutgoingReq ? <MatchContainer matches={this.state.grantSent} /> : null}
+        {this.state.viewOutgoingReq ? <MatchContainer matches={false} outgoing={true} incoming={false} matches={this.state.wishSent} /> : null}
 
-        {this.state.viewIncomingReq ? <MatchContainer matches={this.state.wishReceived} /> : null}
+        {this.state.viewIncomingReq ? <MatchContainer matches={false} outgoing={false} incoming={true} matches={this.state.grantReceived} /> : null}
       </div>
     );
   }

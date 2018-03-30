@@ -18,7 +18,7 @@ class Wish extends Component {
     super(props);
 
     this.state = {
-      id: "",
+      id: this.props.userId,
       email: "", //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
       name: this.props.name,
       isLoggedIn: true,
@@ -50,8 +50,7 @@ class Wish extends Component {
     auth.onAuthStateChanged((user) => {
         if (user) {
             this.setState({
-                email: user.email,
-                id: user.uid
+                email: user.email
             })
         } else {
         console.log("user signed out");
@@ -77,7 +76,9 @@ class Wish extends Component {
     for (let i = 0; i < arr.length; i++) {
       console.log("made it to for loop", arr[i].userId);
       API.getUserId(arr[i].userId)
-          .then(res => {(res.data.fire = arr[i].fireKey);
+          .then(res => {
+        //   (res.data.fire = arr[i].fireKey);
+        //   (res.data.location = arr[i].location);
           console.log(res.data);
           finalMatches.push(res.data);
           this.setState({
@@ -114,6 +115,7 @@ class Wish extends Component {
         grantArr.push(allGrants)
         }
       })
+      console.log(grantArr)
       this.getMatchedUserInfo(grantArr);
     }
   }
@@ -293,11 +295,11 @@ toggleViewIncoming = () => {
                 </Col>
             </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer matches={this.state.matches} onClick={this.handleSelect}/>
+        {this.state.hasMatched ? <MatchContainer wish={true} matches={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
-        {this.state.viewOutgoingReq ? <MatchContainer matches={this.state.wishSent} /> : null}
+        {this.state.viewOutgoingReq ? <MatchContainer matches={false} outgoing={true} incoming={false} matches={this.state.wishSent} /> : null}
 
-        {this.state.viewIncomingReq ? <MatchContainer matches={this.state.grantReceived} /> : null}
+        {this.state.viewIncomingReq ? <MatchContainer matches={false} outgoing={false} incoming={true} matches={this.state.grantReceived} /> : null}
       </div>
     );
   }

@@ -162,7 +162,7 @@ class Login extends Component {
         if (user) {
             this.setState({
                 email: user.email,
-                id: user.uid
+                fireId: user.uid
             })
         } else {
         console.log("user signed out");
