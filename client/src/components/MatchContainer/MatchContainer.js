@@ -14,12 +14,15 @@ const MatchContainer = props =>
                         name={match.name}
                         rating={match.rating}
                         location={match.location}
+                        request={match.request}
                         id={match._id} 
                         key={match.fire}
                         fire={match.fire} 
                         cb={props.onClick}
                         grant={props.grant}
                         match={props.match}
+                        incoming={props.incoming}
+                        outgoing={props.outgoing}
                         wish={props.wish}
                         />)) : null}
                     

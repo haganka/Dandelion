@@ -251,9 +251,9 @@ class Grant extends Component {
               hasMatched: false
             })
           }
-          if (this.state.viewIncoming === true) {
+          if (this.state.viewIncomingReq === true) {
             this.setState({
-              viewIncoming: false
+              viewIncomingReq: false
             })
           }
           console.log(this.state)
@@ -268,9 +268,9 @@ class Grant extends Component {
               hasMatched: false
             })
           }
-          if (this.state.viewOutgoing === true) {
+          if (this.state.viewOutgoingReq === true) {
             this.setState({
-              viewOutgoing: false
+              viewOutgoingReq: false
             })
           }
           console.log(this.state)

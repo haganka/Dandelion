@@ -209,12 +209,12 @@ class Login extends Component {
                 </Row>
             </Grid> : 
              <Home userId={this.state.id} 
-                        name={this.state.name} 
-                        isLoggedIn={this.state.isLoggedIn} 
-                        wishClick={this.toggleWish.bind(this)} 
-                        grantClick={this.toggleGrant.bind(this)}
-                        wish={this.state.wish}
-                        grant={this.state.grant}/>}
+                name={this.state.name} 
+                isLoggedIn={this.state.isLoggedIn} 
+                wishClick={this.toggleWish.bind(this)} 
+                grantClick={this.toggleGrant.bind(this)}
+                wish={this.state.wish}
+                grant={this.state.grant}/>}
             </div>
         );
     }
