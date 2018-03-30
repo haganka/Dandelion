@@ -158,7 +158,8 @@ class Grant extends Component {
       let newEntry = firebase.database().ref(newGrant.business + '/grants').push(newGrant);
       let key = newEntry.key
       this.setState({
-        fireKey: key
+        fireKey: key,
+        clickedKey: ""
       })
       console.log("LOOK AT ME", this.state)
       console.log("this is the new grant", newGrant)

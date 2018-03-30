@@ -157,7 +157,8 @@ class Wish extends Component {
       // newEntry.push(newWish)
       let key = newEntry.key
       this.setState({
-        fireKey: key
+        fireKey: key,
+        clickedKey: ""
       })
       firebase.database().ref(newWish.business + '/wishes/' + key)
       .update({ fireKey: key });
