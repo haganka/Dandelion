@@ -190,14 +190,16 @@ class Grant extends Component {
 
     handleSelect = (id, name, location, request) => {
         console.log("the id of button clicked", id)
-        let allRequests = [];
+        let allRequests = this.state.grantSent;
         let newReq = {name: name, location: location, id: id, request: request};
         allRequests.push(newReq)
         this.setState({clickedKey: id, grantSent: allRequests}, 
             () => this.updateUserSelected())
+  
     }
 
     updateUserSelected = () => {
+        console.log("handle select", this.state.grantSent)
         console.log("clicked key on state", this.state.clickedKey)
         let match = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
         console.log("match passing to FB", match)
@@ -223,7 +225,7 @@ class Grant extends Component {
             this.setState({
                 wishReceived: allWishesReceived
             })
-            console.log("state after request comes through", this.state)
+            console.log("state after request comes through", this.state.wishReceived)
             }
         });
     }

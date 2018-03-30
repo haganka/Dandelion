@@ -192,7 +192,7 @@ class Wish extends Component {
 
   handleSelect = (id, name, location) => {
     console.log("the id of button clicked", id)
-    let allRequests = [];
+    let allRequests = this.state.wishSent;
     let newReq = {name: name, location: location, id: id};
     allRequests.push(newReq)
     this.setState({clickedKey: id, wishSent: allRequests}, 
