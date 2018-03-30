@@ -10,7 +10,7 @@ const MatchContainer = props =>
                     <Col sm={6}>
                     {props.matches ? 
                     props.matches.map((match => <MatchBox
-                        header="Requests"
+                        header={props.button}
                         name={match.name}
                         rating={match.rating}
                         location={match.location}
@@ -18,6 +18,8 @@ const MatchContainer = props =>
                         key={match.fire}
                         fire={match.fire} 
                         cb={props.onClick}
+                        grant={props.grant}
+                        match={props.match}
                         wish={props.wish}
                         />)) : null}
                     
@@ -31,10 +33,13 @@ const MatchContainer = props =>
                         key={match.fire}
                         fireKey={match.fire} 
                         cb={props.onClick}
-                        incoming={true}
+                        grant={props.grant}
+                        wish={props.wish}
+                        matches={props.matches}
+                        incoming={props.incoming}
                         />)) : null}
 
-                    {props.incoming ?
+                    {props.outgoing ?
                     props.matches.map((match => <MatchBox
                         header="Outgoing Requests"
                         name={match.name}
@@ -45,8 +50,10 @@ const MatchContainer = props =>
                         key={match.fire}
                         fireKey={match.fire} 
                         cb={props.onClick}
-                        wish={true}
-                        outgoing={true}
+                        grant={props.grant}
+                        matches={props.matches}
+                        wish={props.wish}
+                        outgoing={props.outgoing}
                         />)) : null} */}
                     </Col>
                 </Row>

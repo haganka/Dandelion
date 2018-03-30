@@ -296,11 +296,11 @@ class Grant extends Component {
                 </Col>
             </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer wish={false} matches={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
+        {this.state.hasMatched ? <MatchContainer grant={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
-        {this.state.viewOutgoingReq ? <MatchContainer matches={false} outgoing={true} incoming={false} matches={this.state.wishSent} /> : null}
+        {this.state.viewOutgoingReq ? <MatchContainer grant={true} match={false} outgoing={true} incoming={false} matches={this.state.grantSent} /> : null}
 
-        {this.state.viewIncomingReq ? <MatchContainer matches={false} outgoing={false} incoming={true} matches={this.state.grantReceived} /> : null}
+        {this.state.viewIncomingReq ? <MatchContainer grant={true} match={false} outgoing={false} incoming={true} matches={this.state.wishReceived} /> : null}
       </div>
     );
   }

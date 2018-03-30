@@ -295,11 +295,11 @@ toggleViewIncoming = () => {
                 </Col>
             </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer wish={this.state.hasMatched} matches={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
+        {this.state.hasMatched ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}>Results</MatchContainer>
           : null}
-        {this.state.viewOutgoingReq ? <MatchContainer matches={false} outgoing={true} incoming={false} matches={this.state.wishSent} /> : null}
+        {this.state.viewOutgoingReq ? <MatchContainer wish={true} match={false} outgoing={true} incoming={false} matches={this.state.wishSent}>Incoming Requests</MatchContainer> : null}
 
-        {this.state.viewIncomingReq ? <MatchContainer matches={false} outgoing={false} incoming={true} matches={this.state.grantReceived} /> : null}
+        {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived}>Outgoing Requests</MatchContainer> : null}
       </div>
     );
   }
