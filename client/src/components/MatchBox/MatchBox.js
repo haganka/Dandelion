@@ -44,22 +44,22 @@ const MatchBox = props =>
                     onChange={props.onChange}
                   /> */}
                 <FormGroup>
-                <Radio name="rating" value={1} checked={false} onChange={props.onChange}>
+                <Radio name="radioGroup" value={1}  onChange={()=>props.onChange(1)}>
                   1
                 </Radio>{' '}
-                <Radio name="rating" value={2} checked={false} onChange={props.onChange}>
+                <Radio name="radioGroup" value={2}  onChange={()=>props.onChange(2)}>
                   2
                 </Radio>{' '}
-                <Radio name="rating" value={3} checked={false} onChange={props.onChange}>
+                <Radio name="radioGroup" value={3} onChange={()=>props.onChange(3)}>
                   3
                 </Radio>
-                <Radio name="rating" value={4} checked={false} onChange={props.onChange}>
+                <Radio name="radioGroup" value={4}  onChange={()=>props.onChange(4)}>
                   4
                 </Radio>
-                <Radio name="rating" value={5} checked={false} onChange={props.onChange}>
+                <Radio name="radioGroup" value={5}  onChange={()=>props.onChange(5)}>
                   5
                 </Radio>
-                <Button onClick={()=>props.ratingSubmit(props.matchId, props.rating)}>Submit Rating</Button>
+                <Button onClick={()=>props.ratingSubmit(props.matchId)}>Submit Rating</Button>
               </FormGroup>
             </Form>: null}
           </Panel.Body>

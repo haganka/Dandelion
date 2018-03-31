@@ -78,6 +78,15 @@ class Grant extends Component {
     console.dir(event.target)
   };
 
+  handleRadioChange = value => {
+    // const { name, value } = event.target;
+    console.log("rating val", value)
+    this.setState({
+      rating: value
+    });
+    console.log(this.state)
+  }
+
   
   getMatchedUserInfo = (arr) => {
     console.log("id of match", arr)
@@ -247,8 +256,8 @@ class Grant extends Component {
           console.log(this.state.grantSent)
     }
 
-    handleRatingSubmit = (id, rating) => {
-      console.log("id", id, "rating", rating)
+    handleRatingSubmit = (id) => {
+      console.log("id", id)
   
         // API.updateUser(arr[i].userId)
         //     .then(res => {
@@ -512,7 +521,7 @@ class Grant extends Component {
 
         {this.state.viewIncomingReq ? <MatchContainer grant={true} match={false} outgoing={false} incoming={true} matches={this.state.wishReceived} onClick={this.handleAccept}/> : null}
       
-        {this.state.matched ? <MatchContainer grant={true} ratingVal={this.state.rating} finalMatch={true} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleInputChange} ratingSubmit={this.handleRatingSubmit}/> : null}
+        {this.state.matched ? <MatchContainer grant={true} rating={this.state.rating} finalMatch={true} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleRadioChange} ratingSubmit={this.handleRatingSubmit}/> : null}
       </div>
     );
   }

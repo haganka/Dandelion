@@ -75,16 +75,13 @@ class Wish extends Component {
     console.dir(event.target)
   };
 
-  handleRadioChange = event => {
-    const { name, value } = event.target;
+  handleRadioChange = value => {
+    // const { name, value } = event.target;
+    console.log("rating val", value)
     this.setState({
-      [name]: value
+      rating: value
     });
     console.log(this.state)
-    console.dir(event.target)
-    if(checked===false){
-      checked===true
-    }
   }
 
   
@@ -250,10 +247,10 @@ class Wish extends Component {
         console.log(this.state.wishSent)
   }
 
-  handleRatingSubmit = (id, rating) => {
-    console.log("id", id, "rating", rating)
+  handleRatingSubmit = (id) => {
+    console.log("id", id)
 
-      // API.updateUser(arr[i].userId)
+      // API.updateUser(id)
       //     .then(res => {
       //     (res.data.fire = arr[i].fireKey);
       //     (res.data.location = arr[i].location);
@@ -510,7 +507,7 @@ class Wish extends Component {
         {this.state.viewPotential ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
         {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived} onClick={this.handleAccept}></MatchContainer> : null}
-        {this.state.matched ? <MatchContainer wish={true} finalMatch={this.state.matched} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleInputChange} rating={this.state.rating} ratingSubmit={this.handleRatingSubmit}/> : null}
+        {this.state.matched ? <MatchContainer wish={true} finalMatch={this.state.matched} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleRadioChange} rating={this.state.rating} ratingSubmit={this.handleRatingSubmit}/> : null}
       
       </div>
     );
