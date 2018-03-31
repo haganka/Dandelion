@@ -186,13 +186,13 @@ class Grant extends Component {
     this.listenForRequest();
   };
 
-  handleInputChange = (event) => {
-    const { name, value } = event.target;
-    this.setState({
-        [name]: value
-    });
-    console.log(this.state)
-};
+//   handleInputChange = (event) => {
+//     const { name, value } = event.target;
+//     this.setState({
+//         [name]: value
+//     });
+//     console.log(this.state)
+// };
 
   getLatLng = (event) => {
     event.preventDefault();
@@ -233,24 +233,24 @@ class Grant extends Component {
     };
     
 
-    handleSelect = (id, name, location, request) => {
-        console.log("the id of button clicked", id)
+    handleSelect = (id, key, name, location, request) => {
+        console.log("the id of button clicked", id, "key", key)
         let allRequests = this.state.grantSent;
-        let newReq = {name: name, location: location, id: id, request: request};
+        let newReq = {name: name, location: location, id: id, request: request, key: key};
         allRequests.push(newReq)
-        this.setState({clickedKey: id, grantSent: allRequests}, 
+        this.setState({clickedKey: key, grantSent: allRequests}, 
             () => this.updateUserSelected())
             this.keyMatchReq(newReq)
   
     }
 
-    handleAccept = (id, name, location, request) => {
-      console.log("the id of accept clicked", id, "name", name, "loc", location)
+    handleAccept = (id, key, name, location, request) => {
+      console.log("the id of accept clicked", id, "key", key, "name", name, "loc", location)
       let allRequests = this.state.grantSent;
-      let newReq = {name: name, location: location, id: id, request: request};
+      let newReq = {name: name, location: location, id: id, request: request, key: key};
       console.log(newReq)
       allRequests.push(newReq)
-      this.setState({clickedKey: id, grantSent: allRequests}, 
+      this.setState({clickedKey: key, grantSent: allRequests}, 
           () => this.updateUserSelected())
           this.reqMatchKey(newReq);
           console.log(this.state.grantSent)
@@ -258,21 +258,20 @@ class Grant extends Component {
 
     handleRatingSubmit = (id) => {
       console.log("id", id)
-  
-        // API.updateUser(arr[i].userId)
-        //     .then(res => {
-        //     (res.data.fire = arr[i].fireKey);
-        //     (res.data.location = arr[i].location);
-        //     console.log(res.data);
-        //     finalMatches.push(res.data);
-        //     this.setState({
-        //       matches: finalMatches,
-        //       hasMatched: true
-        //     });
-        //     console.log(this.state.matches)
-        //   })
-        //   .catch(err => console.log(err));
-    }
+        let userRating = this.state.rating
+        API.updateUser(id, {rating: userRating})
+            .then(res => {
+            console.log(res.data)
+          //   finalMatches.push(res.data);
+          //   this.setState({
+          //     matches: finalMatches,
+          //     hasMatched: true
+          //   });
+          //   console.log(this.state.matches)
+          // })
+          .catch(err => console.log(err));
+      })
+    } 
 
     updateUserSelected = () => {
         console.log("handle select", this.state.grantSent)
@@ -343,7 +342,7 @@ class Grant extends Component {
     reqMatchKey = (req) => {
         console.log("find req match running", req);
         for(let i = 0; i < this.state.grantSent.length; i++){
-            if(req.key === this.state.grantSent[i].id){
+            if(req.key === this.state.grantSent[i].key){
                 alert("it's a match!", this.state.grantSent[i])
                 let newMatch = this.state.finalMatches;
                 newMatch.push(req)
@@ -360,7 +359,7 @@ class Grant extends Component {
     keyMatchReq = (req) => {
         console.log("key match req running", req);
         for(let i = 0; i < this.state.wishReceived.length; i++){
-            if(req.id === this.state.wishReceived[i].key){
+            if(req.key === this.state.wishReceived[i].key){
                 alert("it's a match!", this.state.wishReceived[i])
                 let newMatch = this.state.finalMatches;
                 newMatch.push(req)
