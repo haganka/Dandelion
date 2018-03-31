@@ -17,7 +17,7 @@ const MatchContainer = props =>
                         request={match.request}
                         id={match._id} 
                         matchId={match.id}
-                        key={match.key}
+                        key={match.fire}
                         fire={match.fire} 
                         cb={props.onClick}
                         grant={props.grant}
@@ -25,6 +25,8 @@ const MatchContainer = props =>
                         incoming={props.incoming}
                         outgoing={props.outgoing}
                         wish={props.wish}
+                        complete={props.markComplete}
+                        readyForComplete={props.finalMatch}
                         />)) : null}
                     
                     </Col>

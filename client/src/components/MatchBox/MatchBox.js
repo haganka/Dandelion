@@ -17,6 +17,10 @@ const MatchBox = props =>
             <h5>Rating: {props.rating}</h5>
             <p>Location: {props.location}</p>
             {props.grant ? <p>Request: {props.request}</p> : null}
+            
+            {props.grant && props.match ? 
+            <Button onClick={()=>props.cb(props.fire, props.name, props.location, props.request)}>Choose {props.name}!</Button> : null}
+            
             {props.wish && props.match ? 
             <Button onClick={()=>props.cb(props.fire, props.name, props.location)}>Choose {props.name}!</Button> : null}
             
@@ -26,8 +30,8 @@ const MatchBox = props =>
             {props.incoming && props.wish ? 
             <Button onClick={()=>props.cb(props.id, props.name, props.location)}>Accept {props.name}!</Button> : null}
 
-            {props.grant && props.match ? 
-            <Button onClick={()=>props.cb(props.fire, props.name, props.location, props.request)}>Choose {props.name}!</Button> : null}
+            {props.grant && props.readyForComplete ? 
+            <Button onClick={()=>props.complete(props.matchId, props.name, props.location, props.request)}>Mark completed</Button> : null}  
           </Panel.Body>
         </Panel>
     </Col>

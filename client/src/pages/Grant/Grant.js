@@ -41,7 +41,8 @@ class Grant extends Component {
       viewIncomingReq: false,
       viewFinal: false,
       matched: false,
-      finalMatches: []
+      finalMatches: [],
+      completeMatch: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -153,7 +154,7 @@ class Grant extends Component {
         range: this.state.range,
         created: Date.now(),
         requested: false,
-        requests: {name: "", location:"", request: "", id:"", key:""},
+        requests: {name: "", location:"", request: "", id:"", key:"", complete: false},
         completed: false,
         fireKey: ""
       };
@@ -197,6 +198,15 @@ class Grant extends Component {
       });
   }
 
+    markComplete = (id, name, location, request) => {
+          let completeKey = id;
+          let complete = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
+          console.log("completed passing to FB", complete, "complete key", completeKey)
+           firebase.database().ref(this.state.business + '/wishes/' + completeKey + '/requests/')
+          .update({complete: true});
+    };
+    
+
     handleSelect = (id, name, location, request) => {
         console.log("the id of button clicked", id)
         let allRequests = this.state.grantSent;
@@ -223,42 +233,64 @@ class Grant extends Component {
     updateUserSelected = () => {
         console.log("handle select", this.state.grantSent)
         console.log("clicked key on state", this.state.clickedKey)
-        let match = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
+        let match = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey, complete: false}
         console.log("match passing to FB", match)
          firebase.database().ref(this.state.business + '/wishes/' + this.state.clickedKey)
         .update({requests: match, requested: true});
     };
     
-
-
     updateWishesReceivedState = (received) => {
         this.setState({
           wishReceived: received
         })
         console.log("state after request comes through", this.state.wishReceived)
-        }
+    }
       
       
-  
-      listenForRequest = () => {
-          console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
-          firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
-          console.log("snapshot", snapshot.val())
-          if(snapshot.val() === null || snapshot.val().id === ""){
+    listenForRequest = () => {
+        console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
+        firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
+        console.log("snapshot", snapshot.val())
+        if(snapshot.val() === null || snapshot.val().id === ""){
+            console.log("nothing to snap");
+        }else{
+            let newWish = {name: snapshot.val().name, 
+                location: snapshot.val().location, 
+                id: snapshot.val().id, 
+                key: snapshot.val().key,
+                request: snapshot.val().request };
+            let allWishesReceived = this.state.wishReceived;
+            allWishesReceived.push(newWish);
+            this.updateWishesReceivedState(allWishesReceived)
+            this.reqMatchKey(newWish);
+            }
+        });
+    }
+
+      listenForComplete = () => {
+        console.log("LISTEN FOR Complete", this.state.finalMatches)
+        let finalMatches = this.state.finalMatches;
+        let matchesMade = finalMatches.map(e => (e.id))
+        console.log("final match ids to listen for complete", matchesMade);
+        for(let i = 0; i < matchesMade.length; i++){
+          firebase.database().ref(this.state.business + '/grants/' + matchesMade[i] + '/requests').on('value', snapshot => {
+            console.log("snapshot", snapshot.val()); 
+          if(snapshot.val().complete === false || snapshot.val() === null){
               console.log("nothing to snap");
           }else{
-              let newWish = {name: snapshot.val().name, 
+              let newComplete = {name: snapshot.val().name, 
                   location: snapshot.val().location, 
                   id: snapshot.val().id, 
                   key: snapshot.val().key,
                   request: snapshot.val().request };
-              let allWishesReceived = this.state.wishReceived;
-              allWishesReceived.push(newWish);
-              this.updateWishesReceivedState(allWishesReceived)
-              this.reqMatchKey(newWish);
-              }
-          });
+              let allComplete = this.state.completeMatch;
+              allComplete.push(newComplete);
+              console.log("new complete", newComplete)
+          }
+        })
       }
+    };
+    
 
     reqMatchKey = (req) => {
         console.log("find req match running", req);
@@ -271,6 +303,7 @@ class Grant extends Component {
                     matched: true,
                     finalMatches: newMatch
                 })
+            this.listenForComplete();
             }
         }
 
@@ -440,7 +473,7 @@ class Grant extends Component {
 
         {this.state.viewIncomingReq ? <MatchContainer grant={true} match={false} outgoing={false} incoming={true} matches={this.state.wishReceived} onClick={this.handleAccept}/> : null}
       
-        {this.state.matched ? <MatchContainer finalMatch={this.state.matched} matches={this.state.finalMatches}/> : null}
+        {this.state.matched ? <MatchContainer grant={true} finalMatch={this.state.viewFinal} matches={this.state.finalMatches} markComplete={this.markComplete}/> : null}
       </div>
     );
   }

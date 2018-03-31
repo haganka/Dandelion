@@ -149,7 +149,7 @@ class Wish extends Component {
         request: this.state.request,
         created: Date.now(),
         requested: false,
-        requests: {name: "", location:"", id:"", key:""},
+        requests: {name: "", location:"", id:"", key:"", complete: false},
         completed: false,
         fireKey: ""
       };
@@ -223,7 +223,7 @@ class Wish extends Component {
 
     updateUserSelected = () => {
     console.log("clicked key on state", this.state.clickedKey)
-    let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.id, key: this.state.fireKey}
+    let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.id, key: this.state.fireKey, complete: false}
     console.log("match passing to FB", match)
       firebase.database().ref(this.state.business + "/grants/" + this.state.clickedKey)
       .update({requests: match, requested: true});
