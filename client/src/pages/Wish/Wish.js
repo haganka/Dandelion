@@ -34,6 +34,7 @@ class Wish extends Component {
       clickedKey: "",
       grantReceived: [],
       wishSent: [],
+      viewPotential: false,
       viewOutgoingReq: false,
       viewIncomingReq: false,
       matched: false,
@@ -273,6 +274,33 @@ class Wish extends Component {
         }
 
     }
+    toggleViewPotential = () => {
+      this.setState({
+          viewPotential: true
+        })
+        if (this.state.hasMatched === true) {
+          this.setState({
+            hasMatched: false
+          })
+        }
+        if (this.state.viewOutgoingReq === true) {
+          this.setState({
+            viewOutgoingReq: false
+          })
+        }
+        if (this.state.viewIncoming === true) {
+          this.setState({
+            viewIncomingReq: false
+          })
+        }
+        if (this.state.viewFinal === true) {
+          this.setState({
+            viewFinal: false
+          })
+        }
+        console.log(this.state)
+  }
+
     toggleViewOutgoing = () => {
         this.setState({
             viewOutgoingReq: true
@@ -290,6 +318,11 @@ class Wish extends Component {
           if (this.state.viewFinal === true) {
             this.setState({
               viewFinal: false
+            })
+          }
+          if (this.state.viewPotential === true) {
+            this.setState({
+              viewPotential: false
             })
           }
           console.log(this.state)
@@ -314,6 +347,11 @@ class Wish extends Component {
               viewFinal: false
             })
           }
+          if (this.state.viewPotential === true) {
+            this.setState({
+              viewPotential: false
+            })
+          }
           console.log(this.state)
     }
 
@@ -334,6 +372,11 @@ class Wish extends Component {
           if (this.state.viewIncoming === true) {
             this.setState({
               viewIncomingReq: false
+            })
+          }
+          if (this.state.viewPotential === true) {
+            this.setState({
+              viewPotential: false
             })
           }
           console.log(this.state)
@@ -360,20 +403,24 @@ class Wish extends Component {
         </Grid>
         <Grid>
             <Row>
-                <Col sm={3}>
-                <Button onClick={this.toggleViewOutgoing}>View My Outgoing Requests</Button>
+              <Col sm={3}>
+                <Button onClick={this.toggleViewPotential}>Potential Matches</Button>
                 </Col>
-                <Col sm={3}>
-                <Button onClick={this.toggleViewIncoming}>View My Incoming Requests</Button>
-                </Col>
+              <Col sm={3}>
+                <Button onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
+              </Col>
+              <Col sm={3}>
+                <Button onClick={this.toggleViewIncoming}>Incoming Requests</Button>
+              </Col>
                 {this.state.matched ? <Col sm={3}><Button onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}>Results</MatchContainer>
+        {this.state.hasMatched ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}></MatchContainer>
           : null}
-        {this.state.viewOutgoingReq ? <MatchContainer wish={true} match={false} outgoing={true} incoming={false} matches={this.state.wishSent}>Incoming Requests</MatchContainer> : null}
-
-        {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived}>Outgoing Requests</MatchContainer> : null}
+        {this.state.viewOutgoingReq ? <MatchContainer wish={true} match={false} outgoing={true} incoming={false} matches={this.state.wishSent}></MatchContainer> : null}
+        {this.state.viewPotential ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
+          : null}
+        {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived}></MatchContainer> : null}
         {this.state.matched ? <MatchContainer finalMatch={this.state.matched} matches={this.state.finalMatches}/> : null}
       
       </div>

@@ -36,6 +36,7 @@ class Grant extends Component {
       requests: "",
       wishReceived: [],
       grantSent: [],
+      viewPotential: false,
       viewOutgoingReq: false,
       viewIncomingReq: false,
       viewFinal: false,
@@ -279,6 +280,33 @@ class Grant extends Component {
 
     }
 
+    toggleViewPotential = () => {
+      this.setState({
+          viewPotential: true
+        })
+        if (this.state.hasMatched === true) {
+          this.setState({
+            hasMatched: false
+          })
+        }
+        if (this.state.viewOutgoingReq === true) {
+          this.setState({
+            viewOutgoingReq: false
+          })
+        }
+        if (this.state.viewIncoming === true) {
+          this.setState({
+            viewIncomingReq: false
+          })
+        }
+        if (this.state.viewFinal === true) {
+          this.setState({
+            viewFinal: false
+          })
+        }
+        console.log(this.state)
+  }
+
     toggleViewOutgoing = () => {
         this.setState({
             viewOutgoingReq: true
@@ -296,6 +324,11 @@ class Grant extends Component {
           if (this.state.viewFinal === true) {
             this.setState({
               viewFinal: false
+            })
+          }
+          if (this.state.viewPotential === true) {
+            this.setState({
+              viewPotential: false
             })
           }
           console.log(this.state)
@@ -320,6 +353,11 @@ class Grant extends Component {
               viewFinal: false
             })
           }
+          if (this.state.viewPotential === true) {
+            this.setState({
+              viewPotential: false
+            })
+          }
           console.log(this.state)
     }
 
@@ -340,6 +378,11 @@ class Grant extends Component {
           if (this.state.viewIncoming === true) {
             this.setState({
               viewIncomingReq: false
+            })
+          }
+          if (this.state.viewPotential === true) {
+            this.setState({
+              viewPotential: false
             })
           }
           console.log(this.state)
@@ -365,16 +408,21 @@ class Grant extends Component {
         </Grid>
         <Grid>
             <Row>
-                <Col sm={3}>
-                <Button onClick={this.toggleViewOutgoing}>View My Outgoing Requests</Button>
+              <Col sm={3}>
+                <Button onClick={this.toggleViewPotential}>Potential Matches</Button>
                 </Col>
                 <Col sm={3}>
-                <Button onClick={this.toggleViewIncoming}>View My Incoming Requests</Button>
+                <Button onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
+                </Col>
+                <Col sm={3}>
+                <Button onClick={this.toggleViewIncoming}>Incoming Requests</Button>
                 </Col>
                 {this.state.matched ? <Col sm={3}><Button onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer grant={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
+        {this.state.hasMatched  ? <MatchContainer grant={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
+          : null}
+        {this.state.viewPotential ? <MatchContainer grant={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
         {this.state.viewOutgoingReq ? <MatchContainer grant={true} match={false} outgoing={true} incoming={false} matches={this.state.grantSent} /> : null}
 
