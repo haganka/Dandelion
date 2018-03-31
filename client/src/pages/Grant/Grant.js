@@ -42,7 +42,9 @@ class Grant extends Component {
       viewFinal: false,
       matched: false,
       finalMatches: [],
-      completeMatch: []
+      completeMatch: [],
+      markedComplete: false,
+      rating: 0
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -175,6 +177,14 @@ class Grant extends Component {
     this.listenForRequest();
   };
 
+  handleInputChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({
+        [name]: value
+    });
+    console.log(this.state)
+};
+
   getLatLng = (event) => {
     event.preventDefault();
     let address = this.state.location;
@@ -200,6 +210,13 @@ class Grant extends Component {
 
     markComplete = (id, name, location, request) => {
           let completeKey = id;
+          let allComplete = this.state.completeMatch;
+          let newComplete = {id: id, name: name, location: location, request: request};
+          allComplete.push(newComplete)
+          this.setState({
+            completeMatch: allComplete,
+            markedComplete: true
+          })
           let complete = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
           console.log("completed passing to FB", complete, "complete key", completeKey)
            firebase.database().ref(this.state.business + '/wishes/' + completeKey + '/requests/')
@@ -228,6 +245,24 @@ class Grant extends Component {
           () => this.updateUserSelected())
           this.reqMatchKey(newReq);
           console.log(this.state.grantSent)
+    }
+
+    handleRatingSubmit = (id, rating) => {
+      console.log("id", id, "rating", rating)
+  
+        // API.updateUser(arr[i].userId)
+        //     .then(res => {
+        //     (res.data.fire = arr[i].fireKey);
+        //     (res.data.location = arr[i].location);
+        //     console.log(res.data);
+        //     finalMatches.push(res.data);
+        //     this.setState({
+        //       matches: finalMatches,
+        //       hasMatched: true
+        //     });
+        //     console.log(this.state.matches)
+        //   })
+        //   .catch(err => console.log(err));
     }
 
     updateUserSelected = () => {
@@ -275,7 +310,7 @@ class Grant extends Component {
         for(let i = 0; i < matchesMade.length; i++){
           firebase.database().ref(this.state.business + '/grants/' + matchesMade[i] + '/requests').on('value', snapshot => {
             console.log("snapshot", snapshot.val()); 
-          if(snapshot.val().complete === false || snapshot.val() === null){
+          if(snapshot.val() === null || snapshot.val().complete === false){
               console.log("nothing to snap");
           }else{
               let newComplete = {name: snapshot.val().name, 
@@ -285,6 +320,10 @@ class Grant extends Component {
                   request: snapshot.val().request };
               let allComplete = this.state.completeMatch;
               allComplete.push(newComplete);
+              this.setState({
+                completeMatch: allComplete,
+                markedComplete: true
+              })
               console.log("new complete", newComplete)
           }
         })
@@ -473,7 +512,7 @@ class Grant extends Component {
 
         {this.state.viewIncomingReq ? <MatchContainer grant={true} match={false} outgoing={false} incoming={true} matches={this.state.wishReceived} onClick={this.handleAccept}/> : null}
       
-        {this.state.matched ? <MatchContainer grant={true} finalMatch={this.state.viewFinal} matches={this.state.finalMatches} markComplete={this.markComplete}/> : null}
+        {this.state.matched ? <MatchContainer grant={true} ratingVal={this.state.rating} finalMatch={true} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleInputChange} ratingSubmit={this.handleRatingSubmit}/> : null}
       </div>
     );
   }

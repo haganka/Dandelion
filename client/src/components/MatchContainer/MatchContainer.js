@@ -27,6 +27,10 @@ const MatchContainer = props =>
                         wish={props.wish}
                         complete={props.markComplete}
                         readyForComplete={props.finalMatch}
+                        markedComplete={props.complete}
+                        rating={props.ratingVal}
+                        onChange={props.onChange}
+                        ratingSubmit={props.ratingSubmit}
                         />)) : null}
                     
                     </Col>

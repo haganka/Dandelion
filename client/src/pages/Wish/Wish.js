@@ -38,7 +38,10 @@ class Wish extends Component {
       viewOutgoingReq: false,
       viewIncomingReq: false,
       matched: false,
-      finalMatches: []
+      finalMatches: [],
+      completeMatch: [],
+      markedComplete: false,
+      rating: 0
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -71,6 +74,18 @@ class Wish extends Component {
     console.log(this.state)
     console.dir(event.target)
   };
+
+  handleRadioChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
+    console.log(this.state)
+    console.dir(event.target)
+    if(checked===false){
+      checked===true
+    }
+  }
 
   
   getMatchedUserInfo = (arr) => {
@@ -196,6 +211,21 @@ class Wish extends Component {
       });
   }
 
+  markComplete = (id, name, location) => {
+    let allComplete = this.state.completeMatch;
+    let newComplete = {id: id, name: name, location: location};
+    allComplete.push(newComplete)
+    this.setState({
+      completeMatch: allComplete,
+      markedComplete: true
+    })
+    let completeKey = id;
+    let complete = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
+    console.log("completed passing to FB", complete, "complete key", completeKey)
+     firebase.database().ref(this.state.business + '/grants/' + completeKey + '/requests/')
+    .update({complete: true});
+  };
+
   handleSelect = (id, name, location) => {
     console.log("the id of button clicked", id, "name", name, "loc", location)
     let allRequests = this.state.wishSent;
@@ -218,6 +248,24 @@ class Wish extends Component {
         () => this.updateUserSelected())
         this.reqMatchKey(newReq);
         console.log(this.state.wishSent)
+  }
+
+  handleRatingSubmit = (id, rating) => {
+    console.log("id", id, "rating", rating)
+
+      // API.updateUser(arr[i].userId)
+      //     .then(res => {
+      //     (res.data.fire = arr[i].fireKey);
+      //     (res.data.location = arr[i].location);
+      //     console.log(res.data);
+      //     finalMatches.push(res.data);
+      //     this.setState({
+      //       matches: finalMatches,
+      //       hasMatched: true
+      //     });
+      //     console.log(this.state.matches)
+      //   })
+      //   .catch(err => console.log(err));
   }
  
 
@@ -256,6 +304,33 @@ class Wish extends Component {
         }
     });
   }
+
+  listenForComplete = () => {
+    console.log("LISTEN FOR Complete", this.state.finalMatches)
+    let finalMatches = this.state.finalMatches;
+    let matchesMade = finalMatches.map(e => (e.id))
+    console.log("final match ids to listen for complete", matchesMade);
+    for(let i = 0; i < matchesMade.length; i++){
+      firebase.database().ref(this.state.business + '/wishes/' + matchesMade[i] + '/requests').on('value', snapshot => {
+        console.log("snapshot", snapshot.val()); 
+        if(snapshot.val() === null || snapshot.val().complete === false){
+          console.log("nothing to snap");
+        }else{
+          let newComplete = {name: snapshot.val().name, 
+              location: snapshot.val().location, 
+              id: snapshot.val().id, 
+              key: snapshot.val().key };
+          let allComplete = this.state.completeMatch;
+          allComplete.push(newComplete);
+          console.log("new complete", newComplete)
+          this.setState({
+            completeMatch: allComplete,
+            markedComplete: true
+          })
+        }
+      })
+    }
+  };
 
     reqMatchKey = (req) => {
         console.log("find req match running", req);
@@ -435,7 +510,7 @@ class Wish extends Component {
         {this.state.viewPotential ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
         {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived} onClick={this.handleAccept}></MatchContainer> : null}
-        {this.state.matched ? <MatchContainer finalMatch={this.state.matched} matches={this.state.finalMatches}/> : null}
+        {this.state.matched ? <MatchContainer wish={true} finalMatch={this.state.matched} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleInputChange} rating={this.state.rating} ratingSubmit={this.handleRatingSubmit}/> : null}
       
       </div>
     );

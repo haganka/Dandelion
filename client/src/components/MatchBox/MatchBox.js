@@ -1,7 +1,7 @@
 import React from "react";
 import "./MatchBox.css";
 import { Link } from "react-router-dom";
-import { Col, Row, Form, Button, Jumbotron, Grid, Panel } from 'react-bootstrap';
+import { Col, Row, Form, Button, Radio, FormGroup, FormControl, Jumbotron, Grid, Panel } from 'react-bootstrap';
 
 
 const MatchBox = props => 
@@ -32,6 +32,36 @@ const MatchBox = props =>
 
             {props.grant && props.readyForComplete ? 
             <Button onClick={()=>props.complete(props.matchId, props.name, props.location, props.request)}>Mark completed</Button> : null}  
+            
+            {props.wish && props.readyForComplete && !props.markedComplete ? 
+            <Button onClick={()=>props.complete(props.matchId, props.name, props.location)}>Mark completed</Button> : null} 
+          
+            {props.markedComplete ? 
+            <Form>Please rate your experience with {props.name}
+                  {/* <FormControl
+                    type="radio"
+                    value={props.ratingValue}
+                    onChange={props.onChange}
+                  /> */}
+                <FormGroup>
+                <Radio name="rating" value={1} checked={false} onChange={props.onChange}>
+                  1
+                </Radio>{' '}
+                <Radio name="rating" value={2} checked={false} onChange={props.onChange}>
+                  2
+                </Radio>{' '}
+                <Radio name="rating" value={3} checked={false} onChange={props.onChange}>
+                  3
+                </Radio>
+                <Radio name="rating" value={4} checked={false} onChange={props.onChange}>
+                  4
+                </Radio>
+                <Radio name="rating" value={5} checked={false} onChange={props.onChange}>
+                  5
+                </Radio>
+                <Button onClick={()=>props.ratingSubmit(props.matchId, props.rating)}>Submit Rating</Button>
+              </FormGroup>
+            </Form>: null}
           </Panel.Body>
         </Panel>
     </Col>
