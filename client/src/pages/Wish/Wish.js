@@ -197,14 +197,28 @@ class Wish extends Component {
   }
 
   handleSelect = (id, name, location) => {
-    console.log("the id of button clicked", id)
+    console.log("the id of button clicked", id, "name", name, "loc", location)
     let allRequests = this.state.wishSent;
     let newReq = {name: name, location: location, id: id};
+    console.log(newReq)
     allRequests.push(newReq)
     this.setState({clickedKey: id, wishSent: allRequests}, 
         () => this.updateUserSelected())
         this.keyMatchReq(newReq);
-    }
+        console.log(this.state.wishSent)
+  }
+
+  handleAccept = (id, name, location) => {
+    console.log("the id of accept clicked", id, "name", name, "loc", location)
+    let allRequests = this.state.wishSent;
+    let newReq = {name: name, location: location, id: id};
+    console.log(newReq)
+    allRequests.push(newReq)
+    this.setState({clickedKey: id, wishSent: allRequests}, 
+        () => this.updateUserSelected())
+        this.reqMatchKey(newReq);
+        console.log(this.state.wishSent)
+  }
  
 
     updateUserSelected = () => {
@@ -272,8 +286,8 @@ class Wish extends Component {
                 })
             }
         }
-
     }
+
     toggleViewPotential = () => {
       this.setState({
           viewPotential: true
@@ -420,7 +434,7 @@ class Wish extends Component {
         {this.state.viewOutgoingReq ? <MatchContainer wish={true} match={false} outgoing={true} incoming={false} matches={this.state.wishSent}></MatchContainer> : null}
         {this.state.viewPotential ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
-        {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived}></MatchContainer> : null}
+        {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived} onClick={this.handleAccept}></MatchContainer> : null}
         {this.state.matched ? <MatchContainer finalMatch={this.state.matched} matches={this.state.finalMatches}/> : null}
       
       </div>

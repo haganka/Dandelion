@@ -208,6 +208,18 @@ class Grant extends Component {
   
     }
 
+    handleAccept = (id, name, location, request) => {
+      console.log("the id of accept clicked", id, "name", name, "loc", location)
+      let allRequests = this.state.grantSent;
+      let newReq = {name: name, location: location, id: id, request: request};
+      console.log(newReq)
+      allRequests.push(newReq)
+      this.setState({clickedKey: id, grantSent: allRequests}, 
+          () => this.updateUserSelected())
+          this.reqMatchKey(newReq);
+          console.log(this.state.grantSent)
+    }
+
     updateUserSelected = () => {
         console.log("handle select", this.state.grantSent)
         console.log("clicked key on state", this.state.clickedKey)
@@ -426,7 +438,7 @@ class Grant extends Component {
           : null}
         {this.state.viewOutgoingReq ? <MatchContainer grant={true} match={false} outgoing={true} incoming={false} matches={this.state.grantSent} /> : null}
 
-        {this.state.viewIncomingReq ? <MatchContainer grant={true} match={false} outgoing={false} incoming={true} matches={this.state.wishReceived} /> : null}
+        {this.state.viewIncomingReq ? <MatchContainer grant={true} match={false} outgoing={false} incoming={true} matches={this.state.wishReceived} onClick={this.handleAccept}/> : null}
       
         {this.state.matched ? <MatchContainer finalMatch={this.state.matched} matches={this.state.finalMatches}/> : null}
       </div>

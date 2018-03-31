@@ -21,10 +21,10 @@ const MatchBox = props =>
             <Button onClick={()=>props.cb(props.fire, props.name, props.location)}>Choose {props.name}!</Button> : null}
             
             {props.incoming && props.grant ? 
-            <Button onClick={()=>props.cb(props.fire, props.name, props.location, props.request)}>Accept {props.name}!</Button> : null}
+            <Button onClick={()=>props.cb(props.id, props.name, props.location, props.request)}>Accept {props.name}!</Button> : null}
 
             {props.incoming && props.wish ? 
-            <Button onClick={()=>props.cb(props.fire, props.name, props.location)}>Accept {props.name}!</Button> : null}
+            <Button onClick={()=>props.cb(props.id, props.name, props.location)}>Accept {props.name}!</Button> : null}
 
             {props.grant && props.match ? 
             <Button onClick={()=>props.cb(props.fire, props.name, props.location, props.request)}>Choose {props.name}!</Button> : null}
