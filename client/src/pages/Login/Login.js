@@ -176,8 +176,8 @@ class Login extends Component {
                 {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null}
                 <Row>
                     <Col md={12}>
-                        <Jumbotron>
-                            Hi there, welcome to Wish. Wish allows every day people to make a wish or grant a wish of another. If you're stuck in class and in desperate need of a coffee or don't have time to run out and grab lunch, just make a wish! If you're stopping at the grocery store on the way home or swinging by your favorite coffee shop on the way in to work, offer to grant a wish! By matching and accepting each other, you're making wishes come true. Log in or sign up to get started!
+                        <Jumbotron className="intro">
+                            Dandelion deliveries allow every day people to make a wish or grant a wish of another. If you're in dire need of something, make a wish! If you're out and about and feeling generous, grant one! Dandelion is in the business of making wishes come true. Log in or sign up to get started!
                         </Jumbotron>
                     </Col>
                 </Row>

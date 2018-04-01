@@ -1,4 +1,15 @@
 .wish-nav {
-    font-family: 'Spirax', cursive;
-    font-size: 30px;
+    font-family: 'Averia Serif Libre', cursive;
+    font-size: 45px;
+    color: white !important;
+}
+
+.navbar-default {
+    background: none;
+    /* color: white !important; */
+}
+
+.nav-link {
+    font-size: 25px;
+    color: white !important;
 }
