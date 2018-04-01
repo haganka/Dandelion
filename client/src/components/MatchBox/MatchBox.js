@@ -25,10 +25,10 @@ const MatchBox = props =>
             <Button onClick={()=>props.cb(props.id, props.fire, props.name, props.location)}>Choose {props.name}!</Button> : null}
             
             {props.incoming && props.grant ? 
-            <Button onClick={()=>props.cb(props.id, props.fire, props.name, props.location, props.request)}>Accept {props.name}!</Button> : null}
+            <Button onClick={()=>props.cb(props.matchId, props.finalKey, props.name, props.location, props.request)}>Accept {props.name}!</Button> : null}
 
             {props.incoming && props.wish ? 
-            <Button onClick={()=>props.cb(props.id, props.fire, props.name, props.location)}>Accept {props.name}!</Button> : null}
+            <Button onClick={()=>props.cb(props.matchId, props.finalKey, props.name, props.location)}>Accept {props.name}!</Button> : null}
 
             {props.grant && props.readyForComplete ? 
             <Button onClick={()=>props.complete(props.matchId, props.finalKey, props.name, props.location, props.request)}>Mark completed</Button> : null}  
@@ -59,7 +59,10 @@ const MatchBox = props =>
                 <Radio name="radioGroup" value={5}  onChange={()=>props.onChange(5)}>
                   5
                 </Radio>
-                <Button onClick={()=>props.ratingSubmit(props.matchId)}>Submit Rating</Button>
+                {props.wish ? 
+                <Button onClick={()=>props.ratingSubmit(props.matchId, props.finalKey, props.name, props.location)}>Submit Rating</Button> : null}
+                {props.grant ? 
+                <Button onClick={()=>props.ratingSubmit(props.matchId, props.finalKey, props.name, props.location, props.request)}>Submit Rating</Button> : null}
               </FormGroup>
             </Form>: null}
           </Panel.Body>

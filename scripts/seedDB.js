@@ -18,8 +18,8 @@ const UserSeed = [
     password: "mark",
     ratingArr: [3, 4],
     rating: 3.5,
-    deliveries: 2, 
-    requests: 3
+    completeGrants: [], 
+    completeWishes: []
   },
   {
     name: "Kelly",
@@ -27,8 +27,8 @@ const UserSeed = [
     password: "puppy",
     ratingArr: [5, 1],
     rating: 3,
-    deliveries: 1, 
-    requests: 2
+    completeGrants: [], 
+    completeWishes: []
   },
   {
     name: "Alex",
@@ -36,8 +36,8 @@ const UserSeed = [
     password: "password",
     ratingArr: [],
     rating: 0,
-    deliveries: 0, 
-    requests: 5
+    completeGrants: [],
+    completeWishes: []
   }
 
 ];

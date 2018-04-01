@@ -42,9 +42,10 @@ class Grant extends Component {
       viewFinal: false,
       matched: false,
       finalMatches: [],
-      completeMatch: [],
+      completeMatch: {key: "", id: "", name: "", location: "", request: ""},
       markedComplete: false,
-      rating: 0
+      rating: 0,
+      accountPast: []
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -210,13 +211,13 @@ class Grant extends Component {
       });
   }
 
-    markComplete = (id, name, location, request) => {
-          let completeKey = id;
-          let allComplete = this.state.completeMatch;
-          let newComplete = {id: id, name: name, location: location, request: request};
-          allComplete.push(newComplete)
+    markComplete = (id, key, name, location, request) => {
+          let completeKey = key;
+          // let allComplete = this.state.completeMatch;
+          let newComplete = {key: key, id: id, name: name, location: location, request: request};
+          // allComplete.push(newComplete)
           this.setState({
-            completeMatch: allComplete,
+            completeMatch: newComplete,
             markedComplete: true
           })
           let complete = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
@@ -249,13 +250,16 @@ class Grant extends Component {
           console.log(this.state.grantSent)
     }
 
-    handleRatingSubmit = (id) => {
-      console.log("id", id)
-        API.getUserId(id)
+    handleRatingSubmit = (id, key, name, location, request) => {
+      console.log("id", id, "key", key, "name", name, "location", location, "request", request)
+      console.log("complete matches in state", this.state.completeMatch)  
+      API.getUserId(id)
         .then(res => {
         let ratingArr = res.data.ratingArr;
         let newRating = this.state.rating;
         let dataRating;
+        let completeGrants = res.data.completeGrants;
+        completeGrants.push(this.state.completeMatch);
         ratingArr.push(newRating)
         if(res.data.rating === 0){
           dataRating = newRating;
@@ -263,20 +267,11 @@ class Grant extends Component {
           dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
         }
           let userRating = this.state.rating
-          API.updateUser(id, {ratingArr: ratingArr, rating: dataRating})
+          API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeGrants: completeGrants})
               .then(res => {
               console.log(res.data)
         })
       .catch(err => console.log(err));
-  
-          //   finalMatches.push(res.data);
-          //   this.setState({
-          //     matches: finalMatches,
-          //     hasMatched: true
-          //   });
-          //   console.log(this.state.matches)
-          // })
-          // .catch(err => console.log(err));
       })
     } 
 
@@ -333,10 +328,10 @@ class Grant extends Component {
                   id: snapshot.val().id, 
                   key: snapshot.val().key,
                   request: snapshot.val().request };
-              let allComplete = this.state.completeMatch;
-              allComplete.push(newComplete);
+              // let allComplete = this.state.completeMatch;
+              // allComplete.push(newComplete);
               this.setState({
-                completeMatch: allComplete,
+                completeMatch: newComplete,
                 markedComplete: true
               })
               console.log("new complete", newComplete)
@@ -347,7 +342,9 @@ class Grant extends Component {
     
 
     reqMatchKey = (req) => {
-        console.log("find req match running", req);
+      console.log("find req match running", req);
+      // for(let j = 0; j < this.state.finalMatches.length; j++){
+      //   if(req.key !== this.state.finalMatches[j].key){
         for(let i = 0; i < this.state.grantSent.length; i++){
             if(req.key === this.state.grantSent[i].key){
                 alert("it's a match!", this.state.grantSent[i])
@@ -361,10 +358,14 @@ class Grant extends Component {
             }
         }
 
-    }
+      //   }else{console.log("this match exists already")}
+      // }
+  }
 
     keyMatchReq = (req) => {
-        console.log("key match req running", req);
+      console.log("find req match running", req);
+      // for(let j = 0; j < this.state.finalMatches.length; j++){
+      //   if(req.key !== this.state.finalMatches[j].key){
         for(let i = 0; i < this.state.wishReceived.length; i++){
             if(req.key === this.state.wishReceived[i].key){
                 alert("it's a match!", this.state.wishReceived[i])
@@ -376,8 +377,10 @@ class Grant extends Component {
                 })
             }
         }
-
+      //   }else{console.log("match exists already")}
+      // }
     }
+
 
     toggleViewPotential = () => {
       this.setState({

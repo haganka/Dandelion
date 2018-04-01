@@ -39,7 +39,7 @@ class Wish extends Component {
       viewIncomingReq: false,
       matched: false,
       finalMatches: [],
-      completeMatch: [],
+      completeMatch: {key: "", id: "", name: "", location: ""},
       markedComplete: false,
       rating: 0
     };
@@ -209,16 +209,16 @@ class Wish extends Component {
   }
 
   markComplete = (id, key, name, location) => {
-    let allComplete = this.state.completeMatch;
+    // let allComplete = this.state.completeMatch;
     let newComplete = {key: key, id: id, name: name, location: location};
-    allComplete.push(newComplete)
+    // allComplete.push(newComplete)
     this.setState({
-      completeMatch: allComplete,
+      completeMatch: newComplete,
       markedComplete: true
     })
     let completeKey = key;
     let complete = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
-    console.log("completed passing to FB", complete, "complete key", completeKey)
+    console.log("completed passing to FB", this.state.completeMatch, "complete key", completeKey)
      firebase.database().ref(this.state.business + '/grants/' + completeKey + '/requests/')
     .update({complete: true});
   };
@@ -247,13 +247,16 @@ class Wish extends Component {
         console.log(this.state.wishSent)
   }
 
-  handleRatingSubmit = (id) => {
-    console.log("id", id)
+  handleRatingSubmit = (id, key, name, location) => {
+    console.log("id", id, "key", key, "name", name, "location", location)
+    console.log("complete matches in state", this.state.completeMatch)
       API.getUserId(id)
       .then(res => {
       let ratingArr = res.data.ratingArr;
       let newRating = this.state.rating;
       let dataRating;
+      let completeWishes = res.data.completeWishes;
+      completeWishes.push(this.state.completeMatch);
       ratingArr.push(newRating)
       if(res.data.rating === 0){
         dataRating = newRating;
@@ -261,7 +264,7 @@ class Wish extends Component {
         dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
       }
         let userRating = this.state.rating
-        API.updateUser(id, {ratingArr: ratingArr, rating: dataRating})
+        API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeWishes: completeWishes})
             .then(res => {
             console.log(res.data)
       })
@@ -330,11 +333,11 @@ class Wish extends Component {
               location: snapshot.val().location, 
               id: snapshot.val().id, 
               key: snapshot.val().key };
-          let allComplete = this.state.completeMatch;
-          allComplete.push(newComplete);
+          // let allComplete = this.state.completeMatch;
+          // allComplete.push(newComplete);
           console.log("new complete", newComplete)
           this.setState({
-            completeMatch: allComplete,
+            completeMatch: newComplete,
             markedComplete: true
           })
         }
@@ -344,23 +347,31 @@ class Wish extends Component {
 
     reqMatchKey = (req) => {
         console.log("find req match running", req);
-        for(let i = 0; i < this.state.wishSent.length; i++){
-            if(req.key === this.state.wishSent[i].key){
-                alert("it's a match!", this.state.wishSent[i])
-                let newMatch = this.state.finalMatches;
-                newMatch.push(req)
-                this.setState({
+        // for(let j = 0; j < this.state.finalMatches.length; j++){
+          // if(req.key !== this.state.finalMatches[j].key){
+            console.log("final matches key does not equal req")
+            for(let i = 0; i < this.state.wishSent.length; i++){
+              if(req.key === this.state.wishSent[i].key){
+                  alert("it's a match!", this.state.wishSent[i])
+                  let newMatch = this.state.finalMatches;
+                  newMatch.push(req)
+                  this.setState({
                     matched: true,
                     finalMatches: newMatch
-                })
+                  })
+                  this.listenForComplete();
+              }
             }
-        }
-
+          // }else{
+          // console.log("this match already exists!")}
+        // }
     }
 
     keyMatchReq = (req) => {
-        console.log("key match req running", req);
-        for(let i = 0; i < this.state.grantReceived.length; i++){
+      // for(let j = 0; j < this.state.finalMatches.length; j++){
+      //   if(req.key !== this.state.finalMatches[j].key){
+          console.log("key match req running", req);
+          for(let i = 0; i < this.state.grantReceived.length; i++){
             if(req.key === this.state.grantReceived[i].key){
                 alert("it's a match!", this.state.grantReceived[i])
                 let newMatch = this.state.finalMatches;
@@ -370,8 +381,10 @@ class Wish extends Component {
                     finalMatches: newMatch
                 })
             }
-        }
-    }
+          }
+    //     }else{console.log("this match already exists in final matches")}
+    // }
+  }
 
     toggleViewPotential = () => {
       this.setState({

@@ -8,8 +8,8 @@ const userSchema = new Schema({
   password: {type: String, required: true},
   ratingArr: { type: Array },
   rating: {type: Number},
-  deliveries: { type: Number },
-  requests: { type: Number }
+  completeGrants: { type: Array },
+  completeWishes: { type: Array }
 });
 
 const User = mongoose.model("User", userSchema);
