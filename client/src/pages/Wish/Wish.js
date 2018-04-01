@@ -208,6 +208,15 @@ class Wish extends Component {
       });
   }
 
+  removeEntry = (key) => {
+    console.log("key to remove", key)
+      firebase.database().ref(this.state.business + '/grants/' + key).remove();
+      let allFinal = this.state.finalMatches;
+      console.log("current final", this.state.finalMatches)
+      let newFinal = allFinal.filter(e => e.key !== key)
+      console.log("new final", newFinal);
+  }
+
   markComplete = (id, key, name, location) => {
     // let allComplete = this.state.completeMatch;
     let newComplete = {key: key, id: id, name: name, location: location};
@@ -269,7 +278,7 @@ class Wish extends Component {
             console.log(res.data)
       })
     .catch(err => console.log(err));
-
+    this.removeEntry(key);
         //   finalMatches.push(res.data);
         //   this.setState({
         //     matches: finalMatches,

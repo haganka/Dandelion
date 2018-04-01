@@ -211,6 +211,26 @@ class Grant extends Component {
       });
   }
 
+  removeEntry = (key) => {
+    console.log("key to remove", key)
+      firebase.database().ref(this.state.business + '/grants/' + key).remove();
+      let allFinal = this.state.finalMatches;
+      let allReceived = this.state.wishReceived;
+      let allSent = this.state.grantSent;
+      let allMatches = this.state.matches;
+      let newFinal = allFinal.filter(e => e.fire !== key)
+      let newReceived = allReceived.filter(e => e.key !== key)
+      let newSent = allSent.filter(e => e.key !== key)
+      let newMatches = allMatches.filter(e => e.key !== key)
+      this.setState({
+        matches: newMatches,
+        wishReceived: newReceived,
+        grantSent: newSent,
+        finalMatches: newFinal,
+        completeMatch: {key: "", id: "", name: "", location: "", request: ""} 
+      })
+  }
+
     markComplete = (id, key, name, location, request) => {
           let completeKey = key;
           // let allComplete = this.state.completeMatch;
@@ -273,6 +293,7 @@ class Grant extends Component {
         })
       .catch(err => console.log(err));
       })
+      this.removeEntry(key);
     } 
 
     updateUserSelected = () => {
