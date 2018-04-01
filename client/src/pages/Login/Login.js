@@ -53,7 +53,10 @@ class Login extends Component {
                 name: this.state.name,
                 email: this.state.email,
                 password: this.state.password,
-                rating: []
+                ratingArr: [],
+                rating: 0,
+                completeGrants: [],
+                completeWishes: []
             }).then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
             .catch(err => console.log(err));
         // }

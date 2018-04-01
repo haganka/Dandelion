@@ -212,9 +212,21 @@ class Wish extends Component {
     console.log("key to remove", key)
       firebase.database().ref(this.state.business + '/grants/' + key).remove();
       let allFinal = this.state.finalMatches;
-      console.log("current final", this.state.finalMatches)
+      let allReceived = this.state.grantReceived;
+      let allSent = this.state.wishSent;
+      let allMatches = this.state.matches;
       let newFinal = allFinal.filter(e => e.key !== key)
-      console.log("new final", newFinal);
+      let newReceived = allReceived.filter(e => e.key !== key)
+      let newSent = allSent.filter(e => e.key !== key)
+      let newMatches = allMatches.filter(e => e.fire !== key)
+      this.setState({
+        matches: newMatches,
+        grantReceived: newReceived,
+        wishSent: newSent,
+        finalMatches: newFinal,
+        completeMatch: {key: "", id: "", name: "", location: ""} 
+      })
+      console.log(this.state)
   }
 
   markComplete = (id, key, name, location) => {
@@ -264,8 +276,8 @@ class Wish extends Component {
       let ratingArr = res.data.ratingArr;
       let newRating = this.state.rating;
       let dataRating;
-      let completeWishes = res.data.completeWishes;
-      completeWishes.push(this.state.completeMatch);
+      let completeGrants = res.data.completeGrants;
+      completeGrants.push(this.state.completeMatch);
       ratingArr.push(newRating)
       if(res.data.rating === 0){
         dataRating = newRating;
@@ -273,7 +285,7 @@ class Wish extends Component {
         dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
       }
         let userRating = this.state.rating
-        API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeWishes: completeWishes})
+        API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeGrants: completeGrants})
             .then(res => {
             console.log(res.data)
       })
@@ -490,7 +502,7 @@ class Wish extends Component {
               viewOutgoingReq: false
             })
           }
-          if (this.state.viewIncoming === true) {
+          if (this.state.viewIncomingReq === true) {
             this.setState({
               viewIncomingReq: false
             })
@@ -542,7 +554,7 @@ class Wish extends Component {
         {this.state.viewPotential ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
         {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived} onClick={this.handleAccept}></MatchContainer> : null}
-        {this.state.matched ? <MatchContainer wish={true} finalMatch={this.state.matched} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleRadioChange} rating={this.state.rating} ratingSubmit={this.handleRatingSubmit}/> : null}
+        {this.state.viewFinal ? <MatchContainer wish={true} finalMatch={this.state.matched} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleRadioChange} rating={this.state.rating} ratingSubmit={this.handleRatingSubmit}/> : null}
       
       </div>
     );

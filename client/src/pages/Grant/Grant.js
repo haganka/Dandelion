@@ -218,17 +218,19 @@ class Grant extends Component {
       let allReceived = this.state.wishReceived;
       let allSent = this.state.grantSent;
       let allMatches = this.state.matches;
-      let newFinal = allFinal.filter(e => e.fire !== key)
+      let newFinal = allFinal.filter(e => e.key !== key)
       let newReceived = allReceived.filter(e => e.key !== key)
       let newSent = allSent.filter(e => e.key !== key)
-      let newMatches = allMatches.filter(e => e.key !== key)
+      let newMatches = allMatches.filter(e => e.fire !== key)
       this.setState({
         matches: newMatches,
         wishReceived: newReceived,
         grantSent: newSent,
         finalMatches: newFinal,
-        completeMatch: {key: "", id: "", name: "", location: "", request: ""} 
+        completeMatch: {key: "", id: "", name: "", location: "", request: ""},
+        matched: false
       })
+      console.log(this.state)
   }
 
     markComplete = (id, key, name, location, request) => {
@@ -278,8 +280,8 @@ class Grant extends Component {
         let ratingArr = res.data.ratingArr;
         let newRating = this.state.rating;
         let dataRating;
-        let completeGrants = res.data.completeGrants;
-        completeGrants.push(this.state.completeMatch);
+        let completeWishes = res.data.completeWishes;
+        completeWishes.push(this.state.completeMatch);
         ratingArr.push(newRating)
         if(res.data.rating === 0){
           dataRating = newRating;
@@ -287,7 +289,7 @@ class Grant extends Component {
           dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
         }
           let userRating = this.state.rating
-          API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeGrants: completeGrants})
+          API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeWishes: completeWishes})
               .then(res => {
               console.log(res.data)
         })
@@ -498,7 +500,7 @@ class Grant extends Component {
               viewOutgoingReq: false
             })
           }
-          if (this.state.viewIncoming === true) {
+          if (this.state.viewIncomingReq === true) {
             this.setState({
               viewIncomingReq: false
             })
@@ -551,7 +553,7 @@ class Grant extends Component {
 
         {this.state.viewIncomingReq ? <MatchContainer grant={true} match={false} outgoing={false} incoming={true} matches={this.state.wishReceived} onClick={this.handleAccept}/> : null}
       
-        {this.state.matched ? <MatchContainer grant={true} rating={this.state.rating} finalMatch={true} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleRadioChange} ratingSubmit={this.handleRatingSubmit}/> : null}
+        {this.state.viewFinal ? <MatchContainer grant={true} rating={this.state.rating} finalMatch={true} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleRadioChange} ratingSubmit={this.handleRatingSubmit}/> : null}
       </div>
     );
   }
