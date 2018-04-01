@@ -31,10 +31,10 @@ const MatchBox = props =>
             <Button onClick={()=>props.cb(props.id, props.fire, props.name, props.location)}>Accept {props.name}!</Button> : null}
 
             {props.grant && props.readyForComplete ? 
-            <Button onClick={()=>props.complete(props.id, props.matchId, props.name, props.location, props.request)}>Mark completed</Button> : null}  
+            <Button onClick={()=>props.complete(props.matchId, props.finalKey, props.name, props.location, props.request)}>Mark completed</Button> : null}  
             
             {props.wish && props.readyForComplete && !props.markedComplete ? 
-            <Button onClick={()=>props.complete(props.id, props.matchId, props.name, props.location)}>Mark completed</Button> : null} 
+            <Button onClick={()=>props.complete(props.matchId, props.finalKey, props.name, props.location)}>Mark completed</Button> : null} 
           
             {props.markedComplete ? 
             <Form>Please rate your experience with {props.name}
@@ -59,7 +59,7 @@ const MatchBox = props =>
                 <Radio name="radioGroup" value={5}  onChange={()=>props.onChange(5)}>
                   5
                 </Radio>
-                <Button onClick={()=>props.ratingSubmit(props.key)}>Submit Rating</Button>
+                <Button onClick={()=>props.ratingSubmit(props.matchId)}>Submit Rating</Button>
               </FormGroup>
             </Form>: null}
           </Panel.Body>

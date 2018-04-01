@@ -54,7 +54,8 @@ class Login extends Component {
             API.saveUser({
                 name: this.state.name,
                 email: this.state.email,
-                password: this.state.password
+                password: this.state.password,
+                rating: []
             }).then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
             .catch(err => console.log(err));
         // }

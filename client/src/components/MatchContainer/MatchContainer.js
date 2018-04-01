@@ -18,6 +18,7 @@ const MatchContainer = props =>
                         id={match._id} 
                         matchId={match.id}
                         key={match.fire}
+                        finalKey={match.key}
                         fire={match.fire} 
                         cb={props.onClick}
                         grant={props.grant}

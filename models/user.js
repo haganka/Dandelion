@@ -6,7 +6,8 @@ const userSchema = new Schema({
   name: { type: String },
   email: {type: String, required: true , index: {unique: true}},
   password: {type: String, required: true},
-  rating: { type: Number },
+  ratingArr: { type: Array },
+  rating: {type: Number},
   deliveries: { type: Number },
   requests: { type: Number }
 });

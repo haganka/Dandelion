@@ -249,10 +249,24 @@ class Wish extends Component {
 
   handleRatingSubmit = (id) => {
     console.log("id", id)
-      let userRating = this.state.rating
-      API.updateUser(id, {rating: userRating})
-          .then(res => {
-          console.log(res.data)
+      API.getUserId(id)
+      .then(res => {
+      let ratingArr = res.data.ratingArr;
+      let newRating = this.state.rating;
+      let dataRating;
+      ratingArr.push(newRating)
+      if(res.data.rating === 0){
+        dataRating = newRating;
+      }else{
+        dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
+      }
+        let userRating = this.state.rating
+        API.updateUser(id, {ratingArr: ratingArr, rating: dataRating})
+            .then(res => {
+            console.log(res.data)
+      })
+    .catch(err => console.log(err));
+
         //   finalMatches.push(res.data);
         //   this.setState({
         //     matches: finalMatches,
@@ -260,7 +274,7 @@ class Wish extends Component {
         //   });
         //   console.log(this.state.matches)
         // })
-        .catch(err => console.log(err));
+        // .catch(err => console.log(err));
     })
   } 
  
