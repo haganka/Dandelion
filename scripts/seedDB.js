@@ -26,7 +26,7 @@ const UserSeed = [
     email: "kelly.hagan3@gmail.com",
     password: "puppy",
     ratingArr: [5, 1],
-    raring: 3,
+    rating: 3,
     deliveries: 1, 
     requests: 2
   },

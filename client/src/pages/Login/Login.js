@@ -41,8 +41,6 @@ class Login extends Component {
 
 
     signUpSubmit = (email, password) => {
-        // console.log("sign up clicked!")
-        // event.preventDefault();
         auth.createUserWithEmailAndPassword(email, password)
         .catch(err => console.error(err));
         this.setState({
@@ -73,15 +71,10 @@ class Login extends Component {
           });
         })
         .catch(err => console.error(err));
-        // this.setState({
-        //     email: this.state.email,
-        //     password: this.state.password
-        // })
         API.checkUser({
             email: this.state.email
         })
         .then(res => {console.log(res.data._id); this.setState({id: res.data._id, name: res.data.name});})
-        // .then(window.location = ('/home'))
         .catch(err => console.log(err));
     };
 
