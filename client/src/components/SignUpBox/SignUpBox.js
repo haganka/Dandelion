@@ -60,7 +60,7 @@ const SignUpBox = props =>
     <Button
       className="signup-submit" onClick={()=>props.onSubmit(props.emailValue, props.passValue)}
       disabled={!(props.emailValue && props.passValue)}
-      >Sign Up
+      >Submit
     </Button>
     </Col>
     </Row>

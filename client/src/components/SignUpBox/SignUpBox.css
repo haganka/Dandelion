@@ -6,13 +6,13 @@
     border: white solid 2px;
     color: rgb(255, 255, 255);
     border-radius: 10px;
-    font-size: 22px;
+    font-size: 18px;
     background: none;
     opacity: 100%;
 }
 
 .email, .password, .name {
     color: white;
-    font-size: 22px;
+    font-size: 18px;
     text-align: right;
 }

@@ -12,9 +12,9 @@ import { geolocated } from 'react-geolocated';
 
 const Home = props =>
       <div>
-        <Grid fluid>
+        <Grid>
           <Row>
-            <Col sm={12}>{props.name}
+            <Col sm={4} className="welcome-name">Welcome, {props.name}
             </Col>
           </Row>
           <Row>

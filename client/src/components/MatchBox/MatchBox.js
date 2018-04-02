@@ -11,7 +11,7 @@ const MatchBox = props =>
   </Row>
   <Row>
     <Col sm={10}>
-        <Panel>
+        <Panel className="match-box">
           <Panel.Heading>{props.name}</Panel.Heading>
           <Panel.Body>
             <h5>Rating: {props.rating}</h5>
