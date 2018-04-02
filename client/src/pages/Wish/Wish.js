@@ -77,6 +77,10 @@ class Wish extends Component {
     console.dir(event.target)
   };
 
+  saveCurrentPosition = (lat, long) => {
+    console.log(lat, long)
+  }
+
   handleRadioChange = value => {
     // const { name, value } = event.target;
     console.log("rating val", value)
@@ -547,6 +551,7 @@ class Wish extends Component {
                 getLocation={this.getCurrentPosition}
                 onChange={this.handleInputChange.bind(this)}
                 onSubmit={this.getLatLng}
+                saveCurrentPosition={this.saveCurrentPosition}
               /> 
             </Col>
           </Row>

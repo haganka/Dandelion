@@ -14,5 +14,9 @@
 #email, #password {
     color: white;
     font-size: 18px;
-    text-align: right;
+}
+
+#login-box {
+    margin: 0 auto;
+    padding: 5% 30%;
 }

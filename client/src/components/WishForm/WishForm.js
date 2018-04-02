@@ -15,6 +15,7 @@ const WishForm = props =>
         <Row>
 
             <Geolocation
+                // onSuccess={() => props.saveCurrentPosition(latitude, longitude)}
                 onSuccess={console.log}
                 render={({
                     fetchingPosition,
@@ -24,11 +25,12 @@ const WishForm = props =>
                 }) =>
                     <div>
                         <Row>
-          
                             <Button className="current-loc-submit" onClick={getCurrentPosition}>Use my Current Location</Button>
-                     
                         </Row>
+                        latitude: {latitude}
+                        longitude: {longitude}
                     </div>}
+            
             />
             </Row>
         </FormGroup> 
@@ -37,6 +39,7 @@ const WishForm = props =>
         <Row>
             <div className="current-loc-text">
                     or enter delivery location
+                    {console.log(props.position)}
             </div>
             {/* <Col sm={8}> */}
                 <FormControl

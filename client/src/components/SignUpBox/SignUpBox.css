@@ -14,5 +14,10 @@
 .email, .password, .name {
     color: white;
     font-size: 18px;
-    text-align: right;
 }
+
+#signup-box {
+    margin: 0 auto;
+    padding: 5% 30%;
+}
+

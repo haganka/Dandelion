@@ -1,17 +1,18 @@
 import React from "react";
 import './LogInBox.css';
-import { Form, FormGroup, FormControl, Col, Row, Button, ControlLabel } from 'react-bootstrap';
+import { Form, FormGroup, Grid, FormControl, Col, Row, Button, ControlLabel } from 'react-bootstrap';
 
 const LogInBox = props => 
 
   <div className="login">
-    <Form>
+  <Grid>
+    <Form id="login-box">
     <Row>
     <FormGroup>
-      <Col sm={4} id="email">
+      <div id="email">
         Email
-      </Col>
-      <Col componentClass={ControlLabel} sm={4}>
+      </div>
+      <div >
       <FormControl
           type="email"
           value={props.emailValue}
@@ -19,16 +20,16 @@ const LogInBox = props =>
           name="email"
           placeholder="Enter Email"
         />  
-      </Col>
+      </div>
     </FormGroup>
     </Row>
 
     <Row>
     <FormGroup>
-      <Col sm={4} id="password">
+      <div id="password">
         Password
-      </Col>
-      <Col componentClass={ControlLabel} sm={4}>
+      </div>
+      <div >
         <FormControl
           type="password"
           value={props.passValue}
@@ -36,11 +37,11 @@ const LogInBox = props =>
           name="password"
           placeholder="Enter password"
         />
-      </Col>
+      </div>
     </FormGroup>
     </Row>
     <Row>
-      <Col sm={12} className="login-btn-box">
+      <Col xs={12} className="login-btn-box">
       <Button
         className="login-submit" onClick={()=>props.onSubmit(props.emailValue, props.passValue)}
         disabled={!(props.emailValue && props.passValue)}
@@ -49,6 +50,7 @@ const LogInBox = props =>
     </Col>
     </Row>
     </Form>
+    </Grid>
   </div>;
 
 
