@@ -243,14 +243,11 @@ class Login extends Component {
                 grantClick={this.toggleGrant.bind(this)}
                 wish={this.state.wish}
                 grant={this.state.grant}/>}
-            
-
             </div>
 
 
         );
     }
 }
-
 
 export default Login;

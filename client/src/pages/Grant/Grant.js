@@ -11,6 +11,7 @@ import moment from 'moment';
 import OutgoingContainer from '../../components/OutgoingContainer';
 import IncomingContainer from '../../components/IncomingContainer';
 import {fire, auth} from '../../fire.js';
+import MatchModal from '../../components/MatchModal';
 
 class Grant extends Component {
   //allows access to props if you pass down, allows console logging
@@ -45,7 +46,8 @@ class Grant extends Component {
       completeMatch: {key: "", id: "", name: "", location: "", request: ""},
       markedComplete: false,
       rating: 0,
-      accountPast: []
+      accountPast: [],
+      showModal: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -363,6 +365,15 @@ class Grant extends Component {
         })
       }
     };
+
+    handleCloseModal = () => {
+      this.setState({ showModal: false });
+    }
+  
+    handleShowModal = () => {
+      this.setState({ showModal: true });
+      console.log("where modal is true", this.state.showModal)
+    }
     
 
     reqMatchKey = (req) => {
@@ -371,13 +382,14 @@ class Grant extends Component {
       //   if(req.key !== this.state.finalMatches[j].key){
         for(let i = 0; i < this.state.grantSent.length; i++){
             if(req.key === this.state.grantSent[i].key){
-                alert("it's a match!", this.state.grantSent[i])
+                // alert("it's a match!", this.state.grantSent[i])
                 let newMatch = this.state.finalMatches;
                 newMatch.push(req)
                 this.setState({
                     matched: true,
-                    finalMatches: newMatch
+                    finalMatches: newMatch,
                 })
+            this.handleShowModal();
             this.listenForComplete();
             }
         }
@@ -392,13 +404,14 @@ class Grant extends Component {
       //   if(req.key !== this.state.finalMatches[j].key){
         for(let i = 0; i < this.state.wishReceived.length; i++){
             if(req.key === this.state.wishReceived[i].key){
-                alert("it's a match!", this.state.wishReceived[i])
+                // alert("it's a match!", this.state.wishReceived[i])
                 let newMatch = this.state.finalMatches;
                 newMatch.push(req)
                 this.setState({
                     matched: true,
                     finalMatches: newMatch
                 })
+                this.handleShowModal();
             }
         }
       //   }else{console.log("match exists already")}
@@ -488,6 +501,11 @@ class Grant extends Component {
     }
 
     toggleViewFinal = () => {
+        if(this.state.showModal === true){
+          this.setState({
+            showModal: false
+          })
+        }
         this.setState({
             viewFinal: true
           })
@@ -555,6 +573,9 @@ class Grant extends Component {
         {this.state.viewIncomingReq ? <MatchContainer grant={true} match={false} outgoing={false} incoming={true} matches={this.state.wishReceived} onClick={this.handleAccept}/> : null}
       
         {this.state.viewFinal ? <MatchContainer grant={true} rating={this.state.rating} finalMatch={true} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleRadioChange} ratingSubmit={this.handleRatingSubmit}/> : null}
+      
+        {this.state.showModal ? <MatchModal show={this.handleShowModal} close={this.handleCloseModal} viewMatches={this.toggleViewFinal}/> : null}
+      
       </div>
     );
   }

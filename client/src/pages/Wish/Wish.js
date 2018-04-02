@@ -9,6 +9,7 @@ import firebase from '../../fire.js';
 import MatchContainer from '../../components/MatchContainer';
 // import moment from 'moment';
 import {fire, auth} from '../../fire.js';
+import MatchModal from '../../components/MatchModal';
 
 
 class Wish extends Component {
@@ -41,7 +42,8 @@ class Wish extends Component {
       finalMatches: [],
       completeMatch: {key: "", id: "", name: "", location: ""},
       markedComplete: false,
-      rating: 0
+      rating: 0,
+      showModal: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -367,6 +369,15 @@ class Wish extends Component {
     }
   };
 
+  handleCloseModal = () => {
+    this.setState({ showModal: false });
+  }
+
+  handleShowModal = () => {
+    this.setState({ showModal: true });
+    console.log("where modal is true", this.state.showModal)
+  }
+
     reqMatchKey = (req) => {
         console.log("find req match running", req);
         // for(let j = 0; j < this.state.finalMatches.length; j++){
@@ -490,6 +501,11 @@ class Wish extends Component {
     }
 
     toggleViewFinal = () => {
+      if(this.state.showModal === true){
+        this.setState({
+          showModal: false
+        })
+      }
         this.setState({
             viewFinal: true
           })
@@ -556,6 +572,7 @@ class Wish extends Component {
           : null}
         {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived} onClick={this.handleAccept}></MatchContainer> : null}
         {this.state.viewFinal ? <MatchContainer wish={true} finalMatch={this.state.matched} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleRadioChange} rating={this.state.rating} ratingSubmit={this.handleRatingSubmit}/> : null}
+        {this.state.showModal ? <MatchModal show={this.handleShowModal} close={this.handleCloseModal} viewMatches={this.toggleViewFinal}/> : null}
       
       </div>
     );
