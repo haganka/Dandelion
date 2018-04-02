@@ -281,7 +281,8 @@ class Grant extends Component {
         let newRating = this.state.rating;
         let dataRating;
         let completeWishes = res.data.completeWishes;
-        completeWishes.push(this.state.completeMatch);
+        let newWish = {grantedBy: this.state.name, location: location, request: request, location: location, id: id, key: key}
+        completeWishes.push(newWish);
         ratingArr.push(newRating)
         if(res.data.rating === 0){
           dataRating = newRating;

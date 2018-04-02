@@ -277,7 +277,8 @@ class Wish extends Component {
       let newRating = this.state.rating;
       let dataRating;
       let completeGrants = res.data.completeGrants;
-      completeGrants.push(this.state.completeMatch);
+      let newGrant = {wishFrom: this.state.name, request: this.state.request, location: this.state.location, id: id, key: key}
+      completeGrants.push(newGrant);
       ratingArr.push(newRating)
       if(res.data.rating === 0){
         dataRating = newRating;
