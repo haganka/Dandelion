@@ -8,10 +8,19 @@ import './Home.css';
 import firebase from '../../fire.js';
 import { geolocated } from 'react-geolocated';
 // import MatchContainer from '../MatchContainer';
-
+import NavBar from '../../components/NavBar';
+import Account from '../Account';
 
 const Home = props =>
       <div>
+          {props.isLoggedIn && props.viewAccount ? 
+            <Account 
+                userId={props.userId} 
+                name={props.name} 
+                rating={props.rating}
+                isLoggedIn={props.isLoggedIn} 
+                completedWishes={props.completedWishes}
+                completedGrants={props.completedGrants}/> : 
         <Grid>
           <Row>
             <Col sm={4} className="welcome-name">Welcome, {props.name}
@@ -42,10 +51,9 @@ const Home = props =>
               isLoggedIn={props.isLoggedIn} 
               /> : null}
             </Col>
-          </Row>
-        </Grid>
+          </Row> 
+        </Grid> }
+
       </div>
-
-
 
 export default Home;

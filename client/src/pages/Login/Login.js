@@ -9,7 +9,8 @@ import Wish from '../Wish';
 import Grant from '../Grant';
 import Home from '../Home';
 import {fire, auth} from '../../fire.js';
-
+import Account from '../Account';
+import NavBar from "../../components/NavBar";
 
 class Login extends Component {
     //allows access to props if you pass down, allows console logging
@@ -24,12 +25,16 @@ class Login extends Component {
             email: "",
             password: "",
             id: "",
+            rating: 0,
+            completedWishes: [],
+            completedGrants: [],
             redirectTo: "",
             isLoggedIn: false,
             fireId: null,
             grant: false,
             wish: false,
-            submitSuccess: false
+            submitSuccess: false,
+            viewAccount: false
         };
 
         this.toggleLogIn = this.toggleLogIn.bind(this);
@@ -77,7 +82,14 @@ class Login extends Component {
         API.checkUser({
             email: this.state.email
         })
-        .then(res => {console.log(res.data._id); this.setState({id: res.data._id, name: res.data.name});})
+        .then(res => {console.log(res.data._id); 
+            this.setState({
+                id: res.data._id, 
+                name: res.data.name,
+                rating: res.data.rating,
+                completedWishes: res.data.completeWishes,
+                completedGrants: res.data.completeGrants
+            });})
         .catch(err => console.log(err));
     };
 
@@ -87,6 +99,14 @@ class Login extends Component {
     //       }).catch(function(error) {
     //     });
     // }
+
+    viewAccount = (event) => {
+        event.preventDefault();
+        this.setState({
+            viewAccount: true
+        })
+        console.log(this.state)
+    }
 
 
     handleInputChange = (event) => {
@@ -151,6 +171,9 @@ class Login extends Component {
   }
 
   componentDidMount = () => {
+      this.setState({
+          viewAccount: false
+      })
     this.authListener();
   };
 
@@ -159,7 +182,8 @@ class Login extends Component {
         if (user) {
             this.setState({
                 email: user.email,
-                fireId: user.uid
+                fireId: user.uid,
+                isLoggedIn: true
             })
         } else {
         console.log("user signed out");
@@ -171,9 +195,10 @@ class Login extends Component {
     render() {
         return (
             <div>
+            <NavBar accountClick={this.viewAccount}/>
             {!this.state.submitSuccess ? 
             <Grid fluid>
-                {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null}
+                {/* {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null} */}
                 <Row>
                     <Col md={12}>
                         <Jumbotron className="intro">
@@ -205,14 +230,24 @@ class Login extends Component {
                     </Col>
                 </Row>
             </Grid> : 
-             <Home userId={this.state.id} 
+             <Home 
+                userId={this.state.id} 
                 name={this.state.name} 
+                rating={this.state.rating}
+                completedWishes={this.state.completedWishes}
+                completedGrants={this.state.completedGrants}
+                viewAccount={this.state.viewAccount}
+                accountClick={this.viewAccount}
                 isLoggedIn={this.state.isLoggedIn} 
                 wishClick={this.toggleWish.bind(this)} 
                 grantClick={this.toggleGrant.bind(this)}
                 wish={this.state.wish}
                 grant={this.state.grant}/>}
+            
+
             </div>
+
+
         );
     }
 }
