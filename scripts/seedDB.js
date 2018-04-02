@@ -16,25 +16,28 @@ const UserSeed = [
     name: "Mark",
     email: "Mark@mark.com",
     password: "mark",
-    rating: 3,
-    deliveries: 2, 
-    requests: 3
+    ratingArr: [3, 4],
+    rating: 3.5,
+    completeGrants: [], 
+    completeWishes: []
   },
   {
     name: "Kelly",
     email: "kelly.hagan3@gmail.com",
     password: "puppy",
-    rating: 5,
-    deliveries: 1, 
-    requests: 2
+    ratingArr: [5, 1],
+    rating: 3,
+    completeGrants: [], 
+    completeWishes: []
   },
   {
     name: "Alex",
     email: "Alex@alex.com",
     password: "password",
-    rating: 5,
-    deliveries: 0, 
-    requests: 5
+    ratingArr: [],
+    rating: 0,
+    completeGrants: [],
+    completeWishes: []
   }
 
 ];

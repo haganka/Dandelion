@@ -41,8 +41,6 @@ class Login extends Component {
 
 
     signUpSubmit = (email, password) => {
-        // console.log("sign up clicked!")
-        // event.preventDefault();
         auth.createUserWithEmailAndPassword(email, password)
         .catch(err => console.error(err));
         this.setState({
@@ -54,7 +52,11 @@ class Login extends Component {
             API.saveUser({
                 name: this.state.name,
                 email: this.state.email,
-                password: this.state.password
+                password: this.state.password,
+                ratingArr: [],
+                rating: 0,
+                completeGrants: [],
+                completeWishes: []
             }).then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
             .catch(err => console.log(err));
         // }
@@ -72,15 +74,10 @@ class Login extends Component {
           });
         })
         .catch(err => console.error(err));
-        // this.setState({
-        //     email: this.state.email,
-        //     password: this.state.password
-        // })
         API.checkUser({
             email: this.state.email
         })
         .then(res => {console.log(res.data._id); this.setState({id: res.data._id, name: res.data.name});})
-        // .then(window.location = ('/home'))
         .catch(err => console.log(err));
     };
 
@@ -179,8 +176,8 @@ class Login extends Component {
                 {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null}
                 <Row>
                     <Col md={12}>
-                        <Jumbotron>
-                            Hi there, welcome to Wish. Wish allows every day people to make a wish or grant a wish of another. If you're stuck in class and in desperate need of a coffee or don't have time to run out and grab lunch, just make a wish! If you're stopping at the grocery store on the way home or swinging by your favorite coffee shop on the way in to work, offer to grant a wish! By matching and accepting each other, you're making wishes come true. Log in or sign up to get started!
+                        <Jumbotron className="intro">
+                            Dandelion deliveries allow every day people to make a wish or grant a wish of another. If you're in dire need of something, make a wish! If you're out and about and feeling generous, grant one! Dandelion is in the business of making wishes come true. Log in or sign up to get started!
                         </Jumbotron>
                     </Col>
                 </Row>
@@ -209,12 +206,12 @@ class Login extends Component {
                 </Row>
             </Grid> : 
              <Home userId={this.state.id} 
-                        name={this.state.name} 
-                        isLoggedIn={this.state.isLoggedIn} 
-                        wishClick={this.toggleWish.bind(this)} 
-                        grantClick={this.toggleGrant.bind(this)}
-                        wish={this.state.wish}
-                        grant={this.state.grant}/>}
+                name={this.state.name} 
+                isLoggedIn={this.state.isLoggedIn} 
+                wishClick={this.toggleWish.bind(this)} 
+                grantClick={this.toggleGrant.bind(this)}
+                wish={this.state.wish}
+                grant={this.state.grant}/>}
             </div>
         );
     }

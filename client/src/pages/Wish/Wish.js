@@ -34,8 +34,14 @@ class Wish extends Component {
       clickedKey: "",
       grantReceived: [],
       wishSent: [],
+      viewPotential: false,
       viewOutgoingReq: false,
-      viewIncomingReq: false
+      viewIncomingReq: false,
+      matched: false,
+      finalMatches: [],
+      completeMatch: {key: "", id: "", name: "", location: ""},
+      markedComplete: false,
+      rating: 0
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -69,6 +75,15 @@ class Wish extends Component {
     console.dir(event.target)
   };
 
+  handleRadioChange = value => {
+    // const { name, value } = event.target;
+    console.log("rating val", value)
+    this.setState({
+      rating: value
+    });
+    console.log(this.state)
+  }
+
   
   getMatchedUserInfo = (arr) => {
     console.log("id of match", arr)
@@ -77,8 +92,8 @@ class Wish extends Component {
       console.log("made it to for loop", arr[i].userId);
       API.getUserId(arr[i].userId)
           .then(res => {
-        //   (res.data.fire = arr[i].fireKey);
-        //   (res.data.location = arr[i].location);
+          (res.data.fire = arr[i].fireKey);
+          (res.data.location = arr[i].location);
           console.log(res.data);
           finalMatches.push(res.data);
           this.setState({
@@ -146,7 +161,7 @@ class Wish extends Component {
         request: this.state.request,
         created: Date.now(),
         requested: false,
-        requests: {name: "", location:"", id:"", key:""},
+        requests: {name: "", location:"", id:"", key:"", complete: false},
         completed: false,
         fireKey: ""
       };
@@ -157,7 +172,8 @@ class Wish extends Component {
       // newEntry.push(newWish)
       let key = newEntry.key
       this.setState({
-        fireKey: key
+        fireKey: key,
+        clickedKey: ""
       })
       firebase.database().ref(newWish.business + '/wishes/' + key)
       .update({ fireKey: key });
@@ -192,28 +208,120 @@ class Wish extends Component {
       });
   }
 
-  handleSelect = (id, name, location) => {
-    console.log("the id of button clicked", id)
+  removeEntry = (key) => {
+    console.log("key to remove", key)
+      firebase.database().ref(this.state.business + '/grants/' + key).remove();
+      let allFinal = this.state.finalMatches;
+      let allReceived = this.state.grantReceived;
+      let allSent = this.state.wishSent;
+      let allMatches = this.state.matches;
+      let newFinal = allFinal.filter(e => e.key !== key)
+      let newReceived = allReceived.filter(e => e.key !== key)
+      let newSent = allSent.filter(e => e.key !== key)
+      let newMatches = allMatches.filter(e => e.fire !== key)
+      this.setState({
+        matches: newMatches,
+        grantReceived: newReceived,
+        wishSent: newSent,
+        finalMatches: newFinal,
+        completeMatch: {key: "", id: "", name: "", location: ""} 
+      })
+      console.log(this.state)
+  }
+
+  markComplete = (id, key, name, location) => {
+    // let allComplete = this.state.completeMatch;
+    let newComplete = {key: key, id: id, name: name, location: location};
+    // allComplete.push(newComplete)
+    this.setState({
+      completeMatch: newComplete,
+      markedComplete: true
+    })
+    let completeKey = key;
+    let complete = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
+    console.log("completed passing to FB", this.state.completeMatch, "complete key", completeKey)
+     firebase.database().ref(this.state.business + '/grants/' + completeKey + '/requests/')
+    .update({complete: true});
+  };
+
+  handleSelect = (id, key, name, location) => {
+    console.log("the id of button clicked", id, "key", key, "name", name, "loc", location)
     let allRequests = this.state.wishSent;
-    let newReq = {name: name, location: location, id: id};
+    let newReq = {name: name, location: location, id: id, key: key};
+    console.log(newReq)
     allRequests.push(newReq)
-    this.setState({clickedKey: id, wishSent: allRequests}, 
+    this.setState({clickedKey: key, wishSent: allRequests}, 
         () => this.updateUserSelected())
-     }
+        this.keyMatchReq(newReq);
+        console.log(this.state.wishSent)
+  }
+
+  handleAccept = (id, key, name, location) => {
+    console.log("the id of accept clicked", id, "key", key, "name", name, "loc", location)
+    let allRequests = this.state.wishSent;
+    let newReq = {name: name, location: location, id: id, key: key};
+    console.log(newReq)
+    allRequests.push(newReq)
+    this.setState({clickedKey: key, wishSent: allRequests}, 
+        () => this.updateUserSelected())
+        this.reqMatchKey(newReq);
+        console.log(this.state.wishSent)
+  }
+
+  handleRatingSubmit = (id, key, name, location) => {
+    console.log("id", id, "key", key, "name", name, "location", location)
+    console.log("complete matches in state", this.state.completeMatch)
+      API.getUserId(id)
+      .then(res => {
+      let ratingArr = res.data.ratingArr;
+      let newRating = this.state.rating;
+      let dataRating;
+      let completeGrants = res.data.completeGrants;
+      completeGrants.push(this.state.completeMatch);
+      ratingArr.push(newRating)
+      if(res.data.rating === 0){
+        dataRating = newRating;
+      }else{
+        dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
+      }
+        let userRating = this.state.rating
+        API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeGrants: completeGrants})
+            .then(res => {
+            console.log(res.data)
+      })
+    .catch(err => console.log(err));
+    this.removeEntry(key);
+        //   finalMatches.push(res.data);
+        //   this.setState({
+        //     matches: finalMatches,
+        //     hasMatched: true
+        //   });
+        //   console.log(this.state.matches)
+        // })
+        // .catch(err => console.log(err));
+    })
+  } 
  
 
-    updateUserSelected = () => {
+  updateUserSelected = () => {
     console.log("clicked key on state", this.state.clickedKey)
-    let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.id, key: this.state.fireKey}
+    let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.id, key: this.state.fireKey, complete: false}
     console.log("match passing to FB", match)
       firebase.database().ref(this.state.business + "/grants/" + this.state.clickedKey)
       .update({requests: match, requested: true});
 
     };
 
+    updateGrantsReceivedState = (received) => {
+        this.setState({
+            grantReceived: received
+        })
+        console.log("state after request comes through", this.state)
+    }
+
     listenForRequest = () => {
-        console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
-        firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
+        console.log("LISTEN FOR RE RUNNING", this.state)
+        firebase.database().ref(this.state.business + '/wishes/' + this.state.fireKey + '/requests').on('value', snapshot => {
         console.log("snapshot", snapshot.val());
         if(snapshot.val() === null || snapshot.val().id === ""){
             console.log("nothing to snap");
@@ -222,49 +330,190 @@ class Wish extends Component {
                 location: snapshot.val().location, 
                 id: snapshot.val().id, 
                 key: snapshot.val().key}
-            let allGrantsReceived = this.state.grantRecieved;
+            let allGrantsReceived = this.state.grantReceived;
+            console.log("received", allGrantsReceived)
             allGrantsReceived.push(newGrant)
-            this.setState({
-                grantReceived: allGrantsReceived
-            })
-            console.log("state after request comes through", this.state)
+            this.updateGrantsReceivedState(allGrantsReceived);
+            this.reqMatchKey(newGrant);
         }
     });
   }
 
-  toggleViewOutgoing = () => {
-    this.setState({
-        viewOutgoingReq: !this.state.viewOutgoingReq
+  listenForComplete = () => {
+    console.log("LISTEN FOR Complete", this.state.finalMatches)
+    let finalMatches = this.state.finalMatches;
+    let matchesMade = finalMatches.map(e => (e.id))
+    console.log("final match ids to listen for complete", matchesMade);
+    for(let i = 0; i < matchesMade.length; i++){
+      firebase.database().ref(this.state.business + '/wishes/' + matchesMade[i] + '/requests').on('value', snapshot => {
+        console.log("snapshot", snapshot.val()); 
+        if(snapshot.val() === null || snapshot.val().complete === false){
+          console.log("nothing to snap");
+        }else{
+          let newComplete = {name: snapshot.val().name, 
+              location: snapshot.val().location, 
+              id: snapshot.val().id, 
+              key: snapshot.val().key };
+          // let allComplete = this.state.completeMatch;
+          // allComplete.push(newComplete);
+          console.log("new complete", newComplete)
+          this.setState({
+            completeMatch: newComplete,
+            markedComplete: true
+          })
+        }
       })
-      if (this.state.hasMatched === true) {
-        this.setState({
-          hasMatched: false
-        })
-      }
-      if (this.state.viewIncomingReq === true) {
-        this.setState({
-          viewIncomingReq: false
-        })
-      }
-      console.log(this.state)
-}
+    }
+  };
 
-toggleViewIncoming = () => {
-    this.setState({
-        viewIncomingReq: !this.state.viewIncomingReq
-      })
-      if (this.state.hasMatched === true) {
-        this.setState({
-          hasMatched: false
+    reqMatchKey = (req) => {
+        console.log("find req match running", req);
+        // for(let j = 0; j < this.state.finalMatches.length; j++){
+          // if(req.key !== this.state.finalMatches[j].key){
+            console.log("final matches key does not equal req")
+            for(let i = 0; i < this.state.wishSent.length; i++){
+              if(req.key === this.state.wishSent[i].key){
+                  alert("it's a match!", this.state.wishSent[i])
+                  let newMatch = this.state.finalMatches;
+                  newMatch.push(req)
+                  this.setState({
+                    matched: true,
+                    finalMatches: newMatch
+                  })
+                  this.listenForComplete();
+              }
+            }
+          // }else{
+          // console.log("this match already exists!")}
+        // }
+    }
+
+    keyMatchReq = (req) => {
+      // for(let j = 0; j < this.state.finalMatches.length; j++){
+      //   if(req.key !== this.state.finalMatches[j].key){
+          console.log("key match req running", req);
+          for(let i = 0; i < this.state.grantReceived.length; i++){
+            if(req.key === this.state.grantReceived[i].key){
+                alert("it's a match!", this.state.grantReceived[i])
+                let newMatch = this.state.finalMatches;
+                newMatch.push(req)
+                this.setState({
+                    matched: true,
+                    finalMatches: newMatch
+                })
+            }
+          }
+    //     }else{console.log("this match already exists in final matches")}
+    // }
+  }
+
+    toggleViewPotential = () => {
+      this.setState({
+          viewPotential: true
         })
-      }
-      if (this.state.viewOutgoingReq === true) {
+        if (this.state.hasMatched === true) {
+          this.setState({
+            hasMatched: false
+          })
+        }
+        if (this.state.viewOutgoingReq === true) {
+          this.setState({
+            viewOutgoingReq: false
+          })
+        }
+        if (this.state.viewIncoming === true) {
+          this.setState({
+            viewIncomingReq: false
+          })
+        }
+        if (this.state.viewFinal === true) {
+          this.setState({
+            viewFinal: false
+          })
+        }
+        console.log(this.state)
+  }
+
+    toggleViewOutgoing = () => {
         this.setState({
-          viewOutgoingReq: false
-        })
-      }
-      console.log(this.state)
-}
+            viewOutgoingReq: true
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewIncomingReq === true) {
+            this.setState({
+              viewIncomingReq: false
+            })
+          }
+          if (this.state.viewFinal === true) {
+            this.setState({
+              viewFinal: false
+            })
+          }
+          if (this.state.viewPotential === true) {
+            this.setState({
+              viewPotential: false
+            })
+          }
+          console.log(this.state)
+    }
+
+    toggleViewIncoming = () => {
+        this.setState({
+            viewIncomingReq: true
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewOutgoingReq === true) {
+            this.setState({
+              viewOutgoingReq: false
+            })
+          }          
+          if (this.state.viewFinal === true) {
+            this.setState({
+              viewFinal: false
+            })
+          }
+          if (this.state.viewPotential === true) {
+            this.setState({
+              viewPotential: false
+            })
+          }
+          console.log(this.state)
+    }
+
+    toggleViewFinal = () => {
+        this.setState({
+            viewFinal: true
+          })
+          if (this.state.hasMatched === true) {
+            this.setState({
+              hasMatched: false
+            })
+          }
+          if (this.state.viewOutgoingReq === true) {
+            this.setState({
+              viewOutgoingReq: false
+            })
+          }
+          if (this.state.viewIncomingReq === true) {
+            this.setState({
+              viewIncomingReq: false
+            })
+          }
+          if (this.state.viewPotential === true) {
+            this.setState({
+              viewPotential: false
+            })
+          }
+          console.log(this.state)
+    }
 
   render() {
     return (
@@ -287,19 +536,26 @@ toggleViewIncoming = () => {
         </Grid>
         <Grid>
             <Row>
-                <Col sm={3}>
-                <Button onClick={this.toggleViewOutgoing}>View My Outgoing Requests</Button>
+              <Col sm={3}>
+                <Button onClick={this.toggleViewPotential}>Potential Matches</Button>
                 </Col>
-                <Col sm={3}>
-                <Button onClick={this.toggleViewIncoming}>View My Incoming Requests</Button>
-                </Col>
+              <Col sm={3}>
+                <Button onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
+              </Col>
+              <Col sm={3}>
+                <Button onClick={this.toggleViewIncoming}>Incoming Requests</Button>
+              </Col>
+                {this.state.matched ? <Col sm={3}><Button onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
         </Grid>
-        {this.state.hasMatched ? <MatchContainer wish={true} matches={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
+        {this.state.hasMatched ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}></MatchContainer>
           : null}
-        {this.state.viewOutgoingReq ? <MatchContainer matches={false} outgoing={true} incoming={false} matches={this.state.wishSent} /> : null}
-
-        {this.state.viewIncomingReq ? <MatchContainer matches={false} outgoing={false} incoming={true} matches={this.state.grantReceived} /> : null}
+        {this.state.viewOutgoingReq ? <MatchContainer wish={true} match={false} outgoing={true} incoming={false} matches={this.state.wishSent}></MatchContainer> : null}
+        {this.state.viewPotential ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
+          : null}
+        {this.state.viewIncomingReq ? <MatchContainer wish={true} match={false} outgoing={false} incoming={true} matches={this.state.grantReceived} onClick={this.handleAccept}></MatchContainer> : null}
+        {this.state.viewFinal ? <MatchContainer wish={true} finalMatch={this.state.matched} complete={this.state.markedComplete} matches={this.state.finalMatches} markComplete={this.markComplete} onChange={this.handleRadioChange} rating={this.state.rating} ratingSubmit={this.handleRatingSubmit}/> : null}
+      
       </div>
     );
   }

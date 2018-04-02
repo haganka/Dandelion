@@ -10,43 +10,30 @@ const MatchContainer = props =>
                     <Col sm={6}>
                     {props.matches ? 
                     props.matches.map((match => <MatchBox
-                        header="Requests"
-                        name={match.name}
-                        rating={match.rating}
-                        location={match.location}
-                        id={match._id} 
-                        key={match.fire}
-                        fireKey={match.fire} 
-                        cb={props.onClick}
-                        />)) : null}
-                    
-                    {props.incoming ?
-                    props.matches.map((match => <MatchBox
-                        header="Incoming Requests"
-                        name={match.name}
-                        rating={match.rating}
-                        location={match.location}
-                        id={match.id} 
-                        key={match.fire}
-                        fireKey={match.fire} 
-                        cb={props.onClick}
-                        incoming={true}
-                        />)) : null}
-
-                    {props.incoming ?
-                    props.matches.map((match => <MatchBox
-                        header="Outgoing Requests"
+                        header={props.button}
                         name={match.name}
                         rating={match.rating}
                         location={match.location}
                         request={match.request}
-                        id={match.id} 
+                        id={match._id} 
+                        matchId={match.id}
                         key={match.fire}
-                        fireKey={match.fire} 
+                        finalKey={match.key}
+                        fire={match.fire} 
                         cb={props.onClick}
-                        wish={true}
-                        outgoing={true}
+                        grant={props.grant}
+                        match={props.match}
+                        incoming={props.incoming}
+                        outgoing={props.outgoing}
+                        wish={props.wish}
+                        complete={props.markComplete}
+                        readyForComplete={props.finalMatch}
+                        markedComplete={props.complete}
+                        rating={props.ratingVal}
+                        onChange={props.onChange}
+                        ratingSubmit={props.ratingSubmit}
                         />)) : null}
+                    
                     </Col>
                 </Row>
             </div>

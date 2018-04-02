@@ -20,6 +20,12 @@ export default {
     console.log("userData from login", userData);
     return axios.post("/api/user/login", userData)
   },
+
+  updateUser: function(id, userData) {
+    console.log("userData from login", userData);
+    return axios.put("/api/user/"+ id, userData)
+  },
+
   // Deletes user with given id
   deleteUser: function(id) {
     return axios.delete("/api/user/" + id);
