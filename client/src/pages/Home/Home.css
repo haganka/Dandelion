@@ -1,3 +1,11 @@
+.home-btn {
+    background: rgba(0, 0, 0, 0.639);
+    border: none;
+    border-radius: 20px;
+    height: 100px;
+    width: 90%;
+}
+
 .home-btn-box {
-    background: black;
+    text-align: center;
 }
