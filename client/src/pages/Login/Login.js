@@ -197,13 +197,13 @@ class Login extends Component {
             <div>
             <NavBar accountClick={this.viewAccount}/>
             {!this.state.submitSuccess ? 
-            <Grid fluid>
+            <Grid>
                 {/* {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null} */}
                 <Row>
                     <Col md={12}>
-                        <Jumbotron className="intro">
+                        <p className="intro">
                             Dandelion deliveries allow every day people to make a wish or grant a wish of another. If you're in dire need of something, make a wish! If you're out and about and feeling generous, grant one! Dandelion is in the business of making wishes come true. Log in or sign up to get started!
-                        </Jumbotron>
+                        </p>
                     </Col>
                 </Row>
                 <Row>

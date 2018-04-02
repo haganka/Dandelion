@@ -21,6 +21,8 @@ body {
         while the background image is loading */
     background-color: #464646;
     color: white;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 .navbar-default, .navbar-brand, .nav-item {
