@@ -389,7 +389,7 @@ class Wish extends Component {
             console.log("final matches key does not equal req")
             for(let i = 0; i < this.state.wishSent.length; i++){
               if(req.key === this.state.wishSent[i].key){
-                  alert("it's a match!", this.state.wishSent[i])
+                  // alert("it's a match!", this.state.wishSent[i])
                   let newMatch = this.state.finalMatches;
                   newMatch.push(req)
                   this.setState({
@@ -397,6 +397,7 @@ class Wish extends Component {
                     finalMatches: newMatch
                   })
                   this.listenForComplete();
+                  this.handleShowModal();
               }
             }
           // }else{
@@ -410,13 +411,14 @@ class Wish extends Component {
           console.log("key match req running", req);
           for(let i = 0; i < this.state.grantReceived.length; i++){
             if(req.key === this.state.grantReceived[i].key){
-                alert("it's a match!", this.state.grantReceived[i])
+                // alert("it's a match!", this.state.grantReceived[i])
                 let newMatch = this.state.finalMatches;
                 newMatch.push(req)
                 this.setState({
                     matched: true,
                     finalMatches: newMatch
                 })
+                this.handleShowModal();
             }
           }
     //     }else{console.log("this match already exists in final matches")}

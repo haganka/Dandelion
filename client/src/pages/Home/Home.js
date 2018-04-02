@@ -23,20 +23,20 @@ const Home = props =>
                 completedGrants={props.completedGrants}/> : 
         <Grid>
           <Row>
-            <Col sm={4} className="welcome-name">Welcome, {props.name}
-            </Col>
+            <div className="welcome-name">Welcome, {props.name}
+            </div>
           </Row>
           <Row>
-            <Col md={6} className="home-btn-box">
-              {/* <Jumbotron className="home-btn-box"> */}
-                <button className="home-btn" onClick={props.wishClick}>Make a Wish</button>
-              {/* </Jumbotron> */}
-            </Col>
-            <Col md={6} className="home-btn-box">
-              {/* <Jumbotron className="home-btn-box"> */}
-                <button className="home-btn" onClick={props.grantClick}>Grant a Wish</button>
-              {/* </Jumbotron> */}
-            </Col>
+            <div id="choose-btn">Would you like to make a wish or grant a wish?
+            </div>
+          </Row>
+          <Row>
+            <div className="home-btn-box">
+                <button className="home-btn wish-btn" onClick={props.wishClick}>Make a Wish</button>
+            </div>
+            <div className="home-btn-box">
+                <button className="home-btn grant-btn" onClick={props.grantClick}>Grant a Wish</button>
+            </div>
           </Row>
           <Row>
             <Col md={12}>

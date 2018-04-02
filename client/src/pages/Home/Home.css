@@ -3,11 +3,23 @@
     border: none;
     border-radius: 20px;
     height: 100px;
-    width: 100%;
+    width: 50%;
     font-size: 25px;
 }
 
 .home-btn-box {
     text-align: center;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
+}
+
+.welcome-name, #choose-btn {
+    font-size: 20px;
+}
+
+.wish-btn {
+    float: left;
+}
+
+.grant-btn {
+    float: right;
 }
