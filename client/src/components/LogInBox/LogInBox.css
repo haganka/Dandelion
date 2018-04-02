@@ -1,0 +1,18 @@
+.login-btn-box {
+    text-align: center;
+}
+
+.login-submit, .login-submit:disabled, .login-submit:active{
+    border: white solid 2px;
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
+    font-size: 22px;
+    background: none;
+    opacity: 100%;
+}
+
+#email, #password {
+    color: white;
+    font-size: 22px;
+    text-align: right;
+}

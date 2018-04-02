@@ -1,14 +1,15 @@
 import React from "react";
 import { Form, FormGroup, FormControl, Col, Row, Button, ControlLabel } from 'react-bootstrap';
-
+import './SignUpBox.css';
 const SignUpBox = props =>
 <div className="signup">
   <Form>
+    <Row>
     <FormGroup>
-      <Col sm={2}>
+      <Col sm={4} className="name">
         Name
       </Col>
-      <Col componentClass={ControlLabel} sm={10}>
+      <Col componentClass={ControlLabel} sm={4}>
         <FormControl
           type="text"
           value={props.nameValue}
@@ -18,12 +19,14 @@ const SignUpBox = props =>
         />
       </Col>
     </FormGroup>
-    
+    </Row>
+
+    <Row>
     <FormGroup>
-      <Col sm={2}>
+      <Col sm={4} className="email">
         Email
       </Col>
-      <Col componentClass={ControlLabel} sm={10}>
+      <Col componentClass={ControlLabel} sm={4}>
       <FormControl
           type="email"
           value={props.emailValue}
@@ -33,12 +36,14 @@ const SignUpBox = props =>
         />  
       </Col>
     </FormGroup>
+    </Row>
 
+    <Row>
     <FormGroup>
-      <Col sm={2}>
+      <Col sm={4} className="password">
         Password
       </Col>
-      <Col componentClass={ControlLabel} sm={10}>
+      <Col componentClass={ControlLabel} sm={4}>
         <FormControl
           type="password"
           value={props.passValue}
@@ -48,12 +53,17 @@ const SignUpBox = props =>
         />
       </Col>
     </FormGroup>
+    </Row>
 
+    <Row>
+    <Col sm={12} className="signup-btn-box">
     <Button
-      onClick={()=>props.onSubmit(props.emailValue, props.passValue)}
+      className="signup-submit" onClick={()=>props.onSubmit(props.emailValue, props.passValue)}
       disabled={!(props.emailValue && props.passValue)}
       >Sign Up
     </Button>
+    </Col>
+    </Row>
   </Form>
 </div>
 

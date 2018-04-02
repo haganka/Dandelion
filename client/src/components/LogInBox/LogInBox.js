@@ -1,4 +1,5 @@
 import React from "react";
+import './LogInBox.css';
 import { Form, FormGroup, FormControl, Col, Row, Button, ControlLabel } from 'react-bootstrap';
 
 const LogInBox = props => 
@@ -43,7 +44,7 @@ const LogInBox = props =>
       <Button
         className="login-submit" onClick={()=>props.onSubmit(props.emailValue, props.passValue)}
         disabled={!(props.emailValue && props.passValue)}
-        >Log In
+        >Submit
       </Button>
     </Col>
     </Row>

@@ -4,7 +4,7 @@
 
 .login-btns {
     background: none;
-    font-size: 30px;
+    font-size: 25px;
     border: white solid 2px;
     color: rgb(255, 255, 255);
     border-radius: 10px;
@@ -19,21 +19,4 @@
     font-size: 20px;
 }
 
-#email, #password {
-    color: white;
-    font-size: 22px;
-    text-align: right;
-}
 
-.login-btn-box {
-    text-align: center;
-}
-
-.login-submit, .btn-default {
-    border: white solid 2px;
-    color: rgb(255, 255, 255);
-    border-radius: 10px;
-    font-size: 22px;
-    background-color: none;
-    border: 1px;
-}

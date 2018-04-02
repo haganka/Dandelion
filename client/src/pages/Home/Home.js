@@ -19,12 +19,12 @@ const Home = props =>
           </Row>
           <Row>
             <Col md={6}>
-              <Jumbotron>
+              <Jumbotron className="home-btn-box">
                 <button className="home-btns" onClick={props.wishClick}>Make a Wish</button>
               </Jumbotron>
             </Col>
             <Col md={6}>
-              <Jumbotron>
+              <Jumbotron className="home-btn-box">
                 <button className="home-btns" onClick={props.grantClick}>Grant a Wish</button>
               </Jumbotron>
             </Col>
