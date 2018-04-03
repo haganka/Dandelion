@@ -147,13 +147,14 @@ class Login extends Component {
     //   business: "", location: "", request: "", range: ""
     // })
     this.setState({
-      wish: !this.state.wish
+      wish: true,
+      grant: false
     })
-    if (this.state.grant === true) {
-      this.setState({
-        grant: false
-      })
-    }
+    // if (this.state.grant === true) {
+    //   this.setState({
+    //     grant: false
+    //   })
+    // }
   }
 
   toggleGrant() {
@@ -161,13 +162,14 @@ class Login extends Component {
     //   business: "", location: "", request: "", range: ""
     // })
     this.setState({
-      grant: !this.state.grant
+      grant: true,
+      wish: false
     })
-    if (this.state.wish === true) {
-      this.setState({
-        wish: false
-      })
-    }
+    // if (this.state.wish === true) {
+    //   this.setState({
+    //     wish: false
+    //   })
+    // }
   }
 
   componentDidMount = () => {
@@ -231,6 +233,8 @@ class Login extends Component {
                 </Row>
             </Grid> : 
              <Home 
+                wish={this.state.wish}
+                grant={this.state.grant}
                 userId={this.state.id} 
                 name={this.state.name} 
                 rating={this.state.rating}

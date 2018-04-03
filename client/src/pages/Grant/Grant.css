@@ -1,0 +1,9 @@
+.potential-match, .final-match, .out-match, .in-match {
+    color: white;
+    background: none;
+    text-shadow: none;
+}
+
+.match-row {
+    border-bottom: 1px white;
+}

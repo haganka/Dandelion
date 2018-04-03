@@ -41,11 +41,13 @@ const Home = props =>
           <Row>
             <Col md={12}>
               {props.wish ? <Wish
+              wish={props.wish}
               userId={props.userId} 
               name={props.name} 
               isLoggedIn={props.isLoggedIn} 
               /> : null}
               {props.grant ? <Grant
+              grant={props.grant}
               userId={props.userId} 
               name={props.name} 
               isLoggedIn={props.isLoggedIn} 

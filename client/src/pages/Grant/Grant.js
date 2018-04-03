@@ -20,6 +20,7 @@ class Grant extends Component {
     super(props);
 
     this.state = {
+      grant: this.props.grant,
       email: "",
       id: this.props.userId,
       isLoggedIn: this.props.isLoggedIn, //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
@@ -421,114 +422,50 @@ class Grant extends Component {
 
     toggleViewPotential = () => {
       this.setState({
-          viewPotential: true
+          viewPotential: true,
+          hasMatched: false,
+          viewOutgoingReq: false,
+          viewIncomingReq: false,
+          viewFinal: false,
+          grant: false
         })
-        if (this.state.hasMatched === true) {
-          this.setState({
-            hasMatched: false
-          })
-        }
-        if (this.state.viewOutgoingReq === true) {
-          this.setState({
-            viewOutgoingReq: false
-          })
-        }
-        if (this.state.viewIncoming === true) {
-          this.setState({
-            viewIncomingReq: false
-          })
-        }
-        if (this.state.viewFinal === true) {
-          this.setState({
-            viewFinal: false
-          })
-        }
         console.log(this.state)
   }
 
     toggleViewOutgoing = () => {
         this.setState({
-            viewOutgoingReq: true
+            viewOutgoingReq: true,
+            hasMatched: false,
+            viewIncomingReq: false,
+            viewFinal: false,
+            viewPotential: false,
+            grant: false
           })
-          if (this.state.hasMatched === true) {
-            this.setState({
-              hasMatched: false
-            })
-          }
-          if (this.state.viewIncomingReq === true) {
-            this.setState({
-              viewIncomingReq: false
-            })
-          }
-          if (this.state.viewFinal === true) {
-            this.setState({
-              viewFinal: false
-            })
-          }
-          if (this.state.viewPotential === true) {
-            this.setState({
-              viewPotential: false
-            })
-          }
           console.log(this.state)
     }
 
     toggleViewIncoming = () => {
         this.setState({
-            viewIncomingReq: true
+            viewIncomingReq: true,
+            hasMatched: false,
+            viewOutgoingReq: false,
+            viewPotential: false,
+            viewFinal: false
           })
-          if (this.state.hasMatched === true) {
-            this.setState({
-              hasMatched: false
-            })
-          }
-          if (this.state.viewOutgoingReq === true) {
-            this.setState({
-              viewOutgoingReq: false
-            })
-          }          
-          if (this.state.viewFinal === true) {
-            this.setState({
-              viewFinal: false
-            })
-          }
-          if (this.state.viewPotential === true) {
-            this.setState({
-              viewPotential: false
-            })
-          }
           console.log(this.state)
     }
 
     toggleViewFinal = () => {
         if(this.state.showModal === true){
           this.setState({
-            showModal: false
+            showModal: false,
+            viewFinal: true,
+            viewOutgoingReq: false,
+            viewIncomingReq: false,
+            viewPotential: false,
+            grant: false
           })
         }
-        this.setState({
-            viewFinal: true
-          })
-          if (this.state.hasMatched === true) {
-            this.setState({
-              hasMatched: false
-            })
-          }
-          if (this.state.viewOutgoingReq === true) {
-            this.setState({
-              viewOutgoingReq: false
-            })
-          }
-          if (this.state.viewIncomingReq === true) {
-            this.setState({
-              viewIncomingReq: false
-            })
-          }
-          if (this.state.viewPotential === true) {
-            this.setState({
-              viewPotential: false
-            })
-          }
           console.log(this.state)
     }
 
@@ -538,30 +475,30 @@ class Grant extends Component {
       <div>
         <Grid fluid>
           <Row>
-            <Col md={12}>
-                <GrantForm
+            {/* <Col md={12}> */}
+                {this.state.grant ? <GrantForm
                     type="text"
                     busValue={this.state.business}
                     locValue={this.state.location}
                     rangeValue={this.state.range}
                     onChange={this.handleInputChange.bind(this)}
                     onSubmit={this.getLatLng}
-                /> 
-            </Col>
+                /> : null}
+            {/* </Col> */}
           </Row>
         </Grid>
         <Grid>
-            <Row>
+            <Row className="match-row">
               <Col sm={3}>
-                <Button onClick={this.toggleViewPotential}>Potential Matches</Button>
+                <Button className="potential-match" onClick={this.toggleViewPotential}>Potential Matches</Button>
                 </Col>
                 <Col sm={3}>
-                <Button onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
+                <Button className="out-match" onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
                 </Col>
                 <Col sm={3}>
-                <Button onClick={this.toggleViewIncoming}>Incoming Requests</Button>
+                <Button className="in-match" onClick={this.toggleViewIncoming}>Incoming Requests</Button>
                 </Col>
-                {this.state.matched ? <Col sm={3}><Button onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
+                {this.state.matched ? <Col sm={3}><Button className="final-match" onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
         </Grid>
         {this.state.hasMatched  ? <MatchContainer grant={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
