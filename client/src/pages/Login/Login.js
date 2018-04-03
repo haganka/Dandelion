@@ -53,7 +53,6 @@ class Login extends Component {
             password: this.state.password,
             submitSuccess: true
         })
-        // if (this.state.email && this.state.password && this.state.name) {
             API.saveUser({
                 name: this.state.name,
                 email: this.state.email,
@@ -119,57 +118,33 @@ class Login extends Component {
 
     toggleLogIn() {
         this.setState({
-            name: "", email: "", password: ""
+            name: "", email: "", password: "",
+            login: true,
+            signup: false
           })
-        this.setState({
-            login: !this.state.login
-        })
-        if(this.state.signup === true){
-            this.setState({ signup: false});
-        }
     }
 
     toggleSignUp() {
         this.setState({
-            name: "", email: "", password: ""
+            name: "", email: "", password: "",
+            signup: true,
+            login: false
           })
-        this.setState({
-            signup: !this.state.signup
-        })
-        if(this.state.login === true){
-            this.setState({ login: false});
-        }
     }
 
 
   toggleWish() {
-    // this.setState({
-    //   business: "", location: "", request: "", range: ""
-    // })
     this.setState({
       wish: true,
       grant: false
     })
-    // if (this.state.grant === true) {
-    //   this.setState({
-    //     grant: false
-    //   })
-    // }
   }
 
   toggleGrant() {
-    // this.setState({
-    //   business: "", location: "", request: "", range: ""
-    // })
     this.setState({
       grant: true,
       wish: false
     })
-    // if (this.state.wish === true) {
-    //   this.setState({
-    //     wish: false
-    //   })
-    // }
   }
 
   componentDidMount = () => {
