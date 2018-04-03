@@ -41,20 +41,28 @@ const GrantForm = props =>
         </FormGroup>
     </Row>
     <Row>
-        <FormGroup>
+        {/* <FormGroup> */}
             <div className="range">
             Range 
             </div>
-            {/* <Col componentClass={ControlLabel} sm={10}> */}
-            <FormControl
+            {/* <FormControl
                 type="text"
                 value={props.rangeValue}
                 onChange={props.onChange}
                 name="range"
                 placeholder="desired delivery range (i.e. 0.5 miles, 1 mile, 5 miles)"
             />
-            {/* </Col> */}
-        </FormGroup>
+        </FormGroup> */}
+
+        <FormControl 
+            onChange={props.onChange}
+            name="range"
+            componentClass="select" placeholder="select">
+                <option value="">Select</option>
+                <option value=".5">1/2 mile</option>
+                <option value="1">1 mile</option>
+                <option value="5">5 miles</option>
+        </FormControl>
     </Row>
     <Row>
         <Col sm={12}>
