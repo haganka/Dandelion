@@ -1,0 +1,23 @@
+.grant-submit, .grant-submit:disabled, .grant-submit:active{
+    border: white solid 2px;
+    color: rgb(255, 255, 255);
+    border-radius: 10px;
+    font-size: 18px;
+    background: none;
+    opacity: 100%;
+    text-shadow: none;
+}
+
+.location, .business-grant, .range {
+    color: white;
+    font-size: 16px;
+}
+
+.grant-box {
+    /* text-align: center; */
+    /* margin-top: 60px; */
+    margin-bottom: 20px;
+    font-size: 16px;
+    margin-left: 20px;
+    margin-right: 20px;
+}

@@ -1,15 +1,16 @@
 import React from "react";
-import { Form, FormGroup, FormControl, Col, Row, Button, ControlLabel } from 'react-bootstrap';
+import { Form, FormGroup, Grid, FormControl, Col, Row, Button, ControlLabel } from 'react-bootstrap';
 import './SignUpBox.css';
 const SignUpBox = props =>
 <div className="signup">
-  <Form>
+  <Grid>
+  <Form id='signup-box'>
     <Row>
     <FormGroup>
-      <Col sm={4} className="name">
+      <div className="name">
         Name
-      </Col>
-      <Col componentClass={ControlLabel} sm={4}>
+      </div>
+      <div>
         <FormControl
           type="text"
           value={props.nameValue}
@@ -17,16 +18,16 @@ const SignUpBox = props =>
           name="name"
           placeholder="Enter name"
         />
-      </Col>
+      </div>
     </FormGroup>
     </Row>
 
     <Row>
     <FormGroup>
-      <Col sm={4} className="email">
+      <div className="email">
         Email
-      </Col>
-      <Col componentClass={ControlLabel} sm={4}>
+      </div>
+      <div>
       <FormControl
           type="email"
           value={props.emailValue}
@@ -34,16 +35,16 @@ const SignUpBox = props =>
           name="email"
           placeholder="Enter Email"
         />  
-      </Col>
+      </div>
     </FormGroup>
     </Row>
 
     <Row>
     <FormGroup>
-      <Col sm={4} className="password">
+      <div className="password">
         Password
-      </Col>
-      <Col componentClass={ControlLabel} sm={4}>
+      </div>
+      <div>
         <FormControl
           type="password"
           value={props.passValue}
@@ -51,12 +52,12 @@ const SignUpBox = props =>
           name="password"
           placeholder="Enter password"
         />
-      </Col>
+      </div>
     </FormGroup>
     </Row>
 
     <Row>
-    <Col sm={12} className="signup-btn-box">
+    <Col xs={12} className="signup-btn-box">
     <Button
       className="signup-submit" onClick={()=>props.onSubmit(props.emailValue, props.passValue)}
       disabled={!(props.emailValue && props.passValue)}
@@ -65,6 +66,7 @@ const SignUpBox = props =>
     </Col>
     </Row>
   </Form>
+  </Grid>
 </div>
 
 export default SignUpBox;

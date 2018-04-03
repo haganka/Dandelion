@@ -9,7 +9,8 @@ import Wish from '../Wish';
 import Grant from '../Grant';
 import Home from '../Home';
 import {fire, auth} from '../../fire.js';
-
+import Account from '../Account';
+import NavBar from "../../components/NavBar";
 
 class Login extends Component {
     //allows access to props if you pass down, allows console logging
@@ -24,12 +25,16 @@ class Login extends Component {
             email: "",
             password: "",
             id: "",
+            rating: 0,
+            completedWishes: [],
+            completedGrants: [],
             redirectTo: "",
             isLoggedIn: false,
             fireId: null,
             grant: false,
             wish: false,
-            submitSuccess: false
+            submitSuccess: false,
+            viewAccount: false
         };
 
         this.toggleLogIn = this.toggleLogIn.bind(this);
@@ -48,7 +53,6 @@ class Login extends Component {
             password: this.state.password,
             submitSuccess: true
         })
-        // if (this.state.email && this.state.password && this.state.name) {
             API.saveUser({
                 name: this.state.name,
                 email: this.state.email,
@@ -77,7 +81,14 @@ class Login extends Component {
         API.checkUser({
             email: this.state.email
         })
-        .then(res => {console.log(res.data._id); this.setState({id: res.data._id, name: res.data.name});})
+        .then(res => {console.log(res.data._id); 
+            this.setState({
+                id: res.data._id, 
+                name: res.data.name,
+                rating: res.data.rating,
+                completedWishes: res.data.completeWishes,
+                completedGrants: res.data.completeGrants
+            });})
         .catch(err => console.log(err));
     };
 
@@ -87,6 +98,23 @@ class Login extends Component {
     //       }).catch(function(error) {
     //     });
     // }
+
+    viewAccount = (event) => {
+        event.preventDefault();
+        API.checkUser({
+            email: this.state.email
+        })
+        .then(res => { 
+            this.setState({
+                completedWishes: res.data.completeWishes,
+                completedGrants: res.data.completeGrants
+            });
+        }).then(() =>
+        this.setState({
+            viewAccount: true
+        }))
+        console.log(this.state)
+    }
 
 
     handleInputChange = (event) => {
@@ -99,58 +127,39 @@ class Login extends Component {
 
     toggleLogIn() {
         this.setState({
-            name: "", email: "", password: ""
+            name: "", email: "", password: "",
+            login: true,
+            signup: false
           })
-        this.setState({
-            login: !this.state.login
-        })
-        if(this.state.signup === true){
-            this.setState({ signup: false});
-        }
     }
 
     toggleSignUp() {
         this.setState({
-            name: "", email: "", password: ""
+            name: "", email: "", password: "",
+            signup: true,
+            login: false
           })
-        this.setState({
-            signup: !this.state.signup
-        })
-        if(this.state.login === true){
-            this.setState({ login: false});
-        }
     }
 
 
   toggleWish() {
-    // this.setState({
-    //   business: "", location: "", request: "", range: ""
-    // })
     this.setState({
-      wish: !this.state.wish
+      wish: true,
+      grant: false
     })
-    if (this.state.grant === true) {
-      this.setState({
-        grant: false
-      })
-    }
   }
 
   toggleGrant() {
-    // this.setState({
-    //   business: "", location: "", request: "", range: ""
-    // })
     this.setState({
-      grant: !this.state.grant
+      grant: true,
+      wish: false
     })
-    if (this.state.wish === true) {
-      this.setState({
-        wish: false
-      })
-    }
   }
 
   componentDidMount = () => {
+      this.setState({
+          viewAccount: false
+      })
     this.authListener();
   };
 
@@ -159,7 +168,8 @@ class Login extends Component {
         if (user) {
             this.setState({
                 email: user.email,
-                fireId: user.uid
+                fireId: user.uid,
+                isLoggedIn: true
             })
         } else {
         console.log("user signed out");
@@ -171,24 +181,25 @@ class Login extends Component {
     render() {
         return (
             <div>
+            <NavBar accountClick={this.viewAccount}/>
             {!this.state.submitSuccess ? 
-            <Grid fluid>
-                {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null}
+            <Grid>
+                {/* {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null} */}
                 <Row>
                     <Col md={12}>
-                        <Jumbotron className="intro">
+                        <p className="intro">
                             Dandelion deliveries allow every day people to make a wish or grant a wish of another. If you're in dire need of something, make a wish! If you're out and about and feeling generous, grant one! Dandelion is in the business of making wishes come true. Log in or sign up to get started!
-                        </Jumbotron>
+                        </p>
                     </Col>
                 </Row>
                 <Row>
                     <Col sm={12} className="login-box">
-                    <button className="login-btns" onClick={this.toggleLogIn.bind(this)}>Log in</button>
-                    <button className="login-btns" onClick={this.toggleSignUp.bind(this)}>Sign up</button>
+                    <button className="login-btns" id="login-btn" onClick={this.toggleLogIn.bind(this)}>Log in</button>
+                    <button className="login-btns" id="signup-btn" onClick={this.toggleSignUp.bind(this)}>Sign up</button>
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <div className="login-form-box">
                         {this.state.login ? <LogInBox
                             emailValue={this.state.email} 
                             passValue={this.state.password}
@@ -202,20 +213,29 @@ class Login extends Component {
                             onChange={this.handleInputChange.bind(this)} 
                             onSubmit={this.signUpSubmit.bind(this)}
                         />: null}
-                    </Col>
+                    </div>
                 </Row>
             </Grid> : 
-             <Home userId={this.state.id} 
+             <Home 
+                wish={this.state.wish}
+                grant={this.state.grant}
+                userId={this.state.id} 
                 name={this.state.name} 
+                rating={this.state.rating}
+                completedWishes={this.state.completedWishes}
+                completedGrants={this.state.completedGrants}
+                viewAccount={this.state.viewAccount}
+                accountClick={this.viewAccount}
                 isLoggedIn={this.state.isLoggedIn} 
                 wishClick={this.toggleWish.bind(this)} 
                 grantClick={this.toggleGrant.bind(this)}
                 wish={this.state.wish}
                 grant={this.state.grant}/>}
             </div>
+
+
         );
     }
 }
-
 
 export default Login;

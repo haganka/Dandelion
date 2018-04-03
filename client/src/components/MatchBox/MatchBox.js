@@ -14,27 +14,27 @@ const MatchBox = props =>
         <Panel className="match-box">
           <Panel.Heading>{props.name}</Panel.Heading>
           <Panel.Body>
-            <h5>Rating: {props.rating}</h5>
+            <p>Rating: {props.rating}</p>
             <p>Location: {props.location}</p>
             {props.grant ? <p>Request: {props.request}</p> : null}
             
             {props.grant && props.match ? 
-            <Button onClick={()=>props.cb(props.id, props.fire, props.name, props.location, props.request)}>Choose {props.name}!</Button> : null}
+            <Button onClick={()=>props.cb(props.id, props.fire, props.name, props.location, props.request, props.rating)}>Choose {props.name}!</Button> : null}
             
             {props.wish && props.match ? 
-            <Button onClick={()=>props.cb(props.id, props.fire, props.name, props.location)}>Choose {props.name}!</Button> : null}
+            <Button onClick={()=>props.cb(props.id, props.fire, props.name, props.location, props.rating)}>Choose {props.name}!</Button> : null}
             
             {props.incoming && props.grant ? 
-            <Button onClick={()=>props.cb(props.matchId, props.finalKey, props.name, props.location, props.request)}>Accept {props.name}!</Button> : null}
+            <Button onClick={()=>props.cb(props.matchId, props.finalKey, props.name, props.location, props.request, props.rating)}>Accept {props.name}!</Button> : null}
 
             {props.incoming && props.wish ? 
-            <Button onClick={()=>props.cb(props.matchId, props.finalKey, props.name, props.location)}>Accept {props.name}!</Button> : null}
+            <Button onClick={()=>props.cb(props.matchId, props.finalKey, props.name, props.location, props.rating)}>Accept {props.name}!</Button> : null}
 
             {props.grant && props.readyForComplete ? 
-            <Button onClick={()=>props.complete(props.matchId, props.finalKey, props.name, props.location, props.request)}>Mark completed</Button> : null}  
+            <Button onClick={()=>props.complete(props.matchId, props.finalKey, props.name, props.location, props.request, props.rating)}>Mark completed</Button> : null}  
             
             {props.wish && props.readyForComplete && !props.markedComplete ? 
-            <Button onClick={()=>props.complete(props.matchId, props.finalKey, props.name, props.location)}>Mark completed</Button> : null} 
+            <Button onClick={()=>props.complete(props.matchId, props.finalKey, props.name, props.location, props.rating)}>Mark completed</Button> : null} 
           
             {props.markedComplete ? 
             <Form>Please rate your experience with {props.name}

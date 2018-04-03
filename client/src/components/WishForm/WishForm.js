@@ -9,12 +9,13 @@ const options = ["starbucks", "walgreens", "chipotle"];
 const WishForm = props =>
 
     <div className="wish-box">
-    <Grid>
+    {/* <Grid> */}
     <Form>
         <FormGroup>
         <Row>
 
             <Geolocation
+                // onSuccess={() => props.saveCurrentPosition(latitude, longitude)}
                 onSuccess={console.log}
                 render={({
                     fetchingPosition,
@@ -24,37 +25,41 @@ const WishForm = props =>
                 }) =>
                     <div>
                         <Row>
-                        <Col sm={4}>
                             <Button className="current-loc-submit" onClick={getCurrentPosition}>Use my Current Location</Button>
-                        </Col>
                         </Row>
-                        <Row>
-                            <Col sm={2} componentClass={ControlLabel} className="current-loc-text">
-                                or enter delivery location
-                            </Col>
-                            <Col sm={5}>
-                            <FormControl
-                                className="location-input"
-                                type="text"
-                                value={props.locValue}
-                                onChange={props.onChange}
-                                name="location"
-                                placeholder="delivery location (address, city, state)"
-                            />
-                        </Col>
-                        </Row>
+                        latitude: {latitude}
+                        longitude: {longitude}
                     </div>}
+            
             />
             </Row>
         </FormGroup> 
 
+        <FormGroup>
+        <Row>
+            <div className="current-loc-text">
+                    or enter delivery location
+                    {console.log(props.position)}
+            </div>
+            {/* <Col sm={8}> */}
+                <FormControl
+                    className="location-input"
+                    type="text"
+                    value={props.locValue}
+                    onChange={props.onChange}
+                    name="location"
+                    placeholder="delivery location (address, city, state)"
+                />
+            {/* </Col> */}
+        </Row>
+        </FormGroup>
 
         <FormGroup controlId="formControlsSelect">
             <Row>
-            <Col sm={2} componentClass={ControlLabel} className="business">
+            <div className="business">
             Choose a business
-            </Col>
-            <Col sm={5}>
+            </div>
+            {/* <Col sm={8}> */}
                 <FormControl 
                 className="bus-select"
                 onChange={props.onChange}
@@ -65,16 +70,16 @@ const WishForm = props =>
                     <option value="walgreens">Walgreens</option>
                     <option value="chipotle">Chipotle</option>
                 </FormControl>
-            </Col>
+            {/* </Col> */}
             </Row>
         </FormGroup>
 
         <FormGroup>
             <Row>
-            <Col sm={2} componentClass={ControlLabel} className="request">
+            <div className="request">
             Request 
-            </Col>
-            <Col sm={5} className="req-input">
+            </div>
+            {/* <Col sm={8} className="req-input"> */}
             <FormControl
                 type="text"
                 value={props.reqValue}
@@ -82,7 +87,7 @@ const WishForm = props =>
                 name="request"
                 placeholder="your request"
             />
-            </Col>
+            {/* </Col> */}
             </Row>
         </FormGroup>
             <Row>
@@ -96,7 +101,7 @@ const WishForm = props =>
             </Col>
         </Row>
     </Form>
-    </Grid>
+    {/* </Grid> */}
   </div>;
 
 export default WishForm;

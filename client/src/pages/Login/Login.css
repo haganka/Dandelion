@@ -4,19 +4,45 @@
 
 .login-btns {
     background: none;
-    font-size: 25px;
-    border: white solid 2px;
+    font-size: 22px;
+    border: white solid .5px;
     color: rgb(255, 255, 255);
     border-radius: 10px;
     margin: 10px;
-    width: 20%;
+    width: auto;
     height: 50px;
+    padding: 5px 15px 5px 15px;
 }
 
 .intro {
     color: white;
-    background: none;
-    font-size: 20px;
+    font-size: 16px;
+    background-color: rgba(179, 191, 184, 0.74);
+    border-radius: 10px;
+    padding: 20px;
+    width: 50%;
+    margin: 0 auto;
+    margin-top: 50px;
 }
+
+/* Extra small devices (phones, less than 768px) */
+@media screen and (max-width: 768px) {
+    .intro {
+        width: 90%;
+        margin-top: 0;
+    }
+    .login-box {
+        width: 100%;
+    }
+}
+/* @media screen and (max-width: 990px) {
+
+    h1 {
+        text-align: center;
+    }
+
+} */
+
+
 
 

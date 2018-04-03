@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, FormGroup, Col, Row, FormControl, ControlLabel, Button } from 'react-bootstrap';
-
+import './GrantForm.css';
 
 const GrantForm = props =>
     
@@ -8,10 +8,10 @@ const GrantForm = props =>
     <Form>
         <Row>
             <FormGroup>
-                <Col sm={2}>
+                <div className="business-grant">
                 Business Name
-                </Col>
-                <Col sm={8}>
+                </div>
+                {/* <Col sm={8}> */}
                 <FormControl 
                     onChange={props.onChange}
                     name="business"
@@ -21,15 +21,15 @@ const GrantForm = props =>
                         <option value="walgreens">Walgreens</option>
                         <option value="chipotle">Chipotle</option>
                 </FormControl>
-                </Col>
+                {/* </Col> */}
             </FormGroup>
         </Row>
     <Row>
         <FormGroup>
-            <Col sm={2}>
+            <div className="location">
             Business Location 
-            </Col>
-            <Col componentClass={ControlLabel} sm={10}>
+            </div>
+            {/* <Col componentClass={ControlLabel} sm={10}> */}
             <FormControl
                 type="text"
                 value={props.locValue}
@@ -37,28 +37,37 @@ const GrantForm = props =>
                 name="location"
                 placeholder="business location"
             />
-            </Col>
+            {/* </Col> */}
         </FormGroup>
     </Row>
     <Row>
-        <FormGroup>
-            <Col sm={2}>
+        {/* <FormGroup> */}
+            <div className="range">
             Range 
-            </Col>
-            <Col componentClass={ControlLabel} sm={10}>
-            <FormControl
+            </div>
+            {/* <FormControl
                 type="text"
                 value={props.rangeValue}
                 onChange={props.onChange}
                 name="range"
                 placeholder="desired delivery range (i.e. 0.5 miles, 1 mile, 5 miles)"
             />
-            </Col>
-        </FormGroup>
+        </FormGroup> */}
+
+        <FormControl 
+            onChange={props.onChange}
+            name="range"
+            componentClass="select" placeholder="select">
+                <option value="">Select</option>
+                <option value=".5">1/2 mile</option>
+                <option value="1">1 mile</option>
+                <option value="5">5 miles</option>
+        </FormControl>
     </Row>
     <Row>
-        <Col sm={2}>
+        <Col sm={12}>
         <Button
+            className="grant-submit"
             onClick={props.onSubmit}
             disabled={!(props.busValue && props.locValue && props.rangeValue)}
             >Grant

@@ -1,6 +1,6 @@
-.wish-submit-box {
+/* .wish-submit-box {
     text-align: center;
-}
+} */
 
 .wish-submit, .wish-submit:disabled, .wish-submit:active{
     border: white solid 2px;
@@ -9,26 +9,19 @@
     font-size: 18px;
     background: none;
     opacity: 100%;
+    text-shadow: none;
 }
 
-.request, .business {
+.request, .business, .current-loc-text {
     color: white;
     font-size: 16px;
-    text-align: left;
-}
-
-.current-loc-text {
-    color: white;
-    font-size: 16px;
-    text-align: left;
 }
 
 .wish-box {
-    /* background: rgba(0, 0, 0, 0.639);
-    border: none;
-    border-radius: 20px; */
-    text-align: center;
-    margin-top: 60px;
-    margin-bottom: 60px;
-    /* padding: 20px 10px 20px 10px; */
+    /* text-align: center; */
+    /* margin-top: 60px; */
+    margin-bottom: 20px;
+    font-size: 16px;
+    margin-left: 20px;
+    margin-right: 20px;
 }

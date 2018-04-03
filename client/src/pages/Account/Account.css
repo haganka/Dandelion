@@ -1,0 +1,18 @@
+.account-name {
+    font-size: 22px;
+    font-family: 'Averia Serif Libre', cursive;
+    margin-bottom: 20px;
+}
+
+.account-rating {
+    font-size: 18px;
+}
+
+.account-wishes, .account-grants {
+    font-size: 18px;
+    margin-top: 50px;
+}
+
+.form-control {
+    opacity: .8;
+}
