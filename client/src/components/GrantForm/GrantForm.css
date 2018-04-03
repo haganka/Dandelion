@@ -6,6 +6,8 @@
     background: none;
     opacity: 100%;
     text-shadow: none;
+    margin-top: 20px;
+    margin-left: -20px;
 }
 
 .location, .business-grant, .range {

@@ -4,7 +4,6 @@ import { Form, FormGroup, Col, Grid, Row, FormControl, ControlLabel, Button } fr
 import Geolocation from "react-geolocation";
 import './WishForm.css';
 
-const options = ["starbucks", "walgreens", "chipotle"];
 
 const WishForm = props =>
 
@@ -13,35 +12,9 @@ const WishForm = props =>
     <Form>
         <FormGroup>
         <Row>
-
-            <Geolocation
-                // onSuccess={() => props.saveCurrentPosition(latitude, longitude)}
-                onSuccess={console.log}
-                render={({
-                    fetchingPosition,
-                    position: { coords: { latitude, longitude } = {} } = {},
-                    error,
-                    getCurrentPosition
-                }) =>
-                    <div>
-                        <Row>
-                            <Button className="current-loc-submit" onClick={getCurrentPosition}>Use my Current Location</Button>
-                        </Row>
-                        latitude: {latitude}
-                        longitude: {longitude}
-                    </div>}
-            
-            />
-            </Row>
-        </FormGroup> 
-
-        <FormGroup>
-        <Row>
             <div className="current-loc-text">
-                    or enter delivery location
-                    {console.log(props.position)}
+                    Delivery location
             </div>
-            {/* <Col sm={8}> */}
                 <FormControl
                     className="location-input"
                     type="text"
@@ -50,7 +23,6 @@ const WishForm = props =>
                     name="location"
                     placeholder="delivery location (address, city, state)"
                 />
-            {/* </Col> */}
         </Row>
         </FormGroup>
 
@@ -59,7 +31,6 @@ const WishForm = props =>
             <div className="business">
             Choose a business
             </div>
-            {/* <Col sm={8}> */}
                 <FormControl 
                 className="bus-select"
                 onChange={props.onChange}
@@ -69,8 +40,11 @@ const WishForm = props =>
                     <option value="starbucks">Starbucks</option>
                     <option value="walgreens">Walgreens</option>
                     <option value="chipotle">Chipotle</option>
+                    <option value="trader joes">Trader Joe's</option>
+                    <option value="starfruit">Starfruit</option>
+                    <option value="protien bar">Protien Bar</option>
+                    <option value="dominoes">Dominoes</option>
                 </FormControl>
-            {/* </Col> */}
             </Row>
         </FormGroup>
 
@@ -79,7 +53,6 @@ const WishForm = props =>
             <div className="request">
             Request 
             </div>
-            {/* <Col sm={8} className="req-input"> */}
             <FormControl
                 type="text"
                 value={props.reqValue}
@@ -87,7 +60,6 @@ const WishForm = props =>
                 name="request"
                 placeholder="your request"
             />
-            {/* </Col> */}
             </Row>
         </FormGroup>
             <Row>
@@ -101,7 +73,6 @@ const WishForm = props =>
             </Col>
         </Row>
     </Form>
-    {/* </Grid> */}
   </div>;
 
 export default WishForm;

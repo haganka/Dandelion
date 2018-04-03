@@ -7,7 +7,7 @@ import './Wish.css';
 import firebase from '../../fire.js';
 // import { geolocated } from 'react-geolocated';
 import MatchContainer from '../../components/MatchContainer';
-// import moment from 'moment';
+import moment from 'moment';
 import {fire, auth} from '../../fire.js';
 import MatchModal from '../../components/MatchModal';
 
@@ -45,7 +45,8 @@ class Wish extends Component {
       markedComplete: false,
       rating: 0,
       showModal: false,
-      showTabs: false
+      showTabs: false,
+      currentTime: ""
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -53,6 +54,11 @@ class Wish extends Component {
 
 
   componentDidMount = () => {
+    let time = moment();
+    let currentTime = time._d;
+    this.setState({
+      currentTime: currentTime
+    })
     this.authListener();
   };
 
@@ -79,12 +85,11 @@ class Wish extends Component {
     console.dir(event.target)
   };
 
-  saveCurrentPosition = (lat, long) => {
-    console.log(lat, long)
-  }
+  // saveCurrentPosition = (lat, long) => {
+  //   console.log(lat, long)
+  // }
 
   handleRadioChange = value => {
-    // const { name, value } = event.target;
     console.log("rating val", value)
     this.setState({
       rating: value
@@ -159,6 +164,9 @@ class Wish extends Component {
   }
 
   handleWishSubmit = () => {
+    let expire = moment().add(5, 'minutes');
+    let time = moment();
+    console.log("expire at", expire)
     if (this.state.business && this.state.location && this.state.request) {
       let allWishes = this.state.wishes;
       const newWish = {
@@ -168,7 +176,8 @@ class Wish extends Component {
         lat: this.state.lat,
         long: this.state.long,
         request: this.state.request,
-        created: Date.now(),
+        created: time._d,
+        expire: expire._d,
         requested: false,
         requests: {name: "", location:"", id:"", key:"", complete: false},
         completed: false,
@@ -189,6 +198,7 @@ class Wish extends Component {
       console.log("LOOK AT ME", this.state)
       this.findGrantMatch();
       this.listenForRequest();
+      this.listenForExpire(this.state.currentTime, newWish.expire);
     }
   }
 
@@ -242,9 +252,7 @@ class Wish extends Component {
   }
 
   markComplete = (id, key, name, location, rating) => {
-    // let allComplete = this.state.completeMatch;
     let newComplete = {key: key, id: id, name: name, location: location, rating: rating};
-    // allComplete.push(newComplete)
     this.setState({
       completeMatch: newComplete,
       markedComplete: true
@@ -325,6 +333,10 @@ class Wish extends Component {
         console.log("state after request comes through", this.state)
     }
 
+    listenForExpire = (current, expire) => {
+        console.log("current", current, "expire", expire)
+    }
+
     listenForRequest = () => {
         console.log("LISTEN FOR RE RUNNING", this.state)
         firebase.database().ref(this.state.business + '/wishes/' + this.state.fireKey + '/requests').on('value', snapshot => {
@@ -372,6 +384,10 @@ class Wish extends Component {
     }
   };
 
+  saveCurrentPosition = (lat, long) => {
+    localStorage.setItem("lat", lat, "long", long)
+  }
+
   handleCloseModal = () => {
     this.setState({ showModal: false });
   }
@@ -399,18 +415,12 @@ class Wish extends Component {
                   this.handleShowModal();
               }
             }
-          // }else{
-          // console.log("this match already exists!")}
-        // }
     }
 
     keyMatchReq = (req) => {
-      // for(let j = 0; j < this.state.finalMatches.length; j++){
-      //   if(req.key !== this.state.finalMatches[j].key){
           console.log("key match req running", req);
           for(let i = 0; i < this.state.grantReceived.length; i++){
             if(req.key === this.state.grantReceived[i].key){
-                // alert("it's a match!", this.state.grantReceived[i])
                 let newMatch = this.state.finalMatches;
                 newMatch.push(req)
                 this.setState({
@@ -420,8 +430,6 @@ class Wish extends Component {
                 this.handleShowModal();
             }
           }
-    //     }else{console.log("this match already exists in final matches")}
-    // }
   }
 
   toggleViewPotential = () => {
