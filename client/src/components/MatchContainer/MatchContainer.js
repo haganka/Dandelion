@@ -29,7 +29,7 @@ const MatchContainer = props =>
                         complete={props.markComplete}
                         readyForComplete={props.finalMatch}
                         markedComplete={props.complete}
-                        rating={props.ratingVal}
+                        ratingVal={props.ratingVal}
                         onChange={props.onChange}
                         ratingSubmit={props.ratingSubmit}
                         />)) : null}

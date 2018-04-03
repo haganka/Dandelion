@@ -102,11 +102,13 @@ class Grant extends Component {
           (res.data.fire = arr[i].fireKey);
           (res.data.location = arr[i].location);
           (res.data.request = arr[i].request);
+          // (res.data.rating = arr[i].rating)
           console.log(res.data);
           finalMatches.push(res.data);
           this.setState({
             matches: finalMatches,
-            hasMatched: true
+            hasMatched: true,
+            grant: false
           });
           console.log(this.state.matches)
         })
@@ -292,7 +294,7 @@ class Grant extends Component {
         }else{
           dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
         }
-          let userRating = this.state.rating
+          // let userRating = this.state.rating
           API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeWishes: completeWishes})
               .then(res => {
               console.log(res.data)
@@ -355,8 +357,6 @@ class Grant extends Component {
                   id: snapshot.val().id, 
                   key: snapshot.val().key,
                   request: snapshot.val().request };
-              // let allComplete = this.state.completeMatch;
-              // allComplete.push(newComplete);
               this.setState({
                 completeMatch: newComplete,
                 markedComplete: true
@@ -394,18 +394,12 @@ class Grant extends Component {
             this.listenForComplete();
             }
         }
-
-      //   }else{console.log("this match exists already")}
-      // }
-  }
+    }
 
     keyMatchReq = (req) => {
       console.log("find req match running", req);
-      // for(let j = 0; j < this.state.finalMatches.length; j++){
-      //   if(req.key !== this.state.finalMatches[j].key){
         for(let i = 0; i < this.state.wishReceived.length; i++){
             if(req.key === this.state.wishReceived[i].key){
-                // alert("it's a match!", this.state.wishReceived[i])
                 let newMatch = this.state.finalMatches;
                 newMatch.push(req)
                 this.setState({
@@ -415,8 +409,6 @@ class Grant extends Component {
                 this.handleShowModal();
             }
         }
-      //   }else{console.log("match exists already")}
-      // }
     }
 
 
@@ -450,7 +442,8 @@ class Grant extends Component {
             hasMatched: false,
             viewOutgoingReq: false,
             viewPotential: false,
-            viewFinal: false
+            viewFinal: false,
+            grant: false
           })
           console.log(this.state)
     }
@@ -475,7 +468,6 @@ class Grant extends Component {
       <div>
         <Grid fluid>
           <Row>
-            {/* <Col md={12}> */}
                 {this.state.grant ? <GrantForm
                     type="text"
                     busValue={this.state.business}
@@ -484,7 +476,6 @@ class Grant extends Component {
                     onChange={this.handleInputChange.bind(this)}
                     onSubmit={this.getLatLng}
                 /> : null}
-            {/* </Col> */}
           </Row>
         </Grid>
         <Grid>
