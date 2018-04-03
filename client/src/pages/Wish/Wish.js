@@ -241,9 +241,9 @@ class Wish extends Component {
       console.log(this.state)
   }
 
-  markComplete = (id, key, name, location) => {
+  markComplete = (id, key, name, location, rating) => {
     // let allComplete = this.state.completeMatch;
-    let newComplete = {key: key, id: id, name: name, location: location};
+    let newComplete = {key: key, id: id, name: name, location: location, rating: rating};
     // allComplete.push(newComplete)
     this.setState({
       completeMatch: newComplete,
@@ -256,10 +256,10 @@ class Wish extends Component {
     .update({complete: true});
   };
 
-  handleSelect = (id, key, name, location) => {
-    console.log("the id of button clicked", id, "key", key, "name", name, "loc", location)
+  handleSelect = (id, key, name, location, rating) => {
+    console.log("the id of button clicked", id, "key", key, "name", name, "loc", location, "rating", rating)
     let allRequests = this.state.wishSent;
-    let newReq = {name: name, location: location, id: id, key: key};
+    let newReq = {name: name, location: location, id: id, key: key, rating: rating};
     console.log(newReq)
     allRequests.push(newReq)
     this.setState({clickedKey: key, wishSent: allRequests}, 
@@ -268,10 +268,10 @@ class Wish extends Component {
         console.log(this.state.wishSent)
   }
 
-  handleAccept = (id, key, name, location) => {
-    console.log("the id of accept clicked", id, "key", key, "name", name, "loc", location)
+  handleAccept = (id, key, name, location, rating) => {
+    console.log("the id of accept clicked", id, "key", key, "name", name, "loc", location, "rating", rating)
     let allRequests = this.state.wishSent;
-    let newReq = {name: name, location: location, id: id, key: key};
+    let newReq = {name: name, location: location, id: id, key: key, rating: rating};
     console.log(newReq)
     allRequests.push(newReq)
     this.setState({clickedKey: key, wishSent: allRequests}, 
@@ -464,15 +464,17 @@ class Wish extends Component {
       if(this.state.showModal === true){
         this.setState({
           showModal: false,
+        })
+      }
+      this.setState({
           viewFinal: true,
           viewOutgoingReq: false,
           viewIncomingReq: false,
           viewPotential: false,
           wish: false
         })
-      }
         console.log(this.state)
-  }
+      }
 
   render() {
     return (

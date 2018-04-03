@@ -3,6 +3,7 @@ import API from "../../utils/API";
 import { Link, push } from "react-router-dom";
 import { Col, Row, Button, Jumbotron, Grid } from 'react-bootstrap';
 import CompletePanel from '../../components/CompletePanel';
+import './Account.css';
 
 const Account = props =>
       <div>
@@ -17,7 +18,7 @@ const Account = props =>
             </Col>
           </Row>
           <Row>
-            <Col sm={6} className="account-wishes">Completed Wishes: 
+            <Col xs={6} className="account-wishes">Completed Wishes: 
                 {props.completedWishes.map((wish => <CompletePanel 
                 request={wish.request}
                 grantedBy={wish.grantedBy}
@@ -27,7 +28,7 @@ const Account = props =>
                 />))}
             </Col>
 
-            <Col sm={6} className="account-grants">Completed Grants: 
+            <Col xs={6} className="account-grants">Completed Grants: 
                 {props.completedGrants.map((grant => <CompletePanel 
                 request={grant.request}
                 grantedFor={grant.wishFrom}

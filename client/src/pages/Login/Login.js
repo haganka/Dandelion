@@ -101,9 +101,18 @@ class Login extends Component {
 
     viewAccount = (event) => {
         event.preventDefault();
+        API.checkUser({
+            email: this.state.email
+        })
+        .then(res => { 
+            this.setState({
+                completedWishes: res.data.completeWishes,
+                completedGrants: res.data.completeGrants
+            });
+        }).then(() =>
         this.setState({
             viewAccount: true
-        })
+        }))
         console.log(this.state)
     }
 

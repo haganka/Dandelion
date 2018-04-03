@@ -242,7 +242,7 @@ class Grant extends Component {
       console.log(this.state)
   }
 
-    markComplete = (id, key, name, location, request) => {
+    markComplete = (id, key, name, location, request, rating) => {
           let completeKey = key;
           // let allComplete = this.state.completeMatch;
           let newComplete = {key: key, id: id, name: name, location: location, request: request};
@@ -258,7 +258,7 @@ class Grant extends Component {
     };
     
 
-    handleSelect = (id, key, name, location, request) => {
+    handleSelect = (id, key, name, location, request, rating) => {
         console.log("the id of button clicked", id, "key", key)
         let allRequests = this.state.grantSent;
         let newReq = {name: name, location: location, id: id, request: request, key: key};
@@ -269,7 +269,7 @@ class Grant extends Component {
   
     }
 
-    handleAccept = (id, key, name, location, request) => {
+    handleAccept = (id, key, name, location, request, rating) => {
       console.log("the id of accept clicked", id, "key", key, "name", name, "loc", location)
       let allRequests = this.state.grantSent;
       let newReq = {name: name, location: location, id: id, request: request, key: key};
@@ -456,6 +456,8 @@ class Grant extends Component {
         if(this.state.showModal === true){
           this.setState({
             showModal: false,
+          })
+          this.setState({
             viewFinal: true,
             viewOutgoingReq: false,
             viewIncomingReq: false,
@@ -485,16 +487,16 @@ class Grant extends Component {
         {this.state.showTabs ? 
         <Grid>
             <Row className="match-row">
-              <Col sm={3}>
-                <Button className="potential-match" onClick={this.toggleViewPotential}>Potential Matches</Button>
+              <Col xs={6} sm={3}>
+                <Button className="match-btns potential-match" onClick={this.toggleViewPotential}>Potential Matches</Button>
                 </Col>
-                <Col sm={3}>
-                <Button className="out-match" onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
+                <Col xs={6} sm={3}>
+                <Button className="match-btns out-match" onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
                 </Col>
-                <Col sm={3}>
-                <Button className="in-match" onClick={this.toggleViewIncoming}>Incoming Requests</Button>
+                <Col xs={6} sm={3}>
+                <Button className="match-btns in-match" onClick={this.toggleViewIncoming}>Incoming Requests</Button>
                 </Col>
-                {this.state.matched ? <Col sm={3}><Button className="final-match" onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
+                {this.state.matched ? <Col xs={6} sm={3}><Button className="match-btns final-match" onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
         </Grid> : null}
         {this.state.hasMatched  ? <MatchContainer grant={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>

@@ -10,3 +10,14 @@
 .match-row {
     border-bottom: 1px white;
 }
+
+@media screen and (max-width: 768px) {
+    .match-btns {
+        float: left;
+        width: auto;
+        /* font-size: 12px; */
+    }
+    .out-match, .final-match {
+        margin-left: 2%;
+    }
+}
