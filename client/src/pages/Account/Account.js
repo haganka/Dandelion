@@ -38,7 +38,6 @@ const Account = props =>
             </Col>
           </Row>
 
-
         </Grid>
       </div>
 
