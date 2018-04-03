@@ -9,7 +9,7 @@ const options = ["starbucks", "walgreens", "chipotle"];
 const WishForm = props =>
 
     <div className="wish-box">
-    <Grid>
+    {/* <Grid> */}
     <Form>
         <FormGroup>
         <Row>
@@ -101,7 +101,7 @@ const WishForm = props =>
             </Col>
         </Row>
     </Form>
-    </Grid>
+    {/* </Grid> */}
   </div>;
 
 export default WishForm;
