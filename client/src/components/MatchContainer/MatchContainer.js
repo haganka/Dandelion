@@ -7,7 +7,7 @@ import { Col, Row } from 'react-bootstrap';
 const MatchContainer = props =>
              <div>
                  <Row>
-                    <Col sm={6}>
+                    {/* <Col sm={6}> */}
                     {props.matches ? 
                     props.matches.map((match => <MatchBox
                         header={props.button}
@@ -34,7 +34,7 @@ const MatchContainer = props =>
                         ratingSubmit={props.ratingSubmit}
                         />)) : null}
                     
-                    </Col>
+                    {/* </Col> */}
                 </Row>
             </div>
 

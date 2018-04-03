@@ -190,7 +190,7 @@ class Login extends Component {
                     </Col>
                 </Row>
                 <Row>
-                    <Col>
+                    <div className="login-form-box">
                         {this.state.login ? <LogInBox
                             emailValue={this.state.email} 
                             passValue={this.state.password}
@@ -204,7 +204,7 @@ class Login extends Component {
                             onChange={this.handleInputChange.bind(this)} 
                             onSubmit={this.signUpSubmit.bind(this)}
                         />: null}
-                    </Col>
+                    </div>
                 </Row>
             </Grid> : 
              <Home 

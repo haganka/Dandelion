@@ -48,7 +48,8 @@ class Grant extends Component {
       markedComplete: false,
       rating: 0,
       accountPast: [],
-      showModal: false
+      showModal: false,
+      showTabs: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -194,6 +195,9 @@ class Grant extends Component {
 
 
   getLatLng = (event) => {
+    this.setState ({
+      showTabs: true
+    })
     event.preventDefault();
     let address = this.state.location;
     let queryAddress = address.split(' ').join('+');
@@ -478,6 +482,7 @@ class Grant extends Component {
                 /> : null}
           </Row>
         </Grid>
+        {this.state.showTabs ? 
         <Grid>
             <Row className="match-row">
               <Col sm={3}>
@@ -491,7 +496,7 @@ class Grant extends Component {
                 </Col>
                 {this.state.matched ? <Col sm={3}><Button className="final-match" onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
-        </Grid>
+        </Grid> : null}
         {this.state.hasMatched  ? <MatchContainer grant={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
           : null}
         {this.state.viewPotential ? <MatchContainer grant={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}/>
