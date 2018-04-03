@@ -55,7 +55,7 @@ class Wish extends Component {
 
   componentDidMount = () => {
     let time = moment();
-    let currentTime = time._d;
+    let currentTime = moment()._d;
     this.setState({
       currentTime: currentTime
     })
@@ -334,7 +334,10 @@ class Wish extends Component {
     }
 
     listenForExpire = (current, expire) => {
-        console.log("current", current, "expire", expire)
+        console.log("current", current, "expire", expire);
+        // let currentArr = current.split(" ");
+        // let expireArr = expire.split(" ");
+        // console.log("current", currentArr, "expire", expireArr);
     }
 
     listenForRequest = () => {
@@ -384,9 +387,6 @@ class Wish extends Component {
     }
   };
 
-  saveCurrentPosition = (lat, long) => {
-    localStorage.setItem("lat", lat, "long", long)
-  }
 
   handleCloseModal = () => {
     this.setState({ showModal: false });
