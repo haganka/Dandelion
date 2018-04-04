@@ -5,6 +5,7 @@
     float: left;
     margin: 20px 20px 20px 0;
     font-size: 18px;
+    text-align: center;
 }
 
 .match-row {
@@ -14,10 +15,25 @@
 @media screen and (max-width: 768px) {
     .match-btns {
         float: left;
-        width: auto;
-        /* font-size: 12px; */
+        width: 115px;
+        font-size: 9px;
+        text-align: center;
+        margin: 0 auto;
+        margin-bottom: 5px;
+    }
+    .in-match, .potential-match {
+        margin-left: 20px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .match-btns {
+        float: left;
+        width: 170px;
+        font-size: 14px;
+        text-align: center;
     }
     .out-match, .final-match {
-        margin-left: 2%;
+        margin-left: .5%;
     }
 }

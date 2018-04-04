@@ -49,7 +49,8 @@ class Grant extends Component {
       rating: 0,
       accountPast: [],
       showModal: false,
-      noResults: false
+      noResults: false,
+      showTabs: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -105,7 +106,8 @@ class Grant extends Component {
           this.setState({
             matches: finalMatches,
             hasMatched: true,
-            grant: false
+            grant: false,
+            showTabs: true
           });
           console.log(this.state.matches)
         })
@@ -135,7 +137,7 @@ class Grant extends Component {
         if(wish.val()){
           let diff = (time - wish.val().created)/1000/60;
           console.log("time", time, "allwishes time", wish.val().created, "diff", diff)
-          if(diff >= 5){
+          if(diff >= 10){
             let key = wish.val().fireKey
             this.removeEntry(key);
             console.log("wish thats overdue", wish.val())
@@ -184,7 +186,7 @@ class Grant extends Component {
         fireKey: ""
       };
       allGrants.push(newGrant);
-      this.setState({ grants: allGrants })
+      this.setState({ grants: allGrants, showTabs: false })
       let newEntry = firebase.database().ref(newGrant.business + '/grants').push(newGrant);
       let key = newEntry.key
       this.setState({
@@ -227,7 +229,7 @@ class Grant extends Component {
 
   removeEntry = (key) => {
     console.log("key to remove", key)
-      firebase.database().ref(this.state.business + '/grants/' + key).remove();
+      firebase.database().ref(this.state.business + '/wishes/' + key).remove();
       let allFinal = this.state.finalMatches;
       let allReceived = this.state.wishReceived;
       let allSent = this.state.grantSent;
@@ -490,19 +492,19 @@ class Grant extends Component {
                 /> : null}
           </Row>
         </Grid>
-        {this.state.hasMatched ? 
+        {this.state.showTabs ? 
         <Grid>
             <Row className="match-row">
               <Col xs={6} sm={3}>
-                <Button className="match-btns potential-match" onClick={this.toggleViewPotential}>Potential Matches</Button>
+                <Button className="match-btns potential-match" onClick={this.toggleViewPotential}>POTENTIAL MATCHES</Button>
                 </Col>
                 <Col xs={6} sm={3}>
-                <Button className="match-btns out-match" onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
+                <Button className="match-btns out-match" onClick={this.toggleViewOutgoing}>OUTGOING REQUESTS</Button>
                 </Col>
                 <Col xs={6} sm={3}>
-                <Button className="match-btns in-match" onClick={this.toggleViewIncoming}>Incoming Requests</Button>
+                <Button className="match-btns in-match" onClick={this.toggleViewIncoming}>INCOMING REQUESTS</Button>
                 </Col>
-                {this.state.matched ? <Col xs={6} sm={3}><Button className="match-btns final-match" onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
+                {this.state.matched ? <Col xs={6} sm={3}><Button className="match-btns final-match" onClick={this.toggleViewFinal}>VIEW MY MATCHES</Button></Col> : null}
             </Row>
         </Grid> : null}
         {this.state.noResults ? <Row> Sorry, there aren't any wishes nearby to match your grant at the moment. Try again soon!</Row> : null}

@@ -32,10 +32,10 @@ const Home = props =>
           </Row>
           <Row>
             <div className="home-btn-box">
-                <button className="home-btn wish-btn" onClick={props.wishClick}>Make a Wish</button>
+                <button className="home-btn wish-btn" onClick={props.wishClick.bind()}>Make a Wish</button>
             </div>
             <div className="home-btn-box">
-                <button className="home-btn grant-btn" onClick={props.grantClick}>Grant a Wish</button>
+                <button className="home-btn grant-btn" onClick={props.grantClick.bind()}>Grant a Wish</button>
             </div>
           </Row>
           <Row>
