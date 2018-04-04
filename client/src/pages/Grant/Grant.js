@@ -229,7 +229,7 @@ class Grant extends Component {
 
   removeEntry = (key) => {
     console.log("key to remove", key)
-      firebase.database().ref(this.state.business + '/grants/' + key).remove();
+      firebase.database().ref(this.state.business + '/wishes/' + key).remove();
       let allFinal = this.state.finalMatches;
       let allReceived = this.state.wishReceived;
       let allSent = this.state.grantSent;
@@ -496,15 +496,15 @@ class Grant extends Component {
         <Grid>
             <Row className="match-row">
               <Col xs={6} sm={3}>
-                <Button className="match-btns potential-match" onClick={this.toggleViewPotential}>Potential Matches</Button>
+                <Button className="match-btns potential-match" onClick={this.toggleViewPotential}>POTENTIAL MATCHES</Button>
                 </Col>
                 <Col xs={6} sm={3}>
-                <Button className="match-btns out-match" onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
+                <Button className="match-btns out-match" onClick={this.toggleViewOutgoing}>OUTGOING REQUESTS</Button>
                 </Col>
                 <Col xs={6} sm={3}>
-                <Button className="match-btns in-match" onClick={this.toggleViewIncoming}>Incoming Requests</Button>
+                <Button className="match-btns in-match" onClick={this.toggleViewIncoming}>INCOMING REQUESTS</Button>
                 </Col>
-                {this.state.matched ? <Col xs={6} sm={3}><Button className="match-btns final-match" onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
+                {this.state.matched ? <Col xs={6} sm={3}><Button className="match-btns final-match" onClick={this.toggleViewFinal}>VIEW MY MATCHES</Button></Col> : null}
             </Row>
         </Grid> : null}
         {this.state.noResults ? <Row> Sorry, there aren't any wishes nearby to match your grant at the moment. Try again soon!</Row> : null}

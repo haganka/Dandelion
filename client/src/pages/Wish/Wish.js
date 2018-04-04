@@ -521,15 +521,15 @@ class Wish extends Component {
         <Grid>
             <Row>
               <Col sm={3}>
-                <Button className="potential-match" onClick={this.toggleViewPotential}>Potential Matches</Button>
+                <Button className="potential-match match-btns" onClick={this.toggleViewPotential}>POTENTIAL MATCHES</Button>
                 </Col>
               <Col sm={3}>
-                <Button className="in-match" onClick={this.toggleViewOutgoing}>Outgoing Requests</Button>
+                <Button className="in-match match-btns" onClick={this.toggleViewOutgoing}>OUTGOING REQUESTS</Button>
               </Col>
               <Col sm={3}>
-                <Button className="out-match" onClick={this.toggleViewIncoming}>Incoming Requests</Button>
+                <Button className="out-match match-btns" onClick={this.toggleViewIncoming}>INCOMING REQUESTS</Button>
               </Col>
-                {this.state.matched ? <Col sm={3}><Button className="final-match"onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
+                {this.state.matched ? <Col sm={3}><Button className="final-match"onClick={this.toggleViewFinal}>VIEW MY MATCHES</Button></Col> : null}
             </Row>
         </Grid> : null}
         {this.state.noResults ? <Row> Sorry, there aren't any grants to match your wish at the moment. Try again soon!</Row> : null}
