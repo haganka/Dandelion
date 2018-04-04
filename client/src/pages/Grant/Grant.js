@@ -49,7 +49,8 @@ class Grant extends Component {
       rating: 0,
       accountPast: [],
       showModal: false,
-      noResults: false
+      noResults: false,
+      showTabs: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -105,7 +106,8 @@ class Grant extends Component {
           this.setState({
             matches: finalMatches,
             hasMatched: true,
-            grant: false
+            grant: false,
+            showTabs: true
           });
           console.log(this.state.matches)
         })
@@ -184,7 +186,7 @@ class Grant extends Component {
         fireKey: ""
       };
       allGrants.push(newGrant);
-      this.setState({ grants: allGrants })
+      this.setState({ grants: allGrants, showTabs: false })
       let newEntry = firebase.database().ref(newGrant.business + '/grants').push(newGrant);
       let key = newEntry.key
       this.setState({
@@ -490,7 +492,7 @@ class Grant extends Component {
                 /> : null}
           </Row>
         </Grid>
-        {this.state.hasMatched ? 
+        {this.state.showTabs ? 
         <Grid>
             <Row className="match-row">
               <Col xs={6} sm={3}>

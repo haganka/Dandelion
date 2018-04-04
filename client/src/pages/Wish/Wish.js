@@ -46,7 +46,8 @@ class Wish extends Component {
       rating: 0,
       showModal: false,
       noResults: false,
-      currentTime: ""
+      currentTime: "",
+      showTabs: false
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -108,7 +109,8 @@ class Wish extends Component {
           this.setState({
             matches: finalMatches,
             hasMatched: true,
-            wish: false
+            wish: false,
+            showTabs: true
           });
           console.log(this.state.matches)
         })
@@ -193,7 +195,7 @@ class Wish extends Component {
       };
       allWishes.push(newWish);
       console.log("new wish", newWish)
-      this.setState({ wishes: allWishes })
+      this.setState({ wishes: allWishes, showTabs: false })
       let newEntry = firebase.database().ref(newWish.business + '/wishes').push(newWish);
       // newEntry.push(newWish)
       let key = newEntry.key
@@ -214,6 +216,9 @@ class Wish extends Component {
 
 
   getLatLng = (event) => {
+    this.setState ({
+      showTabs: true
+    })
     event.preventDefault();
     let address = this.state.location;
     let queryAddress = address.split(' ').join('+');
