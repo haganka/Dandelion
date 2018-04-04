@@ -517,7 +517,7 @@ class Wish extends Component {
               /> : null}
           </Row>
         </Grid>
-        {this.state.hasMatched ? 
+        {this.state.showTabs ? 
         <Grid>
             <Row>
               <Col sm={3}>
