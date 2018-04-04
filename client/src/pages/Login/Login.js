@@ -11,6 +11,7 @@ import Home from '../Home';
 import {fire, auth} from '../../fire.js';
 import Account from '../Account';
 import NavBar from "../../components/NavBar";
+// import Footer from '../../components/Footer';
 
 class Login extends Component {
     //allows access to props if you pass down, allows console logging
@@ -180,7 +181,7 @@ class Login extends Component {
 
     render() {
         return (
-            <div>
+            <div className="container">
             {!this.state.submitSuccess ? 
             <div>
                 <Grid>
@@ -239,8 +240,9 @@ class Login extends Component {
                 wishClick={this.toggleWish.bind(this)} 
                 grantClick={this.toggleGrant.bind(this)}
                 wish={this.state.wish}
-                grant={this.state.grant}/>}
+                grant={this.state.grant}/>
             </div>}
+            {/* <Footer/> */}
         </div>
 
         );

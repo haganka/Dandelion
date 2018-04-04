@@ -23,7 +23,23 @@ body {
     color: white;
     max-width: 100%;
     overflow-x: hidden;
+    margin-bottom: 50px;
+    min-height: 100vh;
 }
+
+html, body {
+    min-height: 100%;
+    position: relative;
+}
+
+/* .container {
+    min-height: 100vh; 
+    overflow: hidden; 
+    display: block; 
+    position: relative;
+    padding-bottom: 100px; 
+    min-width: 100%;
+} */
 
 .navbar-default, .navbar-brand, .nav-item {
     background-color: none;

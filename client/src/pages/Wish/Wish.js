@@ -45,7 +45,7 @@ class Wish extends Component {
       markedComplete: false,
       rating: 0,
       showModal: false,
-      showTabs: false,
+      noResults: false,
       currentTime: ""
     };
 
@@ -157,7 +157,8 @@ class Wish extends Component {
         if (allGrants) {
           const matches = Object.keys(allGrants).filter(e => this.getDistance(this.state.lat, this.state.long, allGrants[e].lat, allGrants[e].long) <= allGrants[e].range)
           this.getGrantMatches(matches);
-        } else { console.log("no matches") }
+        }else { this.setState({noResults: true})
+        }
       }
      
     });
@@ -191,7 +192,8 @@ class Wish extends Component {
       let key = newEntry.key
       this.setState({
         fireKey: key,
-        clickedKey: ""
+        clickedKey: "",
+        noResults: false
       })
       firebase.database().ref(newWish.business + '/wishes/' + key)
       .update({ fireKey: key });
@@ -205,9 +207,6 @@ class Wish extends Component {
 
 
   getLatLng = (event) => {
-    this.setState ({
-      showTabs: true
-    })
     event.preventDefault();
     let address = this.state.location;
     let queryAddress = address.split(' ').join('+');
@@ -304,8 +303,8 @@ class Wish extends Component {
         dataRating = newRating;
       }else{
         dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
+        dataRating = dataRating.toString().split(".").map((el,i)=>i?el.split("").slice(0,2).join(""):el).join(".");
       }
-        // let userRating = this.state.rating
         API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeGrants: completeGrants})
             .then(res => {
             console.log(res.data)
@@ -502,7 +501,7 @@ class Wish extends Component {
               /> : null}
           </Row>
         </Grid>
-        {this.state.showTabs ? 
+        {this.state.hasMatched ? 
         <Grid>
             <Row>
               <Col sm={3}>
@@ -517,6 +516,7 @@ class Wish extends Component {
                 {this.state.matched ? <Col sm={3}><Button className="final-match"onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
         </Grid> : null}
+        {this.state.noResults ? <Row> Sorry, there aren't any grants to match your wish at the moment. Try again soon!</Row> : null}
         {this.state.hasMatched ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}></MatchContainer>
           : null}
         {this.state.viewOutgoingReq ? <MatchContainer wish={true} match={false} outgoing={true} incoming={false} matches={this.state.wishSent}></MatchContainer> : null}

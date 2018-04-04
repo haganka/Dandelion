@@ -33,6 +33,15 @@
     margin-top: 75px;
 }
 
+/* .container {
+    min-height: 100vh; 
+    overflow: hidden; 
+    display: block; 
+    position: relative;
+    padding-bottom: 100px; 
+    min-width: 100%;
+} */
+
 
 /* Extra small devices (phones, less than 768px) */
 @media screen and (max-width: 768px) {

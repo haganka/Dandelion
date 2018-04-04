@@ -6,10 +6,11 @@ import Account from "./pages/Account";
 // import NoMatch from "./pages/NoMatch";
 import NavBar from "./components/NavBar";
 import './App.css';
+import Footer from './components/Footer';
 
 const App = () =>
   <Router>
-    <div>
+    <div className="container">
       {/* <NavBar /> */}
       <Switch>
         <Route exact path="/" component={Login} />
@@ -19,6 +20,7 @@ const App = () =>
         {/* <Route exact path="/account" component={Account} /> */}
         {/* <Route component={NoMatch} /> */}
       </Switch>
+      {/* <Footer/> */}
     </div>
   </Router>;
 
