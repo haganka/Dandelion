@@ -7,7 +7,7 @@ import './Wish.css';
 import firebase from '../../fire.js';
 // import { geolocated } from 'react-geolocated';
 import MatchContainer from '../../components/MatchContainer';
-// import moment from 'moment';
+import moment from 'moment';
 import {fire, auth} from '../../fire.js';
 import MatchModal from '../../components/MatchModal';
 
@@ -45,7 +45,8 @@ class Wish extends Component {
       markedComplete: false,
       rating: 0,
       showModal: false,
-      showTabs: false
+      noResults: false,
+      currentTime: ""
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -53,6 +54,11 @@ class Wish extends Component {
 
 
   componentDidMount = () => {
+    let time = moment();
+    let currentTime = moment()._d;
+    this.setState({
+      currentTime: currentTime
+    })
     this.authListener();
   };
 
@@ -79,12 +85,7 @@ class Wish extends Component {
     console.dir(event.target)
   };
 
-  saveCurrentPosition = (lat, long) => {
-    console.log(lat, long)
-  }
-
   handleRadioChange = value => {
-    // const { name, value } = event.target;
     console.log("rating val", value)
     this.setState({
       rating: value
@@ -132,16 +133,27 @@ class Wish extends Component {
   getGrantMatches = (matches) => {
     console.log("get matches running", matches);
     let grantArr = [];
+    let time = Date.now();
+    console.log("time", time)
     for (let i = 0; i < matches.length; i++) {
       firebase.database().ref(this.state.business + '/grants/' + matches[i]).on('value', grant => {
-        if(!this.state.clickedKey){
-        const allGrants = grant.val();
-        grantArr.push(allGrants)
-        }
-      })
-      console.log(grantArr)
-      this.getMatchedUserInfo(grantArr);
-    }
+        if(grant.val()){
+          let diff = (time - grant.val().created)/1000/60;
+            console.log("time", time, "allGrants time", grant.val().created, "diff", diff)
+            if(diff >= 5){
+                let key = grant.val().fireKey
+                this.removeEntry(key);
+            }else{
+              if(!this.state.clickedKey){
+                const allGrants = grant.val();
+                grantArr.push(allGrants)
+                console.log(grantArr)
+                this.getMatchedUserInfo(grantArr);
+              }
+            }
+          }
+        })
+      }
   }
 
   findGrantMatch = () => {
@@ -152,13 +164,17 @@ class Wish extends Component {
         if (allGrants) {
           const matches = Object.keys(allGrants).filter(e => this.getDistance(this.state.lat, this.state.long, allGrants[e].lat, allGrants[e].long) <= allGrants[e].range)
           this.getGrantMatches(matches);
-        } else { console.log("no matches") }
-      }
+        }else { this.setState({noResults: true})
+        }
+    }
      
     });
   }
 
   handleWishSubmit = () => {
+    // let expire = moment().add(5, 'minutes');
+    let time = Date.now();
+    console.log("created", time)
     if (this.state.business && this.state.location && this.state.request) {
       let allWishes = this.state.wishes;
       const newWish = {
@@ -168,7 +184,8 @@ class Wish extends Component {
         lat: this.state.lat,
         long: this.state.long,
         request: this.state.request,
-        created: Date.now(),
+        created: time,
+        // expire: expire,
         requested: false,
         requests: {name: "", location:"", id:"", key:"", complete: false},
         completed: false,
@@ -182,22 +199,21 @@ class Wish extends Component {
       let key = newEntry.key
       this.setState({
         fireKey: key,
-        clickedKey: ""
+        clickedKey: "",
+        noResults: false
       })
       firebase.database().ref(newWish.business + '/wishes/' + key)
       .update({ fireKey: key });
       console.log("LOOK AT ME", this.state)
       this.findGrantMatch();
       this.listenForRequest();
+      // this.listenForExpire(this.state.currentTime, newWish.expire);
     }
   }
 
 
 
   getLatLng = (event) => {
-    this.setState ({
-      showTabs: true
-    })
     event.preventDefault();
     let address = this.state.location;
     let queryAddress = address.split(' ').join('+');
@@ -242,9 +258,7 @@ class Wish extends Component {
   }
 
   markComplete = (id, key, name, location, rating) => {
-    // let allComplete = this.state.completeMatch;
     let newComplete = {key: key, id: id, name: name, location: location, rating: rating};
-    // allComplete.push(newComplete)
     this.setState({
       completeMatch: newComplete,
       markedComplete: true
@@ -296,8 +310,8 @@ class Wish extends Component {
         dataRating = newRating;
       }else{
         dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
+        dataRating = dataRating.toString().split(".").map((el,i)=>i?el.split("").slice(0,2).join(""):el).join(".");
       }
-        // let userRating = this.state.rating
         API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeGrants: completeGrants})
             .then(res => {
             console.log(res.data)
@@ -324,6 +338,17 @@ class Wish extends Component {
         })
         console.log("state after request comes through", this.state)
     }
+
+    // listenForExpire = () => {
+    //     console.log("current", current, "expire", expire);
+    //     var ref = firebase.database().ref(this.state.business + '/grants/');
+    //     var now = moment().unix();
+    //     var cutoff = 
+    //     var old = ref.orderByChild('timestamp').endAt(cutoff).limitToLast(1);
+    //     var listener = old.on('child_added', function(snapshot) {
+    //         snapshot.ref.remove();
+    //     });
+    // }
 
     listenForRequest = () => {
         console.log("LISTEN FOR RE RUNNING", this.state)
@@ -372,6 +397,7 @@ class Wish extends Component {
     }
   };
 
+
   handleCloseModal = () => {
     this.setState({ showModal: false });
   }
@@ -399,18 +425,12 @@ class Wish extends Component {
                   this.handleShowModal();
               }
             }
-          // }else{
-          // console.log("this match already exists!")}
-        // }
     }
 
     keyMatchReq = (req) => {
-      // for(let j = 0; j < this.state.finalMatches.length; j++){
-      //   if(req.key !== this.state.finalMatches[j].key){
           console.log("key match req running", req);
           for(let i = 0; i < this.state.grantReceived.length; i++){
             if(req.key === this.state.grantReceived[i].key){
-                // alert("it's a match!", this.state.grantReceived[i])
                 let newMatch = this.state.finalMatches;
                 newMatch.push(req)
                 this.setState({
@@ -420,8 +440,6 @@ class Wish extends Component {
                 this.handleShowModal();
             }
           }
-    //     }else{console.log("this match already exists in final matches")}
-    // }
   }
 
   toggleViewPotential = () => {
@@ -494,7 +512,7 @@ class Wish extends Component {
               /> : null}
           </Row>
         </Grid>
-        {this.state.showTabs ? 
+        {this.state.hasMatched ? 
         <Grid>
             <Row>
               <Col sm={3}>
@@ -509,6 +527,7 @@ class Wish extends Component {
                 {this.state.matched ? <Col sm={3}><Button className="final-match"onClick={this.toggleViewFinal}>View My Matches</Button></Col> : null}
             </Row>
         </Grid> : null}
+        {this.state.noResults ? <Row> Sorry, there aren't any grants to match your wish at the moment. Try again soon!</Row> : null}
         {this.state.hasMatched ? <MatchContainer wish={true} match={true} outgoing={false} incoming={false} matches={this.state.matches} onClick={this.handleSelect}></MatchContainer>
           : null}
         {this.state.viewOutgoingReq ? <MatchContainer wish={true} match={false} outgoing={true} incoming={false} matches={this.state.wishSent}></MatchContainer> : null}

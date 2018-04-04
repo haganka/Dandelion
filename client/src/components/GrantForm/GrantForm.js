@@ -9,9 +9,8 @@ const GrantForm = props =>
         <Row>
             <FormGroup>
                 <div className="business-grant">
-                Business Name
+                Choose a Business
                 </div>
-                {/* <Col sm={8}> */}
                 <FormControl 
                     onChange={props.onChange}
                     name="business"
@@ -20,39 +19,31 @@ const GrantForm = props =>
                         <option value="starbucks">Starbucks</option>
                         <option value="walgreens">Walgreens</option>
                         <option value="chipotle">Chipotle</option>
+                        <option value="trader joes">Trader Joe's</option>
+                        <option value="starfruit">Starfruit</option>
+                        <option value="protien bar">Protien Bar</option>
+                        <option value="dominoes">Dominoes</option>
                 </FormControl>
-                {/* </Col> */}
             </FormGroup>
         </Row>
-    <Row>
+        <Row>
         <FormGroup>
             <div className="location">
             Business Location 
             </div>
-            {/* <Col componentClass={ControlLabel} sm={10}> */}
-            <FormControl
+                <FormControl
                 type="text"
                 value={props.locValue}
                 onChange={props.onChange}
                 name="location"
                 placeholder="business location"
-            />
-            {/* </Col> */}
+                />
         </FormGroup>
-    </Row>
-    <Row>
-        {/* <FormGroup> */}
+        </Row>
+        <Row>
             <div className="range">
             Range 
             </div>
-            {/* <FormControl
-                type="text"
-                value={props.rangeValue}
-                onChange={props.onChange}
-                name="range"
-                placeholder="desired delivery range (i.e. 0.5 miles, 1 mile, 5 miles)"
-            />
-        </FormGroup> */}
 
         <FormControl 
             onChange={props.onChange}

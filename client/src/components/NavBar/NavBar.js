@@ -13,7 +13,7 @@ const NavBar = props =>
   </Navbar.Header>
   <Nav>
     <NavItem eventKey={1} href="/" className="nav-item nav-link">
-      Home
+      Wish or Grant
     </NavItem>
     <NavItem eventKey={2} href="/account" onClick={props.accountClick} className="nav-item nav-link">
       Account
