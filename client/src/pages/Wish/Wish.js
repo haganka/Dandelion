@@ -85,10 +85,6 @@ class Wish extends Component {
     console.dir(event.target)
   };
 
-  // saveCurrentPosition = (lat, long) => {
-  //   console.log(lat, long)
-  // }
-
   handleRadioChange = value => {
     console.log("rating val", value)
     this.setState({
@@ -137,16 +133,27 @@ class Wish extends Component {
   getGrantMatches = (matches) => {
     console.log("get matches running", matches);
     let grantArr = [];
+    let time = Date.now();
+    console.log("time", time)
     for (let i = 0; i < matches.length; i++) {
       firebase.database().ref(this.state.business + '/grants/' + matches[i]).on('value', grant => {
-        if(!this.state.clickedKey){
-        const allGrants = grant.val();
-        grantArr.push(allGrants)
-        }
-      })
-      console.log(grantArr)
-      this.getMatchedUserInfo(grantArr);
-    }
+        if(grant.val()){
+          let diff = (time - grant.val().created)/1000/60;
+            console.log("time", time, "allGrants time", grant.val().created, "diff", diff)
+            if(diff >= 5){
+                let key = grant.val().fireKey
+                this.removeEntry(key);
+            }else{
+              if(!this.state.clickedKey){
+                const allGrants = grant.val();
+                grantArr.push(allGrants)
+                console.log(grantArr)
+                this.getMatchedUserInfo(grantArr);
+              }
+            }
+          }
+        })
+      }
   }
 
   findGrantMatch = () => {
@@ -159,15 +166,15 @@ class Wish extends Component {
           this.getGrantMatches(matches);
         }else { this.setState({noResults: true})
         }
-      }
+    }
      
     });
   }
 
   handleWishSubmit = () => {
-    let expire = moment().add(5, 'minutes');
-    let time = moment();
-    console.log("expire at", expire)
+    // let expire = moment().add(5, 'minutes');
+    let time = Date.now();
+    console.log("created", time)
     if (this.state.business && this.state.location && this.state.request) {
       let allWishes = this.state.wishes;
       const newWish = {
@@ -177,8 +184,8 @@ class Wish extends Component {
         lat: this.state.lat,
         long: this.state.long,
         request: this.state.request,
-        created: time._d,
-        expire: expire._d,
+        created: time,
+        // expire: expire,
         requested: false,
         requests: {name: "", location:"", id:"", key:"", complete: false},
         completed: false,
@@ -200,7 +207,7 @@ class Wish extends Component {
       console.log("LOOK AT ME", this.state)
       this.findGrantMatch();
       this.listenForRequest();
-      this.listenForExpire(this.state.currentTime, newWish.expire);
+      // this.listenForExpire(this.state.currentTime, newWish.expire);
     }
   }
 
@@ -332,12 +339,16 @@ class Wish extends Component {
         console.log("state after request comes through", this.state)
     }
 
-    listenForExpire = (current, expire) => {
-        console.log("current", current, "expire", expire);
-        // let currentArr = current.split(" ");
-        // let expireArr = expire.split(" ");
-        // console.log("current", currentArr, "expire", expireArr);
-    }
+    // listenForExpire = () => {
+    //     console.log("current", current, "expire", expire);
+    //     var ref = firebase.database().ref(this.state.business + '/grants/');
+    //     var now = moment().unix();
+    //     var cutoff = 
+    //     var old = ref.orderByChild('timestamp').endAt(cutoff).limitToLast(1);
+    //     var listener = old.on('child_added', function(snapshot) {
+    //         snapshot.ref.remove();
+    //     });
+    // }
 
     listenForRequest = () => {
         console.log("LISTEN FOR RE RUNNING", this.state)

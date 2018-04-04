@@ -7,20 +7,6 @@ const GrantForm = props =>
     <div className="grant-box">
     <Form>
         <Row>
-        <FormGroup>
-            <div className="location">
-            Business Location 
-            </div>
-                <FormControl
-                type="text"
-                value={props.locValue}
-                onChange={props.onChange}
-                name="location"
-                placeholder="business location"
-                />
-        </FormGroup>
-        </Row>
-        <Row>
             <FormGroup>
                 <div className="business-grant">
                 Choose a Business
@@ -39,6 +25,20 @@ const GrantForm = props =>
                         <option value="dominoes">Dominoes</option>
                 </FormControl>
             </FormGroup>
+        </Row>
+        <Row>
+        <FormGroup>
+            <div className="location">
+            Business Location 
+            </div>
+                <FormControl
+                type="text"
+                value={props.locValue}
+                onChange={props.onChange}
+                name="location"
+                placeholder="business location"
+                />
+        </FormGroup>
         </Row>
         <Row>
             <div className="range">

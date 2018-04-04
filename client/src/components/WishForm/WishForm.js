@@ -10,22 +10,6 @@ const WishForm = props =>
     <div className="wish-box">
     {/* <Grid> */}
     <Form>
-        <FormGroup>
-        <Row>
-            <div className="current-loc-text">
-                    Delivery location
-            </div>
-                <FormControl
-                    className="location-input"
-                    type="text"
-                    value={props.locValue}
-                    onChange={props.onChange}
-                    name="location"
-                    placeholder="delivery location (address, city, state)"
-                />
-        </Row>
-        </FormGroup>
-
         <FormGroup controlId="formControlsSelect">
             <Row>
             <div className="business">
@@ -47,7 +31,21 @@ const WishForm = props =>
                 </FormControl>
             </Row>
         </FormGroup>
-
+        <FormGroup>
+        <Row>
+            <div className="current-loc-text">
+                    Delivery location
+            </div>
+                <FormControl
+                    className="location-input"
+                    type="text"
+                    value={props.locValue}
+                    onChange={props.onChange}
+                    name="location"
+                    placeholder="delivery location (address, city, state)"
+                />
+        </Row>
+        </FormGroup>
         <FormGroup>
             <Row>
             <div className="request">

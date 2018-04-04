@@ -68,11 +68,9 @@ class Grant extends Component {
             })
         } else {
         console.log("user signed out");
-    }
-
-  });
-}
-
+        }
+    });
+  }
 
   handleInputChange = event => {
     const { name, value } = event.target;
@@ -84,7 +82,6 @@ class Grant extends Component {
   };
 
   handleRadioChange = value => {
-    // const { name, value } = event.target;
     console.log("rating val", value)
     this.setState({
       rating: value
@@ -103,7 +100,6 @@ class Grant extends Component {
           (res.data.fire = arr[i].fireKey);
           (res.data.location = arr[i].location);
           (res.data.request = arr[i].request);
-          // (res.data.rating = arr[i].rating)
           console.log(res.data);
           finalMatches.push(res.data);
           this.setState({
@@ -118,13 +114,12 @@ class Grant extends Component {
   }
 
   getDistance = (lat1, lon1, lat2, lon2) => {
-    var p = 0.017453292519943295;    // Math.PI / 180
+    var p = 0.017453292519943295;   
     var c = Math.cos;
     var a = 0.5 - c((lat2 - lat1) * p) / 2 +
       c(lat1 * p) * c(lat2 * p) *
       (1 - c((lon2 - lon1) * p)) / 2;
-
-    var km = 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+    var km = 12742 * Math.asin(Math.sqrt(a));
     var miles = km * 0.62137;
     console.log("miles", miles);
     return miles;
@@ -133,17 +128,29 @@ class Grant extends Component {
   getWishMatches = (matches) => {
     console.log("get wish matches running", matches);
     let wishArr = [];
+    let time = Date.now();
+    console.log("time", time)
     for (let i = 0; i < matches.length; i++) {
       firebase.database().ref(this.state.business + '/wishes/' + matches[i]).on('value', wish => {
-        if(!this.state.clickedKey){
-        const allWishes = wish.val();
-        wishArr.push(allWishes)
-        console.log("all wishes", wishArr)
+        if(wish.val()){
+          let diff = (time - wish.val().created)/1000/60;
+          console.log("time", time, "allwishes time", wish.val().created, "diff", diff)
+          if(diff >= 5){
+            let key = wish.val().fireKey
+            this.removeEntry(key);
+            console.log("wish thats overdue", wish.val())
+          }else{
+            if(!this.state.clickedKey){
+              const allWishes = wish.val();
+              wishArr.push(allWishes)
+              console.log("all wishes", wishArr)
+              this.getMatchedUserInfo(wishArr)
+            }
+          }
         }
       })
-      this.getMatchedUserInfo(wishArr)
     }
-  }
+}
 
   findWishMatch = () => {
     console.log("running find wish match")
@@ -158,14 +165,9 @@ class Grant extends Component {
 
   }
 
-  // isLocationValid = (location) => {
-  //   let pattern = new RegEx(/\d+(\s+\w+){1,}\s+(?:st(?:\.|reet)?|dr(?:\.|ive)?|pl(?:\.|ace)?|ave(?:\.|nue)?|rd|road|lane|drive|way|court|plaza|square|run|parkway|point|pike|square|driveway|trace|park|terrace|blvd)/);
-  //   console.log(pattern.test(location));
-  // }
-
   handleGrantSubmit = () => {
+    let time = Date.now();
     if (this.state.business && this.state.location && this.state.range) {
-      // if(this.islocationValid(this.state.location)){
       console.log("saving grant data", this.state)
       let allGrants = this.state.grants;
       const newGrant = {
@@ -175,7 +177,7 @@ class Grant extends Component {
         lat: this.state.lat,
         long: this.state.long,
         range: this.state.range,
-        created: Date.now(),
+        created: time,
         requested: false,
         requests: {name: "", location:"", request: "", id:"", key:"", complete: false},
         completed: false,
@@ -197,8 +199,7 @@ class Grant extends Component {
     }
     this.findWishMatch();
     this.listenForRequest();
-  // }
-}
+  }
 
 
   getLatLng = (event) => {
