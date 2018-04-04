@@ -181,14 +181,20 @@ class Login extends Component {
     render() {
         return (
             <div>
-            <NavBar accountClick={this.viewAccount}/>
             {!this.state.submitSuccess ? 
-            <Grid>
+            <div>
+                <Grid>
                 {/* {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null} */}
-                <Row>
+                    <Row id="dand-box">
+                        <div id="dandelion-head">
+                        DANDELION
+                        </div>
+                    </Row>
+                
+                    <Row>
                     <Col md={12}>
                         <p className="intro">
-                            Dandelion deliveries allow every day people to make a wish or grant a wish of another. If you're in dire need of something, make a wish! If you're out and about and feeling generous, grant one! Dandelion is in the business of making wishes come true. Log in or sign up to get started!
+                            Dandelion deliveries allow everyday people to make a wish or grant a wish of another. If you're in dire need of something, make a wish! If you're out and about and feeling generous, grant one! Dandelion is in the business of making wishes come true. Log in or sign up to get started!
                         </p>
                     </Col>
                 </Row>
@@ -215,7 +221,10 @@ class Login extends Component {
                         />: null}
                     </div>
                 </Row>
-            </Grid> : 
+            </Grid> 
+            </div> : 
+            <div>
+             <NavBar accountClick={this.viewAccount}/>
              <Home 
                 wish={this.state.wish}
                 grant={this.state.grant}
@@ -231,8 +240,8 @@ class Login extends Component {
                 grantClick={this.toggleGrant.bind(this)}
                 wish={this.state.wish}
                 grant={this.state.grant}/>}
-            </div>
-
+            </div>}
+        </div>
 
         );
     }
