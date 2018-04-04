@@ -142,7 +142,7 @@ class Wish extends Component {
         if(grant.val()){
           let diff = (time - grant.val().created)/1000/60;
             console.log("time", time, "allGrants time", grant.val().created, "diff", diff)
-            if(diff >= 5){
+            if(diff >= 10){
                 let key = grant.val().fireKey
                 this.removeEntry(key);
             }else{
