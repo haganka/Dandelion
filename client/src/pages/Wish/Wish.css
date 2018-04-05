@@ -14,19 +14,21 @@
 
 @media screen and (max-width: 768px) {
     .match-btns {
-        float: left;
+        /* float: left; */
         width: 115px;
         font-size: 9px;
         text-align: center;
+        margin: 0 auto;
+        margin-bottom: 5px;
     }
-    .out-match, .final-match {
-        margin-left: .5%;
+    .in-match, .potential-match {
+        /* margin-left: 20px; */
     }
 }
 
 @media screen and (max-width: 991px) {
     .match-btns {
-        float: left;
+        /* float: left; */
         width: 170px;
         font-size: 14px;
         text-align: center;

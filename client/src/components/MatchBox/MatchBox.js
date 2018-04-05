@@ -38,11 +38,7 @@ const MatchBox = props =>
           
             {props.markedComplete ? 
             <Form>Please rate your experience with {props.name}
-                  {/* <FormControl
-                    type="radio"
-                    value={props.ratingValue}
-                    onChange={props.onChange}
-                  /> */}
+
                 <FormGroup>
                 <Radio name="radioGroup" value={1}  onChange={()=>props.onChange(1)}>
                   1

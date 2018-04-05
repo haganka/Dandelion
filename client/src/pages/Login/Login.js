@@ -195,7 +195,7 @@ class Login extends Component {
                     <Row>
                     <Col md={12}>
                         <p className="intro">
-                            Dandelion deliveries allow everyday people to make a wish or grant a wish of another. If you're in dire need of something, make a wish! If you're out and about and feeling generous, grant one! Dandelion is in the business of making wishes come true. Log in or sign up to get started!
+                            Dandelion deliveries allow everyday people to make a wish or grant a wish of another. If you're in dire need of a delivery, make a wish! If you're out and about and feeling generous, grant one! Dandelion is in the business of making wishes come true. Log in or sign up to get started!
                         </p>
                     </Col>
                 </Row>

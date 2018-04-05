@@ -150,6 +150,7 @@ class Wish extends Component {
                 const allGrants = grant.val();
                 grantArr.push(allGrants)
                 console.log(grantArr)
+                this.setState({noResults: false})
                 this.getMatchedUserInfo(grantArr);
               }
             }
@@ -332,10 +333,15 @@ class Wish extends Component {
     console.log("clicked key on state", this.state.clickedKey)
     let match = {name: this.state.name, location: this.state.location, request: this.state.request, id: this.state.id, key: this.state.fireKey, complete: false}
     console.log("match passing to FB", match)
-      firebase.database().ref(this.state.business + "/grants/" + this.state.clickedKey)
-      .update({requests: match, requested: true});
+    let ref = firebase.database().ref(this.state.business + '/grants/' + this.state.clickedKey)
+    ref.once('value', snapshot => {
+      if(snapshot.val()){
+        ref.update({requests: match, requested: true});
+      }else{console.log("this no longer exists")}
+      })
+    }
+  
 
-    };
 
     updateGrantsReceivedState = (received) => {
         this.setState({
@@ -492,6 +498,7 @@ class Wish extends Component {
       this.setState({
           viewFinal: true,
           viewOutgoingReq: false,
+          hasMatched: false,
           viewIncomingReq: false,
           viewPotential: false,
           wish: false
@@ -517,7 +524,7 @@ class Wish extends Component {
               /> : null}
           </Row>
         </Grid>
-        {this.state.hasMatched ? 
+        {this.state.showTabs ? 
         <Grid>
             <Row>
               <Col sm={3}>
@@ -529,7 +536,7 @@ class Wish extends Component {
               <Col sm={3}>
                 <Button className="out-match match-btns" onClick={this.toggleViewIncoming}>INCOMING REQUESTS</Button>
               </Col>
-                {this.state.matched ? <Col sm={3}><Button className="final-match"onClick={this.toggleViewFinal}>VIEW MY MATCHES</Button></Col> : null}
+                {this.state.matched ? <Col sm={3}><Button className="final-match match-btns"onClick={this.toggleViewFinal}>VIEW MY MATCHES</Button></Col> : null}
             </Row>
         </Grid> : null}
         {this.state.noResults ? <Row> Sorry, there aren't any grants to match your wish at the moment. Try again soon!</Row> : null}

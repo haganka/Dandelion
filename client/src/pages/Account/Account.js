@@ -18,7 +18,7 @@ const Account = props =>
             </Col>
           </Row>
           <Row>
-            <Col xs={6} className="account-wishes">Completed Wishes 
+            <Col xs={12} sm={6} className="account-wishes">Completed Wishes 
                 {props.completedWishes.map((wish => <CompletePanel 
                 request={wish.request}
                 grantedBy={wish.grantedBy}
@@ -28,7 +28,7 @@ const Account = props =>
                 />))}
             </Col>
 
-            <Col xs={6} className="account-grants">Completed Grants 
+            <Col xs={12} sm={6} className="account-grants">Completed Grants 
                 {props.completedGrants.map((grant => <CompletePanel 
                 request={grant.request}
                 grantedFor={grant.wishFrom}

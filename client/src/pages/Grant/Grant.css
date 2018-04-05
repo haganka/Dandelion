@@ -12,28 +12,28 @@
     border-bottom: 1px white;
 }
 
-@media screen and (max-width: 768px) {
-    .match-btns {
-        float: left;
-        width: 115px;
-        font-size: 9px;
-        text-align: center;
-        margin: 0 auto;
-        margin-bottom: 5px;
-    }
-    .in-match, .potential-match {
-        margin-left: 20px;
-    }
-}
-
 @media screen and (max-width: 991px) {
     .match-btns {
-        float: left;
+        /* float: left; */
         width: 170px;
         font-size: 14px;
         text-align: center;
     }
     .out-match, .final-match {
         margin-left: .5%;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .match-btns {
+        /* float: left; */
+        width: 127px;
+        font-size: 10px;
+        text-align: center;
+        margin: 0 auto;
+        margin-bottom: 5px;
+    }
+    .in-match, .potential-match {
+        /* margin-left: 20px; */
     }
 }
