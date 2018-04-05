@@ -147,16 +147,23 @@ class Wish extends Component {
                 this.removeEntry(key);
             }else{
               if(!this.state.clickedKey){
+                console.log("this happened")
                 const allGrants = grant.val();
-                grantArr.push(allGrants)
-                console.log(grantArr)
-                this.setState({noResults: false})
-                this.getMatchedUserInfo(grantArr);
+                if(allGrants){
+                  console.log("there are grants")
+                  grantArr.push(allGrants)
+                  console.log(grantArr)
+                  this.setState({noResults: false})
+                  // this.getMatchedUserInfo(grantArr);
+                }else{
+                  console.log("no results should become true");
+                  this.setState({noResults: true})
+                }
               }
             }
           }
         })
-      }
+      }if(grantArr.length > 0){this.getMatchedUserInfo(grantArr);}
   }
 
   findGrantMatch = () => {
@@ -166,10 +173,13 @@ class Wish extends Component {
         const allGrants = grant.val();
         if (allGrants) {
           const matches = Object.keys(allGrants).filter(e => this.getDistance(this.state.lat, this.state.long, allGrants[e].lat, allGrants[e].long) <= allGrants[e].range)
-          this.getGrantMatches(matches);
-        }else { this.setState({noResults: true})
+          console.log(matches)
+          if(matches.length <= 0){
+            console.log("failed at distance"); this.setState({noResults: true})
+          }else{this.getGrantMatches(matches); }
+        }else { console.log("failed at no grants"); this.setState({noResults: true})
         }
-    }
+      }
      
     });
   }
@@ -350,17 +360,6 @@ class Wish extends Component {
         console.log("state after request comes through", this.state)
     }
 
-    // listenForExpire = () => {
-    //     console.log("current", current, "expire", expire);
-    //     var ref = firebase.database().ref(this.state.business + '/grants/');
-    //     var now = moment().unix();
-    //     var cutoff = 
-    //     var old = ref.orderByChild('timestamp').endAt(cutoff).limitToLast(1);
-    //     var listener = old.on('child_added', function(snapshot) {
-    //         snapshot.ref.remove();
-    //     });
-    // }
-
     listenForRequest = () => {
         console.log("LISTEN FOR RE RUNNING", this.state)
         firebase.database().ref(this.state.business + '/wishes/' + this.state.fireKey + '/requests').on('value', snapshot => {
@@ -460,7 +459,8 @@ class Wish extends Component {
         viewOutgoingReq: false,
         viewIncomingReq: false,
         viewFinal: false,
-        wish: false
+        wish: false,
+        noResults: false
       })
       console.log(this.state)
 }
@@ -472,7 +472,8 @@ class Wish extends Component {
           viewIncomingReq: false,
           viewFinal: false,
           viewPotential: false,
-          wish: false
+          wish: false,
+          noResults: false
         })
         console.log(this.state)
   }
@@ -484,7 +485,8 @@ class Wish extends Component {
           viewOutgoingReq: false,
           viewPotential: false,
           viewFinal: false,
-          wish: false
+          wish: false,
+          noResults: false
         })
         console.log(this.state)
   }
@@ -501,7 +503,8 @@ class Wish extends Component {
           hasMatched: false,
           viewIncomingReq: false,
           viewPotential: false,
-          wish: false
+          wish: false,
+          noResults: false
         })
         console.log(this.state)
       }
