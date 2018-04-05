@@ -6,3 +6,7 @@
 #match-modal-box {
     text-align: center;
 }
+
+.static-modal, .modal-body {
+    background-color: rgba(179, 191, 184);
+}

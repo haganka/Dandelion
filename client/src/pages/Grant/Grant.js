@@ -146,6 +146,7 @@ class Grant extends Component {
               const allWishes = wish.val();
               wishArr.push(allWishes)
               console.log("all wishes", wishArr)
+              this.setState({noResults: false})
               this.getMatchedUserInfo(wishArr)
             }
           }
@@ -321,8 +322,12 @@ class Grant extends Component {
         console.log("clicked key on state", this.state.clickedKey)
         let match = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey, complete: false}
         console.log("match passing to FB", match)
-         firebase.database().ref(this.state.business + '/wishes/' + this.state.clickedKey)
-        .update({requests: match, requested: true});
+        let ref = firebase.database().ref(this.state.business + '/wishes/' + this.state.clickedKey)
+        ref.once('value', snapshot => {
+          if(snapshot.val()){
+            ref.update({requests: match, requested: true});
+          }else{console.log("this no longer exists")}
+        })
     };
     
     updateWishesReceivedState = (received) => {
@@ -469,6 +474,7 @@ class Grant extends Component {
             viewFinal: true,
             viewOutgoingReq: false,
             viewIncomingReq: false,
+            hasMatched: false,
             viewPotential: false,
             grant: false
           })
@@ -495,16 +501,16 @@ class Grant extends Component {
         {this.state.showTabs ? 
         <Grid>
             <Row className="match-row">
-              <Col xs={6} sm={3}>
+              <Col xs={5} sm={3}>
                 <Button className="match-btns potential-match" onClick={this.toggleViewPotential}>POTENTIAL MATCHES</Button>
                 </Col>
-                <Col xs={6} sm={3}>
+                <Col xs={5} xsOffset={1} sm={3}>
                 <Button className="match-btns out-match" onClick={this.toggleViewOutgoing}>OUTGOING REQUESTS</Button>
                 </Col>
-                <Col xs={6} sm={3}>
+                <Col xs={5} sm={3}>
                 <Button className="match-btns in-match" onClick={this.toggleViewIncoming}>INCOMING REQUESTS</Button>
                 </Col>
-                {this.state.matched ? <Col xs={6} sm={3}><Button className="match-btns final-match" onClick={this.toggleViewFinal}>VIEW MY MATCHES</Button></Col> : null}
+                {this.state.matched ? <Col xs={5} xsOffset={1} sm={3}><Button className="match-btns final-match" onClick={this.toggleViewFinal}>VIEW MY MATCHES</Button></Col> : null}
             </Row>
         </Grid> : null}
         {this.state.noResults ? <Row> Sorry, there aren't any wishes nearby to match your grant at the moment. Try again soon!</Row> : null}
