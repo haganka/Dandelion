@@ -144,10 +144,14 @@ class Grant extends Component {
           }else{
             if(!this.state.clickedKey){
               const allWishes = wish.val();
-              wishArr.push(allWishes)
-              console.log("all wishes", wishArr)
-              this.setState({noResults: false})
-              this.getMatchedUserInfo(wishArr)
+              if(allWishes){
+                wishArr.push(allWishes)
+                console.log("all wishes", wishArr)
+                this.setState({noResults: false})
+                this.getMatchedUserInfo(wishArr)
+              }else{
+                this.setState({noResults: true})
+              }
             }
           }
         }
@@ -162,9 +166,12 @@ class Grant extends Component {
       const allWishes = wish.val();
       if (allWishes) {
         const matches = Object.keys(allWishes).filter(e => this.getDistance(this.state.lat, this.state.long, allWishes[e].lat, allWishes[e].long) <= this.state.range)
-        this.getWishMatches(matches);
-      } else { this.setState({noResults: true}) }
-    })}else{console.log("THIS ALREADY EXISTS")}
+        if(matches.length <= 0){
+          this.setState({noResults: true})
+        }else{this.getWishMatches(matches);}
+      }else{ this.setState({noResults: true}) }
+    })
+  }else{console.log("THIS ALREADY EXISTS"); this.setState({noResults: true})}
 
   }
 
@@ -436,7 +443,8 @@ class Grant extends Component {
           viewOutgoingReq: false,
           viewIncomingReq: false,
           viewFinal: false,
-          grant: false
+          grant: false,
+          noResults: false
         })
         console.log(this.state)
   }
@@ -448,7 +456,8 @@ class Grant extends Component {
             viewIncomingReq: false,
             viewFinal: false,
             viewPotential: false,
-            grant: false
+            grant: false,
+            noResults: false
           })
           console.log(this.state)
     }
@@ -460,7 +469,8 @@ class Grant extends Component {
             viewOutgoingReq: false,
             viewPotential: false,
             viewFinal: false,
-            grant: false
+            grant: false,
+            noResults: false
           })
           console.log(this.state)
     }
@@ -476,7 +486,8 @@ class Grant extends Component {
             viewIncomingReq: false,
             hasMatched: false,
             viewPotential: false,
-            grant: false
+            grant: false,
+            noResults: false
           })
         }
           console.log(this.state)
