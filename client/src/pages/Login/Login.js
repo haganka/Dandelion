@@ -1,22 +1,15 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
-import { Link, browserHistory } from "react-router-dom";
-import { Col, Row, Form, Button, Jumbotron, Grid } from 'react-bootstrap';
+import { Col, Row, Grid } from 'react-bootstrap';
 import LogInBox from "../../components/LogInBox";
 import SignUpBox from "../../components/SignUpBox";
 import './Login.css';
-import Wish from '../Wish';
-import Grant from '../Grant';
 import Home from '../Home';
 import {fire, auth} from '../../fire.js';
-import Account from '../Account';
 import NavBar from "../../components/NavBar";
-// import Footer from '../../components/Footer';
 
 class Login extends Component {
-    //allows access to props if you pass down, allows console logging
     constructor(props) {
-        //allows ability to set state if you want to
         super(props);
 
         this.state = {
@@ -45,7 +38,11 @@ class Login extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-
+    /** On click of sign up submit, creates new authenticated username in firebase and saves new user in MongoDB, then updates state
+     * @requires Express
+     * @param {string} email - user email
+     * @param {string} password - user password
+     */
     signUpSubmit = (email, password) => {
         auth.createUserWithEmailAndPassword(email, password)
         .catch(err => console.error(err));
@@ -62,11 +59,15 @@ class Login extends Component {
                 rating: 0,
                 completeGrants: [],
                 completeWishes: []
-            }).then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
+            }).then(res => { this.setState({id: res.data._id});})
             .catch(err => console.log(err));
-        // }
     };
 
+    /** On click of log submit, checks for authenticated username in firebase and checks for user in MongoDB, then updates state
+     * @requires Express
+     * @param {string} email - user email
+     * @param {string} password - user password
+     */
     logInSubmit = (email, password) => {
         auth.signInWithEmailAndPassword(email, password)
         .then(user => {
@@ -82,7 +83,7 @@ class Login extends Component {
         API.checkUser({
             email: this.state.email
         })
-        .then(res => {console.log(res.data._id); 
+        .then(res => {
             this.setState({
                 id: res.data._id, 
                 name: res.data.name,
@@ -93,13 +94,10 @@ class Login extends Component {
         .catch(err => console.log(err));
     };
 
-    // logout = () => {
-    //     auth.signOut().then(function() {
-    //         this.setState({isLoggedIn: false, email: "", name: "", password: "", id: ""})
-    //       }).catch(function(error) {
-    //     });
-    // }
-
+    /** On click of Account in nav, grabs users complete grants and wishes from MongoDB
+     * @requires Express
+     * @param {event} click
+     */
     viewAccount = (event) => {
         event.preventDefault();
         API.checkUser({
@@ -114,18 +112,20 @@ class Login extends Component {
         this.setState({
             viewAccount: true
         }))
-        console.log(this.state)
     }
 
-
+    /** As user types in login information, handles saving changing input to the state
+     * @param {event} keypress
+     */
     handleInputChange = (event) => {
         const { name, value } = event.target;
         this.setState({
             [name]: value
         });
-        console.log(this.state)
     };
 
+    /** On click of log in, updates state to empty fields and show the log in form
+     */
     toggleLogIn() {
         this.setState({
             name: "", email: "", password: "",
@@ -134,6 +134,8 @@ class Login extends Component {
           })
     }
 
+    /** On click of sign up, updates state to empty fields and show the log in form
+     */
     toggleSignUp() {
         this.setState({
             name: "", email: "", password: "",
@@ -142,42 +144,51 @@ class Login extends Component {
           })
     }
 
-
-  toggleWish() {
-    this.setState({
-      wish: true,
-      grant: false
-    })
-  }
-
-  toggleGrant() {
-    this.setState({
-      grant: true,
-      wish: false
-    })
-  }
-
-  componentDidMount = () => {
-      this.setState({
-          viewAccount: false
-      })
-    this.authListener();
-  };
-
-  authListener = () => {
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            this.setState({
-                email: user.email,
-                fireId: user.uid,
-                isLoggedIn: true
-            })
-        } else {
-        console.log("user signed out");
-        }
-
-    });
+    /** On click of make a wish, updates state to show wish component
+     */
+    toggleWish() {
+        this.setState({
+        wish: true,
+        grant: false
+        })
     }
+
+    /** On click of make a wish, updates state to show wish component
+     */
+    toggleGrant() {
+        this.setState({
+        grant: true,
+        wish: false
+        })
+    }
+
+    /** When the component mounts, sets viewAccount to false and runs the FB auth listener
+     */
+    componentDidMount = () => {
+        this.setState({
+            viewAccount: false
+        })
+        this.authListener();
+    };
+
+    /** When component mounts, FB auth listener checks for user login state and updates state
+     */
+    authListener = () => {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({
+                    email: user.email,
+                    fireId: user.uid,
+                    isLoggedIn: true
+                })
+            }else{
+                this.setState({
+                    isLoggedIn: false
+                })
+            }
+
+        });
+        }
 
     render() {
         return (
@@ -185,7 +196,6 @@ class Login extends Component {
             {!this.state.submitSuccess ? 
             <div>
                 <Grid>
-                {/* {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null} */}
                     <Row id="dand-box">
                         <div id="dandelion-head">
                         DANDELION
@@ -238,11 +248,8 @@ class Login extends Component {
                 accountClick={this.viewAccount}
                 isLoggedIn={this.state.isLoggedIn} 
                 wishClick={this.toggleWish.bind(this)} 
-                grantClick={this.toggleGrant.bind(this)}
-                wish={this.state.wish}
-                grant={this.state.grant}/>
+                grantClick={this.toggleGrant.bind(this)}/>
             </div>}
-            {/* <Footer/> */}
         </div>
 
         );

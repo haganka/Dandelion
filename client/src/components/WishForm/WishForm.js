@@ -1,7 +1,5 @@
 import React from "react";
-import { Form, FormGroup, Col, Grid, Row, FormControl, ControlLabel, Button } from 'react-bootstrap';
-// import {geolocated} from 'react-geolocated';
-import Geolocation from "react-geolocation";
+import { Form, FormGroup, Col, Row, FormControl, Button } from 'react-bootstrap';
 import './WishForm.css';
 
 

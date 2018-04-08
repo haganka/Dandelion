@@ -1,29 +1,22 @@
-import React, { Component, ReactDOM } from "react";
+import React, { Component } from "react";
 import API from "../../utils/API";
-// import { Link, push } from "react-router-dom";
 import { Col, Row, Grid, Button } from 'react-bootstrap';
 import GrantForm from "../../components/GrantForm";
 import './Grant.css';
 import firebase from '../../fire.js';
-// import { geolocated } from 'react-geolocated';
 import MatchContainer from '../../components/MatchContainer';
-import moment from 'moment';
-import OutgoingContainer from '../../components/OutgoingContainer';
-import IncomingContainer from '../../components/IncomingContainer';
-import {fire, auth} from '../../fire.js';
+import {auth} from '../../fire.js';
 import MatchModal from '../../components/MatchModal';
 
 class Grant extends Component {
-  //allows access to props if you pass down, allows console logging
   constructor(props) {
-    //allows ability to set state if you want to
     super(props);
 
     this.state = {
       grant: this.props.grant,
       email: "",
       id: this.props.userId,
-      isLoggedIn: this.props.isLoggedIn, //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
+      isLoggedIn: this.props.isLoggedIn, 
       name: this.props.name,
       business: "",
       location: "",
@@ -68,7 +61,6 @@ class Grant extends Component {
                 fireId: user.uid
             })
         } else {
-        console.log("user signed out");
         }
     });
   }
@@ -78,30 +70,23 @@ class Grant extends Component {
     this.setState({
       [name]: value
     });
-    console.log(this.state)
-    console.dir(event.target)
   };
 
   handleRadioChange = value => {
-    console.log("rating val", value)
     this.setState({
       rating: value
     });
-    console.log(this.state)
   }
 
   
   getMatchedUserInfo = (arr) => {
-    console.log("id of match", arr)
     let finalMatches = [];
     for (let i = 0; i < arr.length; i++) {
-      console.log("made it to for loop", arr[i].userId);
       API.getUserId(arr[i].userId)
           .then(res => {
           (res.data.fire = arr[i].fireKey);
           (res.data.location = arr[i].location);
           (res.data.request = arr[i].request);
-          console.log(res.data);
           finalMatches.push(res.data);
           this.setState({
             matches: finalMatches,
@@ -109,7 +94,6 @@ class Grant extends Component {
             grant: false,
             showTabs: true
           });
-          console.log(this.state.matches)
         })
         .catch(err => console.log(err));
     }
@@ -123,30 +107,24 @@ class Grant extends Component {
       (1 - c((lon2 - lon1) * p)) / 2;
     var km = 12742 * Math.asin(Math.sqrt(a));
     var miles = km * 0.62137;
-    console.log("miles", miles);
     return miles;
   }
 
   getWishMatches = (matches) => {
-    console.log("get wish matches running", matches);
     let wishArr = [];
     let time = Date.now();
-    console.log("time", time)
     for (let i = 0; i < matches.length; i++) {
       firebase.database().ref(this.state.business + '/wishes/' + matches[i]).on('value', wish => {
         if(wish.val()){
           let diff = (time - wish.val().created)/1000/60;
-          console.log("time", time, "allwishes time", wish.val().created, "diff", diff)
           if(diff >= 10){
             let key = wish.val().fireKey
             this.removeEntry(key);
-            console.log("wish thats overdue", wish.val())
           }else{
             if(!this.state.clickedKey){
               const allWishes = wish.val();
               if(allWishes){
                 wishArr.push(allWishes)
-                console.log("all wishes", wishArr)
                 this.setState({noResults: false})
                 this.getMatchedUserInfo(wishArr)
               }else{
@@ -160,7 +138,6 @@ class Grant extends Component {
 }
 
   findWishMatch = () => {
-    console.log("running find wish match")
     if(this.state.clickedKey === ""){
     firebase.database().ref(this.state.business + '/wishes').on('value', wish => {
       const allWishes = wish.val();
@@ -171,14 +148,13 @@ class Grant extends Component {
         }else{this.getWishMatches(matches);}
       }else{ this.setState({noResults: true}) }
     })
-  }else{console.log("THIS ALREADY EXISTS"); this.setState({noResults: true})}
+  }else{ this.setState({noResults: true})}
 
   }
 
   handleGrantSubmit = () => {
     let time = Date.now();
     if (this.state.business && this.state.location && this.state.range) {
-      console.log("saving grant data", this.state)
       let allGrants = this.state.grants;
       const newGrant = {
         userId: this.state.id,
@@ -202,8 +178,6 @@ class Grant extends Component {
         clickedKey: "",
         noResults: false
       })
-      console.log("LOOK AT ME", this.state)
-      console.log("this is the new grant", newGrant)
       firebase.database().ref(newGrant.business + '/grants/' + key)
       .update({ fireKey: key });
     }
@@ -216,7 +190,6 @@ class Grant extends Component {
     event.preventDefault();
     let address = this.state.location;
     let queryAddress = address.split(' ').join('+');
-    console.log("address", queryAddress);
     API.getLocation(queryAddress)
       .then(res => {
         if (res.status === "OK" || res.status !== "ZERO_RESULTS") {
@@ -227,16 +200,13 @@ class Grant extends Component {
             lat: lat,
             long: long
           })
-        } else {
-          console.log("bad address input, try again")
+        }else{
         }
           this.handleGrantSubmit()
-          console.log("running grant handler")
       });
   }
 
   removeEntry = (key) => {
-    console.log("key to remove", key)
       firebase.database().ref(this.state.business + '/wishes/' + key).remove();
       let allFinal = this.state.finalMatches;
       let allReceived = this.state.wishReceived;
@@ -254,27 +224,22 @@ class Grant extends Component {
         completeMatch: {key: "", id: "", name: "", location: "", request: ""},
         matched: false
       })
-      console.log(this.state)
   }
 
     markComplete = (id, key, name, location, request, rating) => {
           let completeKey = key;
-          // let allComplete = this.state.completeMatch;
           let newComplete = {key: key, id: id, name: name, location: location, request: request};
-          // allComplete.push(newComplete)
           this.setState({
             completeMatch: newComplete,
             markedComplete: true
           })
           let complete = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey}
-          console.log("completed passing to FB", complete, "complete key", completeKey)
            firebase.database().ref(this.state.business + '/wishes/' + completeKey + '/requests/')
           .update({complete: true});
     };
     
 
     handleSelect = (id, key, name, location, request, rating) => {
-        console.log("the id of button clicked", id, "key", key)
         let allRequests = this.state.grantSent;
         let newReq = {name: name, location: location, id: id, request: request, key: key};
         allRequests.push(newReq)
@@ -285,27 +250,22 @@ class Grant extends Component {
     }
 
     handleAccept = (id, key, name, location, request, rating) => {
-      console.log("the id of accept clicked", id, "key", key, "name", name, "loc", location)
       let allRequests = this.state.grantSent;
       let newReq = {name: name, location: location, id: id, request: request, key: key};
-      console.log(newReq)
       allRequests.push(newReq)
       this.setState({clickedKey: key, grantSent: allRequests}, 
           () => this.updateUserSelected())
           this.reqMatchKey(newReq);
-          console.log(this.state.grantSent)
     }
 
-    handleRatingSubmit = (id, key, name, location, request) => {
-      console.log("id", id, "key", key, "name", name, "location", location, "request", request)
-      console.log("complete matches in state", this.state.completeMatch)  
+    handleRatingSubmit = (id, key, name, location, request) => { 
       API.getUserId(id)
         .then(res => {
         let ratingArr = res.data.ratingArr;
         let newRating = this.state.rating;
         let dataRating;
         let completeWishes = res.data.completeWishes;
-        let newWish = {grantedBy: this.state.name, location: location, request: request, location: location, id: id, key: key}
+        let newWish = {grantedBy: this.state.name, location: location, request: request, id: id, key: key}
         completeWishes.push(newWish);
         ratingArr.push(newRating)
         if(res.data.rating === 0){
@@ -314,10 +274,8 @@ class Grant extends Component {
           dataRating = ratingArr.reduce((a,b) => a + b, 0)/ratingArr.length;
           dataRating = dataRating.toString().split(".").map((el,i)=>i?el.split("").slice(0,2).join(""):el).join(".");
         }
-          // let userRating = this.state.rating
           API.updateUser(id, {ratingArr: ratingArr, rating: dataRating, completeWishes: completeWishes})
               .then(res => {
-              console.log(res.data)
         })
       .catch(err => console.log(err));
       })
@@ -325,10 +283,7 @@ class Grant extends Component {
     } 
 
     updateUserSelected = () => {
-        console.log("handle select", this.state.grantSent)
-        console.log("clicked key on state", this.state.clickedKey)
         let match = {name: this.state.name, location: this.state.location, id: this.state.id, key: this.state.fireKey, complete: false}
-        console.log("match passing to FB", match)
         let ref = firebase.database().ref(this.state.business + '/wishes/' + this.state.clickedKey)
         ref.once('value', snapshot => {
           if(snapshot.val()){
@@ -341,17 +296,14 @@ class Grant extends Component {
         this.setState({
           wishReceived: received
         })
-        console.log("state after request comes through", this.state.wishReceived)
     }
       
       
     listenForRequest = () => {
-        console.log("LISTEN FOR RE RUNNING", this.state.fireKey)
         firebase.database().ref(this.state.business + '/grants/' + this.state.fireKey + '/requests').on('value', snapshot => {
-        console.log("snapshot", snapshot.val())
-        if(snapshot.val() === null || snapshot.val().id === ""){
-            console.log("nothing to snap");
-        }else{
+          if(snapshot.val() === null || snapshot.val().id === ""){
+              console.log("nothing to snap");
+          }else{
             let newWish = {name: snapshot.val().name, 
                 location: snapshot.val().location, 
                 id: snapshot.val().id, 
@@ -366,16 +318,13 @@ class Grant extends Component {
     }
 
       listenForComplete = () => {
-        console.log("LISTEN FOR Complete", this.state.finalMatches)
         let finalMatches = this.state.finalMatches;
         let matchesMade = finalMatches.map(e => (e.id))
-        console.log("final match ids to listen for complete", matchesMade);
         for(let i = 0; i < matchesMade.length; i++){
           firebase.database().ref(this.state.business + '/grants/' + matchesMade[i] + '/requests').on('value', snapshot => {
-            console.log("snapshot", snapshot.val()); 
-          if(snapshot.val() === null || snapshot.val().complete === false){
-              console.log("nothing to snap");
-          }else{
+            if(snapshot.val() === null || snapshot.val().complete === false){
+                console.log("nothing to snap");
+            }else{
               let newComplete = {name: snapshot.val().name, 
                   location: snapshot.val().location, 
                   id: snapshot.val().id, 
@@ -385,7 +334,6 @@ class Grant extends Component {
                 completeMatch: newComplete,
                 markedComplete: true
               })
-              console.log("new complete", newComplete)
           }
         })
       }
@@ -397,7 +345,6 @@ class Grant extends Component {
   
     handleShowModal = () => {
       this.setState({ showModal: true });
-      console.log("where modal is true", this.state.showModal)
     }
     
 
@@ -407,7 +354,6 @@ class Grant extends Component {
       //   if(req.key !== this.state.finalMatches[j].key){
         for(let i = 0; i < this.state.grantSent.length; i++){
             if(req.key === this.state.grantSent[i].key){
-                // alert("it's a match!", this.state.grantSent[i])
                 let newMatch = this.state.finalMatches;
                 newMatch.push(req)
                 this.setState({
@@ -421,7 +367,6 @@ class Grant extends Component {
     }
 
     keyMatchReq = (req) => {
-      console.log("find req match running", req);
         for(let i = 0; i < this.state.wishReceived.length; i++){
             if(req.key === this.state.wishReceived[i].key){
                 let newMatch = this.state.finalMatches;
@@ -459,7 +404,6 @@ class Grant extends Component {
             grant: false,
             noResults: false
           })
-          console.log(this.state)
     }
 
     toggleViewIncoming = () => {
@@ -472,7 +416,6 @@ class Grant extends Component {
             grant: false,
             noResults: false
           })
-          console.log(this.state)
     }
 
     toggleViewFinal = () => {
@@ -490,7 +433,6 @@ class Grant extends Component {
             noResults: false
           })
         }
-          console.log(this.state)
     }
 
 

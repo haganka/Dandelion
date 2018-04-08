@@ -1,5 +1,5 @@
 import React from "react";
-import { Nav, NavItem, Navbar, Header, Brand } from 'react-bootstrap';
+import { Nav, NavItem, Navbar } from 'react-bootstrap';
 import './NavBar.css';
 
 const NavBar = props =>

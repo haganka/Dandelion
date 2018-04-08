@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, FormGroup, Col, Row, FormControl, ControlLabel, Button } from 'react-bootstrap';
+import { Form, FormGroup, Col, Row, FormControl, Button } from 'react-bootstrap';
 import './GrantForm.css';
 
 const GrantForm = props =>

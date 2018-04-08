@@ -1,13 +1,11 @@
 import React from "react";
 import "./CompletePanel.css";
-import { Link } from "react-router-dom";
-import { Col, Row, Form, Button, Radio, FormGroup, FormControl, Jumbotron, Grid, Panel } from 'react-bootstrap';
+import { Row, Grid, Panel } from 'react-bootstrap';
 
 
 const CompletePanel = props => 
 <Grid>
   <Row>
-    {/* <Col sm={10}> */}
         <Panel className="completed-box">
           <Panel.Heading></Panel.Heading>
           <Panel.Body>
@@ -17,7 +15,6 @@ const CompletePanel = props =>
             <p> Granted For: {props.grantedFor}</p>}
           </Panel.Body>
         </Panel>
-    {/* </Col> */}
   </Row>
 </Grid>
 ;

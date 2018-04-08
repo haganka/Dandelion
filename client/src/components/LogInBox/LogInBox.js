@@ -1,6 +1,6 @@
 import React from "react";
 import './LogInBox.css';
-import { Form, FormGroup, Grid, FormControl, Col, Row, Button, ControlLabel } from 'react-bootstrap';
+import { Form, FormGroup, Grid, FormControl, Col, Row, Button } from 'react-bootstrap';
 
 const LogInBox = props => 
 
