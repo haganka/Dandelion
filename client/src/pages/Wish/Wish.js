@@ -1,14 +1,12 @@
-import React, { Component, ReactDOM } from "react";
+import React, { Component } from "react";
 import API from "../../utils/API";
-// import { Link, push } from "react-router-dom";
 import { Col, Row, Grid, Button } from 'react-bootstrap';
 import WishForm from "../../components/WishForm";
 import './Wish.css';
 import firebase from '../../fire.js';
-// import { geolocated } from 'react-geolocated';
+import {auth} from '../../fire.js';
 import MatchContainer from '../../components/MatchContainer';
 import moment from 'moment';
-import {fire, auth} from '../../fire.js';
 import MatchModal from '../../components/MatchModal';
 
 
@@ -55,7 +53,7 @@ class Wish extends Component {
 
 
   componentDidMount = () => {
-    let time = moment();
+
     let currentTime = moment()._d;
     this.setState({
       currentTime: currentTime

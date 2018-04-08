@@ -1,7 +1,6 @@
 import React from "react";
 import "./MatchModal.css";
-import { Link } from "react-router-dom";
-import { Modal, Col, Row, Form, Button, Radio, FormGroup, FormControl, Jumbotron, Grid, Panel } from 'react-bootstrap';
+import { Modal, Button,} from 'react-bootstrap';
 
 
 const MatchModal = props => 

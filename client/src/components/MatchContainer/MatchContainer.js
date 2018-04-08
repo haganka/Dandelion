@@ -1,13 +1,10 @@
-import React, { Component } from "react";
-import API from "../../utils/API";
-import { Link } from "react-router-dom";
+import React from "react";
 import MatchBox from '../MatchBox';
-import { Col, Row } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 
 const MatchContainer = props =>
              <div>
                  <Row>
-                    {/* <Col sm={6}> */}
                     {props.matches ? 
                     props.matches.map((match => <MatchBox
                         header={props.button}
@@ -33,8 +30,6 @@ const MatchContainer = props =>
                         onChange={props.onChange}
                         ratingSubmit={props.ratingSubmit}
                         />)) : null}
-                    
-                    {/* </Col> */}
                 </Row>
             </div>
 

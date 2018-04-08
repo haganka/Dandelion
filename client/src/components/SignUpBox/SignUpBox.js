@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, FormGroup, Grid, FormControl, Col, Row, Button, ControlLabel } from 'react-bootstrap';
+import { Form, FormGroup, Grid, FormControl, Col, Row, Button } from 'react-bootstrap';
 import './SignUpBox.css';
 const SignUpBox = props =>
 <div className="signup">

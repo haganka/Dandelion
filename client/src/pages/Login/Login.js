@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
-import { Link, browserHistory } from "react-router-dom";
-import { Col, Row, Form, Button, Jumbotron, Grid } from 'react-bootstrap';
+import { Col, Row, Grid } from 'react-bootstrap';
 import LogInBox from "../../components/LogInBox";
 import SignUpBox from "../../components/SignUpBox";
 import './Login.css';
-import Wish from '../Wish';
-import Grant from '../Grant';
 import Home from '../Home';
 import {fire, auth} from '../../fire.js';
-import Account from '../Account';
 import NavBar from "../../components/NavBar";
 
 class Login extends Component {
@@ -226,9 +222,7 @@ class Login extends Component {
                 accountClick={this.viewAccount}
                 isLoggedIn={this.state.isLoggedIn} 
                 wishClick={this.toggleWish.bind(this)} 
-                grantClick={this.toggleGrant.bind(this)}
-                wish={this.state.wish}
-                grant={this.state.grant}/>
+                grantClick={this.toggleGrant.bind(this)}/>
             </div>}
         </div>
 

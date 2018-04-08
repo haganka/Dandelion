@@ -46,7 +46,6 @@ db.User
   .remove({})
   .then(() => db.User.collection.insertMany(UserSeed))
   .then(data => {
-    console.log(data.insertedIds.length + " records inserted!");
     process.exit(0);
   })
   .catch(err => {

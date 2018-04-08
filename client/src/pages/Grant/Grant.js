@@ -1,14 +1,11 @@
-import React, { Component, ReactDOM } from "react";
+import React, { Component } from "react";
 import API from "../../utils/API";
 import { Col, Row, Grid, Button } from 'react-bootstrap';
 import GrantForm from "../../components/GrantForm";
 import './Grant.css';
 import firebase from '../../fire.js';
 import MatchContainer from '../../components/MatchContainer';
-import moment from 'moment';
-import OutgoingContainer from '../../components/OutgoingContainer';
-import IncomingContainer from '../../components/IncomingContainer';
-import {fire, auth} from '../../fire.js';
+import {auth} from '../../fire.js';
 import MatchModal from '../../components/MatchModal';
 
 class Grant extends Component {
@@ -268,7 +265,7 @@ class Grant extends Component {
         let newRating = this.state.rating;
         let dataRating;
         let completeWishes = res.data.completeWishes;
-        let newWish = {grantedBy: this.state.name, location: location, request: request, location: location, id: id, key: key}
+        let newWish = {grantedBy: this.state.name, location: location, request: request, id: id, key: key}
         completeWishes.push(newWish);
         ratingArr.push(newRating)
         if(res.data.rating === 0){

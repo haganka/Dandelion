@@ -1,7 +1,6 @@
 import React from "react";
 import "./MatchBox.css";
-import { Link } from "react-router-dom";
-import { Col, Row, Form, Button, Radio, FormGroup, FormControl, Jumbotron, Grid, Panel } from 'react-bootstrap';
+import { Col, Row, Form, Button, Radio, FormGroup, Grid, Panel } from 'react-bootstrap';
 
 
 const MatchBox = props => 
