@@ -1,11 +1,9 @@
 import React, { Component, ReactDOM } from "react";
 import API from "../../utils/API";
-// import { Link, push } from "react-router-dom";
 import { Col, Row, Grid, Button } from 'react-bootstrap';
 import GrantForm from "../../components/GrantForm";
 import './Grant.css';
 import firebase from '../../fire.js';
-// import { geolocated } from 'react-geolocated';
 import MatchContainer from '../../components/MatchContainer';
 import moment from 'moment';
 import OutgoingContainer from '../../components/OutgoingContainer';
@@ -14,16 +12,14 @@ import {fire, auth} from '../../fire.js';
 import MatchModal from '../../components/MatchModal';
 
 class Grant extends Component {
-  //allows access to props if you pass down, allows console logging
   constructor(props) {
-    //allows ability to set state if you want to
     super(props);
 
     this.state = {
       grant: this.props.grant,
       email: "",
       id: this.props.userId,
-      isLoggedIn: this.props.isLoggedIn, //need to add email or id in order to link mongo info (rating, name) to firebase info (delivery location)
+      isLoggedIn: this.props.isLoggedIn, 
       name: this.props.name,
       business: "",
       location: "",

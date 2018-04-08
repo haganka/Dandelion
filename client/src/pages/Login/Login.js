@@ -11,12 +11,9 @@ import Home from '../Home';
 import {fire, auth} from '../../fire.js';
 import Account from '../Account';
 import NavBar from "../../components/NavBar";
-// import Footer from '../../components/Footer';
 
 class Login extends Component {
-    //allows access to props if you pass down, allows console logging
     constructor(props) {
-        //allows ability to set state if you want to
         super(props);
 
         this.state = {
@@ -62,9 +59,8 @@ class Login extends Component {
                 rating: 0,
                 completeGrants: [],
                 completeWishes: []
-            }).then(res => {console.log(res.data._id); this.setState({id: res.data._id});})
+            }).then(res => { this.setState({id: res.data._id});})
             .catch(err => console.log(err));
-        // }
     };
 
     logInSubmit = (email, password) => {
@@ -82,7 +78,7 @@ class Login extends Component {
         API.checkUser({
             email: this.state.email
         })
-        .then(res => {console.log(res.data._id); 
+        .then(res => {
             this.setState({
                 id: res.data._id, 
                 name: res.data.name,
@@ -92,13 +88,6 @@ class Login extends Component {
             });})
         .catch(err => console.log(err));
     };
-
-    // logout = () => {
-    //     auth.signOut().then(function() {
-    //         this.setState({isLoggedIn: false, email: "", name: "", password: "", id: ""})
-    //       }).catch(function(error) {
-    //     });
-    // }
 
     viewAccount = (event) => {
         event.preventDefault();
@@ -114,7 +103,6 @@ class Login extends Component {
         this.setState({
             viewAccount: true
         }))
-        console.log(this.state)
     }
 
 
@@ -123,7 +111,6 @@ class Login extends Component {
         this.setState({
             [name]: value
         });
-        console.log(this.state)
     };
 
     toggleLogIn() {
@@ -172,8 +159,10 @@ class Login extends Component {
                 fireId: user.uid,
                 isLoggedIn: true
             })
-        } else {
-        console.log("user signed out");
+        }else{
+            this.setState({
+                isLoggedIn: false
+            })
         }
 
     });
@@ -185,7 +174,6 @@ class Login extends Component {
             {!this.state.submitSuccess ? 
             <div>
                 <Grid>
-                {/* {this.state.isLoggedIn ? <Button onClick={this.logout}>Logout</Button> : null} */}
                     <Row id="dand-box">
                         <div id="dandelion-head">
                         DANDELION
@@ -242,7 +230,6 @@ class Login extends Component {
                 wish={this.state.wish}
                 grant={this.state.grant}/>
             </div>}
-            {/* <Footer/> */}
         </div>
 
         );
