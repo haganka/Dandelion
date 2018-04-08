@@ -26,6 +26,7 @@ This project was built using the MERN stack as well as Firebase for storing real
 * [Node JS](https://nodejs.org/en//)
 * [Express JS](https://expressjs.com//)
 * [MongoDB](https://www.mongodb.com/)
+* [Firebase](https://firebase.google.com/)
 
 ## Features
 * User login leveraging Firebase authentication
