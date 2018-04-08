@@ -38,7 +38,11 @@ class Login extends Component {
         this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-
+    /** On click of sign up submit, creates new authenticated username in firebase and saves new user in MongoDB, then updates state
+     * @requires Express
+     * @param {string} email - user email
+     * @param {string} password - user password
+     */
     signUpSubmit = (email, password) => {
         auth.createUserWithEmailAndPassword(email, password)
         .catch(err => console.error(err));
@@ -59,6 +63,11 @@ class Login extends Component {
             .catch(err => console.log(err));
     };
 
+    /** On click of log submit, checks for authenticated username in firebase and checks for user in MongoDB, then updates state
+     * @requires Express
+     * @param {string} email - user email
+     * @param {string} password - user password
+     */
     logInSubmit = (email, password) => {
         auth.signInWithEmailAndPassword(email, password)
         .then(user => {
@@ -85,6 +94,10 @@ class Login extends Component {
         .catch(err => console.log(err));
     };
 
+    /** On click of Account in nav, grabs users complete grants and wishes from MongoDB
+     * @requires Express
+     * @param {event} click
+     */
     viewAccount = (event) => {
         event.preventDefault();
         API.checkUser({
@@ -101,7 +114,9 @@ class Login extends Component {
         }))
     }
 
-
+    /** As user types in login information, handles saving changing input to the state
+     * @param {event} keypress
+     */
     handleInputChange = (event) => {
         const { name, value } = event.target;
         this.setState({
@@ -109,6 +124,8 @@ class Login extends Component {
         });
     };
 
+    /** On click of log in, updates state to empty fields and show the log in form
+     */
     toggleLogIn() {
         this.setState({
             name: "", email: "", password: "",
@@ -117,6 +134,8 @@ class Login extends Component {
           })
     }
 
+    /** On click of sign up, updates state to empty fields and show the log in form
+     */
     toggleSignUp() {
         this.setState({
             name: "", email: "", password: "",
@@ -125,44 +144,51 @@ class Login extends Component {
           })
     }
 
-
-  toggleWish() {
-    this.setState({
-      wish: true,
-      grant: false
-    })
-  }
-
-  toggleGrant() {
-    this.setState({
-      grant: true,
-      wish: false
-    })
-  }
-
-  componentDidMount = () => {
-      this.setState({
-          viewAccount: false
-      })
-    this.authListener();
-  };
-
-  authListener = () => {
-    auth.onAuthStateChanged((user) => {
-        if (user) {
-            this.setState({
-                email: user.email,
-                fireId: user.uid,
-                isLoggedIn: true
-            })
-        }else{
-            this.setState({
-                isLoggedIn: false
-            })
-        }
-
-    });
+    /** On click of make a wish, updates state to show wish component
+     */
+    toggleWish() {
+        this.setState({
+        wish: true,
+        grant: false
+        })
     }
+
+    /** On click of make a wish, updates state to show wish component
+     */
+    toggleGrant() {
+        this.setState({
+        grant: true,
+        wish: false
+        })
+    }
+
+    /** When the component mounts, sets viewAccount to false and runs the FB auth listener
+     */
+    componentDidMount = () => {
+        this.setState({
+            viewAccount: false
+        })
+        this.authListener();
+    };
+
+    /** When component mounts, FB auth listener checks for user login state and updates state
+     */
+    authListener = () => {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                this.setState({
+                    email: user.email,
+                    fireId: user.uid,
+                    isLoggedIn: true
+                })
+            }else{
+                this.setState({
+                    isLoggedIn: false
+                })
+            }
+
+        });
+        }
 
     render() {
         return (
