@@ -39,13 +39,14 @@ This project was built using the MERN stack as well as Firebase for storing real
 
 ## Future Ideas (Wishes)
 There are quite a few future enhancements I plan to continue working on. These include:
-* User making the grant enters an estimated delivery time that is displayed to the person whose wish is being granted.
+* Improving user authentication/logged in experience. 
+* Estimated delivery range displayed to the person whose wish is being granted. Based on mode of transportation of person granting and distance from business location to delivery location. Could incorporate Google Maps Directions API.
 * Geolocation option. Using geolocation services would improve the user experience so they could choose to avoid entering their exact address location.
 * Once geolocation is enabled, incorporating the Google Places API. Using Google Places would help to narrow down the location options for the person who is granting the wish. Based on their current location and business name, they could choose the exact location of the business from a dropdown list of Google-provided addresses.
 * Using the Firebase timestamp feature, delete entries in the database after they have been live for five minutes. This would keep old requests that were never picked up from matching with users when they're no longer relevant.
 
 ## Collaboration
-Please see future ideas and let me know if you'd like to collaborate! I am open to additional ideas as well so would love to hear from you with thoughts.
+Please see future ideas and let me know if you'd like to collaborate! I am open to additional ideas as well so would love to hear any new thoughts.
 
 ## Author
 * **Kelly Hagan** - [haganka](https://github.com/haganka)
